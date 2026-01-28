@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.tsx';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Certifications | CyberSec Portfolio</title>
+	</head>
+
+	<body class="bg-black text-white min-h-screen">
+		<Navbar client:load />
+		
+		<main class="pt-24 px-4 max-w-4xl mx-auto">
+			<h1 class="text-4xl md:text-5xl font-bold mb-4">Certifications</h1>
+			<p class="text-gray-400 mb-8">Text1</p>
+			
+			<div class="grid md:grid-cols-2 gap-6">
+				<div class="p-6 bg-white/5 rounded-lg border border-white/10">
+					<div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center mb-4">
+						<span class="text-red-400 text-xl font-bold">Text2</span>
+					</div>
+					<h2 class="text-xl font-semibold mb-1">Text3</h2>
+					<p class="text-sm text-gray-500 mb-2">Text4</p>
+					<p class="text-gray-400 text-sm">
+						Text5
+					</p>
+					<p class="text-xs text-gray-500 mt-4">Text6</p>
+				</div>
+				
+				<div class="p-6 bg-white/5 rounded-lg border border-white/10">
+					<div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
+						<span class="text-blue-400 text-xl font-bold">Text7</span>
+					</div>
+					<h2 class="text-xl font-semibold mb-1">Text8</h2>
+					<p class="text-sm text-gray-500 mb-2">Text9</p>
+					<p class="text-gray-400 text-sm">
+						Text10
+					</p>
+					<p class="text-xs text-gray-500 mt-4">Text11</p>
+				</div>
+				
+				<div class="p-6 bg-white/5 rounded-lg border border-white/10">
+					<div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-4">
+						<span class="text-green-400 text-xl font-bold">Text12</span>
+					</div>
+					<h2 class="text-xl font-semibold mb-1">Text13</h2>
+					<p class="text-sm text-gray-500 mb-2">Text14</p>
+					<p class="text-gray-400 text-sm">
+						Text15
+					</p>
+					<p class="text-xs text-gray-500 mt-4">Text16</p>
+				</div>
+				
+				<div class="p-6 bg-white/5 rounded-lg border border-white/10">
+					<div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
+						<span class="text-orange-400 text-xl font-bold">Text17</span>
+					</div>
+					<h2 class="text-xl font-semibold mb-1">Text18</h2>
+					<p class="text-sm text-gray-500 mb-2">Text19</p>
+					<p class="text-gray-400 text-sm">
+						Text20
+					</p>
+					<p class="text-xs text-gray-500 mt-4">Text21</p>
+				</div>
+			</div>
+			
+			<section class="mt-12">
+				<h2 class="text-2xl font-semibold mb-6">Achievements</h2>
+				<div class="space-y-4">
+					<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+						<h3 class="font-medium">Text22</h3>
+						<p class="text-sm text-gray-400">Text23</p>
+					</div>
+					<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+						<h3 class="font-medium">Text24</h3>
+						<p class="text-sm text-gray-400">Text25</p>
+					</div>
+					<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+						<h3 class="font-medium">Text26</h3>
+						<p class="text-sm text-gray-400">Text27</p>
+					</div>
+				</div>
+			</section>
+		</main>
+	</body>
+</html>

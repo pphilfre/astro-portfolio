@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.tsx';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>About | CyberSec Portfolio</title>
+	</head>
+
+	<body class="bg-black text-white min-h-screen">
+		<Navbar client:load />
+		
+		<main class="pt-24 px-4 max-w-4xl mx-auto">
+			<h1 class="text-4xl md:text-5xl font-bold mb-8">About Me</h1>
+			
+			<div class="space-y-6 text-gray-300">
+				<p class="text-lg">
+					Text1
+                    Text2
+				</p>
+				
+				<section class="mt-12">
+					<h2 class="text-2xl font-semibold text-white mb-4">Skills</h2>
+					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text3</h3>
+							<p class="text-sm text-gray-400">Text4</p>
+						</div>
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text5</h3>
+							<p class="text-sm text-gray-400">Text6</p>
+						</div>
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text7</h3>
+							<p class="text-sm text-gray-400">Text8</p>
+						</div>
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text9</h3>
+							<p class="text-sm text-gray-400">Text10</p>
+						</div>
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text11</h3>
+							<p class="text-sm text-gray-400">Text12</p>
+						</div>
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text13</h3>
+							<p class="text-sm text-gray-400">Text14</p>
+						</div>
+					</div>
+				</section>
+				
+				<section class="mt-12">
+					<h2 class="text-2xl font-semibold text-white mb-4">Text15</h2>
+					<div class="space-y-4">
+						<div class="p-4 bg-white/5 rounded-lg border border-white/10">
+							<h3 class="font-medium text-white">Text16</h3>
+							<p class="text-sm text-gray-400">Text17</p>
+							<p class="mt-2">Text18</p>
+						</div>
+					</div>
+				</section>
+			</div>
+		</main>
+	</body>
+</html>
