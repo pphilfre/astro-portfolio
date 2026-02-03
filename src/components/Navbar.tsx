@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { ChevronDownIcon } from "lucide-react";
 
 const navLinkStyle = "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors";
 const navLinkActiveStyle = "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-foreground hover:bg-transparent transition-colors";
@@ -17,6 +16,10 @@ const Navbar = () => {
   const [currentPath, setCurrentPath] = useState("/");
   const [theme, setTheme] = useState<Theme>("system");
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [isProjectsClicked, setIsProjectsClicked] = useState(false);
+  const projectsRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setCurrentPath(window.location.pathname);
@@ -46,12 +49,20 @@ const Navbar = () => {
       if (!target.closest("[data-theme-menu]")) {
         setIsThemeMenuOpen(false);
       }
+      // Close projects dropdown when clicking outside
+      if (!target.closest("[data-projects-menu]")) {
+        setIsProjectsOpen(false);
+        setIsProjectsClicked(false);
+      }
     };
     document.addEventListener("click", handleClickOutside);
 
     return () => {
       mediaQuery.removeEventListener("change", handleSystemThemeChange);
       document.removeEventListener("click", handleClickOutside);
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -78,6 +89,38 @@ const Navbar = () => {
   const isActive = (path: string) => {
     if (path === "/") return currentPath === "/";
     return currentPath.startsWith(path);
+  };
+
+  // Projects dropdown handlers
+  const handleProjectsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isProjectsClicked) {
+      // If already clicked open, close it
+      setIsProjectsOpen(false);
+      setIsProjectsClicked(false);
+    } else {
+      // Click to open permanently
+      setIsProjectsOpen(true);
+      setIsProjectsClicked(true);
+    }
+  };
+
+  const handleProjectsMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    if (!isProjectsClicked) {
+      setIsProjectsOpen(true);
+    }
+  };
+
+  const handleProjectsMouseLeave = () => {
+    if (!isProjectsClicked) {
+      hoverTimeoutRef.current = setTimeout(() => {
+        setIsProjectsOpen(false);
+      }, 150);
+    }
   };
 
   const getThemeIcon = () => {
@@ -124,39 +167,55 @@ const Navbar = () => {
             </NavigationMenuLink>
           </NavigationMenuItem>
 
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className={`bg-transparent hover:text-foreground hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-foreground ${isActive("/projects") ? "text-foreground" : "text-muted-foreground"}`}>
+          {/* Custom Projects dropdown with click/hover support */}
+          <div 
+            className="relative"
+            data-projects-menu
+            ref={projectsRef}
+            onMouseEnter={handleProjectsMouseEnter}
+            onMouseLeave={handleProjectsMouseLeave}
+          >
+            <button
+              onClick={handleProjectsClick}
+              className={`inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:text-foreground ${isActive("/projects") ? "text-foreground" : "text-muted-foreground"}`}
+            >
               Projects
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[300px] gap-2 p-2">
-                <li>
-                  <NavigationMenuLink href="/projects" className="block p-2 rounded hover:bg-muted transition-colors group">
-                    <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">All Projects</div>
-                    <p className="text-muted-foreground/70 text-xs">
-                      View all my security projects
-                    </p>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink href="/projects/ctf" className="block p-2 rounded hover:bg-muted transition-colors group">
-                    <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">CTF Writeups</div>
-                    <p className="text-muted-foreground/70 text-xs">
-                      Capture The Flag challenges & solutions
-                    </p>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink href="/projects/tools" className="block p-2 rounded hover:bg-muted transition-colors group">
-                    <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">Security Tools</div>
-                    <p className="text-muted-foreground/70 text-xs">
-                      Custom tools & scripts I've built
-                    </p>
-                  </NavigationMenuLink>
-                </li>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+              <ChevronDownIcon 
+                className={`ml-1 h-3 w-3 transition-transform duration-200 ${isProjectsOpen ? "rotate-180" : ""}`} 
+              />
+            </button>
+            
+            {isProjectsOpen && (
+              <div className="absolute top-full left-0 mt-1.5 w-[300px] rounded-md border border-border bg-popover p-2 shadow-lg animate-in fade-in-0 zoom-in-95">
+                <ul className="grid gap-2">
+                  <li>
+                    <a href="/projects" className="block p-2 rounded hover:bg-muted transition-colors group">
+                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">All Projects</div>
+                      <p className="text-muted-foreground/70 text-xs">
+                        View all my security projects
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/projects/ctf" className="block p-2 rounded hover:bg-muted transition-colors group">
+                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">CTF Writeups</div>
+                      <p className="text-muted-foreground/70 text-xs">
+                        Capture The Flag challenges & solutions
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/projects/tools" className="block p-2 rounded hover:bg-muted transition-colors group">
+                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">Security Tools</div>
+                      <p className="text-muted-foreground/70 text-xs">
+                        Custom tools & scripts I've built
+                      </p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
 
           <NavigationMenuItem>
             <NavigationMenuLink

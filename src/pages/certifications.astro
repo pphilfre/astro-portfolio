@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Navbar from '../components/Navbar.tsx';
+import { AchievementsBento } from '../components/AchievementsBento.tsx';
 ---
 
 <html lang="en">
@@ -27,62 +28,24 @@ import Navbar from '../components/Navbar.tsx';
 	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<main class="pt-24 px-4 max-w-4xl mx-auto pb-16">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4">Achievements</h1>
-			<p class="text-muted-foreground mb-8">Experience and learning progress</p>
+		<main class="pt-24 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto pb-16">
+			<div class="mb-12">
+				<h1 class="text-4xl md:text-5xl font-bold mb-4">Achievements</h1>
+				<p class="text-muted-foreground text-lg">Experience and learning progress</p>
+			</div>
 			
-			<div class="grid md:grid-cols-2 gap-6">
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-accent mb-2">Tesco Head Office</div>
-					<h2 class="text-xl font-semibold mb-2">Enterprise Cyber Security Exposure</h2>
-					<p class="text-muted-foreground text-sm">
-						Invited back for a second week in Cyber Security after strong performance during a Software Development placement.
-					</p>
-				</article>
+			<AchievementsBento client:load />
+		</main>
+	</body>
+</html>
 
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-accent mb-2">Self-directed project</div>
-					<h2 class="text-xl font-semibold mb-2">Home Lab Infrastructure</h2>
-					<p class="text-muted-foreground text-sm">
-						Built and managed Linux-based services using Docker, VPNs, DNS, reverse proxies, and cloud-hosted infrastructure.
-					</p>
-				</article>
-
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-accent mb-2">Hands-on learning</div>
-					<h2 class="text-xl font-semibold mb-2">Cloud & Identity-Based Access</h2>
-					<p class="text-muted-foreground text-sm">
-						Implemented Azure-based single sign-on and secure remote access to internal services.
-					</p>
-				</article>
-
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-accent mb-2">Independent study</div>
-					<h2 class="text-xl font-semibold mb-2">Networking & Security Knowledge</h2>
-					<p class="text-muted-foreground text-sm">
-						Covered CCNA- and A+-level networking, operating systems, and security concepts through coursework and practical experimentation.
+				<!-- Future Certifications Note -->
+				<article class="md:col-span-2 lg:col-span-4 p-6 bg-muted/30 rounded-2xl border border-border/50">
+					<p class="text-muted-foreground text-center">
+						Formal certifications will be pursued through structured training or degree apprenticeship programmes.
 					</p>
 				</article>
 			</div>
-
-			<section class="mt-8">
-				<h2 class="text-xl font-semibold mb-4">Other Achievements</h2>
-				<div class="p-6 bg-secondary rounded-lg border border-border">
-					<ul class="space-y-2 text-muted-foreground text-sm">
-						<li>Duke of Edinburgh Bronze Award</li>
-						<li>Multiple Headteacher Awards for effort and contribution</li>
-						<li>100% attendance recognition</li>
-					</ul>
-				</div>
-			</section>
-
-			<section class="mt-8">
-				<div class="p-6 bg-secondary rounded-lg border border-border">
-					<p class="text-muted-foreground text-sm">
-						Formal certifications will be pursued through structured training or degree apprenticeship programmes.
-					</p>
-				</div>
-			</section>
 		</main>
 	</body>
 </html>

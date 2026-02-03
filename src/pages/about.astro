@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Navbar from '../components/Navbar.tsx';
+import { AboutBento } from '../components/AboutBento.tsx';
 ---
 
 <html lang="en">
@@ -27,77 +28,13 @@ import Navbar from '../components/Navbar.tsx';
 	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<main class="pt-24 px-4 max-w-4xl mx-auto pb-16">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4">About</h1>
-			<p class="text-muted-foreground mb-8">Background and skills</p>
+		<main class="pt-24 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto pb-16">
+			<div class="mb-12">
+				<h1 class="text-4xl md:text-5xl font-bold mb-4">About</h1>
+				<p class="text-muted-foreground text-lg">Background and skills</p>
+			</div>
 			
-			<div class="space-y-8">
-				<section class="p-6 bg-secondary rounded-lg border border-border">
-					<p class="text-muted-foreground leading-relaxed">
-						I am currently completing my GCSEs and will be studying Maths, Further Maths, Physics, and Economics at A-level. 
-						Outside of formal education, I spend time working with Linux systems, cloud infrastructure, and maintaining a home lab environment. 
-						Through placements at Tesco's Head Office, I have gained early exposure to enterprise technology operations and cyber security practices in a corporate sett3322
-				</section>
-				
-				<section>
-					<h2 class="text-xl font-semibold mb-4">Skills</h2>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-							<h3 class="font-semibold text-foreground mb-3">Operating Systems</h3>
-							<ul class="text-sm text-muted-foreground space-y-1">
-								<li>Linux (advanced, daily use)</li>
-								<li>Windows (enterprise exposure)</li>
-							</ul>
-						</div>
-						<div class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-							<h3 class="font-semibold text-foreground mb-3">Cloud & Infrastructure</h3>
-							<ul class="text-sm text-muted-foreground space-y-1">
-								<li>Azure, Google Cloud, Oracle Cloud</li>
-								<li>Docker containerisation</li>
-								<li>Reverse proxy configuration</li>
-							</ul>
-						</div>
-						<div class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-							<h3 class="font-semibold text-foreground mb-3">Networking & Security</h3>
-							<ul class="text-sm text-muted-foreground space-y-1">
-								<li>VPN and DNS management</li>
-								<li>Identity-based access controls</li>
-								<li>Security tooling exposure</li>
-							</ul>
-						</div>
-						<div class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-							<h3 class="font-semibold text-foreground mb-3">Development</h3>
-							<ul class="text-sm text-muted-foreground space-y-1">
-								<li>Python (basic automation)</li>
-								<li>Git version control</li>
-								<li>PowerShell (exposure)</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-				
-				<section>
-					<h2 class="text-xl font-semibold mb-4">Approach</h2>
-					<div class="p-6 bg-secondary rounded-lg border border-border">
-						<p class="text-muted-foreground leading-relaxed">
-							My focus is on security, reliability, and usability. I prioritise understanding how systems are designed, where they can fail, and how risk can be reduced—rather than simply learning tools in isolation.
-						</p>
-					</div>
-				</section>
-
-				<section>
-					<h2 class="text-xl font-semibold mb-4">Direction</h2>
-					<div class="p-6 bg-secondary rounded-lg border border-border">
-						<p class="text-muted-foreground leading-relaxed">
-							I am working towards a technology degree apprenticeship in financial services, with a long-term focus on cyber security and infrastructure risk.
-						</p>
-					</div>
-				</section>
-			</div>
-		</main>
-	</body>
-</html>
-			</div>
+			<AboutBento client:load />
 		</main>
 	</body>
 </html>
