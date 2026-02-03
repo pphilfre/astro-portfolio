@@ -9,87 +9,63 @@ import Navbar from '../components/Navbar.tsx';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Contact | CyberSec Portfolio</title>
+		<title>Contact | Freddie Philpot</title>
+		<script is:inline>
+			(function() {
+				const theme = localStorage.getItem('theme') || 'system';
+				const root = document.documentElement;
+				if (theme === 'system') {
+					const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					root.classList.add(systemDark ? 'dark' : 'light');
+				} else {
+					root.classList.add(theme);
+				}
+			})();
+		</script>
 	</head>
 
-	<body class="bg-black text-white min-h-screen">
+	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<main class="pt-24 px-4 max-w-2xl mx-auto">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
-			<p class="text-gray-400 mb-8">
-				Text1
-			</p>
+		<main class="pt-24 px-4 max-w-2xl mx-auto pb-16">
+			<h1 class="text-4xl md:text-5xl font-bold mb-4">Contact</h1>
+			<p class="text-muted-foreground mb-8">Get in touch</p>
 			
 			<div class="space-y-6">
-				<div class="grid md:grid-cols-2 gap-4">
-					<a href="mailto:your@email.com" class="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition group">
-						<h3 class="font-semibold mb-1 group-hover:text-blue-400 transition">Text2</h3>
-						<p class="text-sm text-gray-400">Text3</p>
-					</a>
-					
-					<a href="https://linkedin.com/in/yourprofile" target="_blank" class="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition group">
-						<h3 class="font-semibold mb-1 group-hover:text-blue-400 transition">Text4</h3>
-						<p class="text-sm text-gray-400">Text5</p>
-					</a>
-					
-					<a href="https://github.com/yourusername" target="_blank" class="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition group">
-						<h3 class="font-semibold mb-1 group-hover:text-blue-400 transition">Text6</h3>
-						<p class="text-sm text-gray-400">Text7</p>
-					</a>
-					
-					<a href="https://twitter.com/yourhandle" target="_blank" class="p-6 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition group">
-						<h3 class="font-semibold mb-1 group-hover:text-blue-400 transition">Text8</h3>
-						<p class="text-sm text-gray-400">Text9</p>
-					</a>
-				</div>
+				<a 
+					href="mailto:contact@freddiephilpot.dev" 
+					class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition"
+				>
+					<div class="text-xs text-accent mb-2">Email</div>
+					<p class="font-medium text-foreground">contact@freddiephilpot.dev</p>
+					<p class="text-sm text-muted-foreground mt-1">Preferred method for professional enquiries</p>
+				</a>
 				
-				<div class="p-6 bg-white/5 rounded-lg border border-white/10 mt-8">
-					<h2 class="text-xl font-semibold mb-4">Text10</h2>
-					<form class="space-y-4">
-						<div>
-							<label for="name" class="block text-sm font-medium mb-2">Text11</label>
-							<input 
-								type="text" 
-								id="name" 
-								name="name"
-								class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 transition"
-								placeholder="Text12"
-							/>
-						</div>
-						<div>
-							<label for="email" class="block text-sm font-medium mb-2">Text13</label>
-							<input 
-								type="email" 
-								id="email" 
-								name="email"
-								class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 transition"
-								placeholder="Text14"
-							/>
-						</div>
-						<div>
-							<label for="message" class="block text-sm font-medium mb-2">Text15</label>
-							<textarea 
-								id="message" 
-								name="message"
-								rows="4"
-								class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 transition resize-none"
-								placeholder="Text16"
-							></textarea>
-						</div>
-						<button 
-							type="submit"
-							class="w-full px-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-200 transition"
-						>
-							Text17
-						</button>
-					</form>
-				</div>
+				<a 
+					href="#LINKEDIN_URL" 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition"
+				>
+					<div class="text-xs text-accent mb-2">LinkedIn</div>
+					<p class="font-medium text-foreground">Professional Profile</p>
+					<p class="text-sm text-muted-foreground mt-1">Professional profile and experience</p>
+				</a>
 				
-				<div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-					<p class="text-sm text-emerald-400">
-						Text18
-						<a href="#" class="underline">Text19</a>
+				<a 
+					href="#GITHUB_URL" 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition"
+				>
+					<div class="text-xs text-accent mb-2">GitHub</div>
+					<p class="font-medium text-foreground">Projects & Code</p>
+					<p class="text-sm text-muted-foreground mt-1">Projects and contributions</p>
+				</a>
+				
+				<div class="pt-6 border-t border-border">
+					<p class="text-muted-foreground text-sm">
+						I welcome enquiries regarding technology degree apprenticeship opportunities, collaboration on projects, or general questions about my work and experience.
 					</p>
 				</div>
 			</div>

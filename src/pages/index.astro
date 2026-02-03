@@ -16,37 +16,57 @@ import Navbar from '../components/Navbar.tsx';
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Portfolio</title>
+		<script is:inline>
+			(function() {
+				const theme = localStorage.getItem('theme') || 'system';
+				const root = document.documentElement;
+				if (theme === 'system') {
+					const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					root.classList.add(systemDark ? 'dark' : 'light');
+				} else {
+					root.classList.add(theme);
+				}
+			})();
+		</script>
 	</head>
 
-	<body class="bg-black text-white min-h-screen">
+	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<div class="relative w-full h-screen">
+		<div class="relative w-full h-screen" id="beams-container">
 			<Beams
 				client:load
 				beamWidth={3}
 				beamHeight={30}
 				beamNumber={20}
-				lightColor="#ffffff"
+				darkLightColor="#ffffff"
+				lightLightColor="#737373"
+				darkDiffuseColor="#000000"
+				lightDiffuseColor="#fafafa"
 				speed={2}
 				noiseIntensity={0.5}
 				scale={0.2}
 				rotation={30}
+				darkBackgroundColor="#0a0a0a"
+				lightBackgroundColor="#fafafa"
 			/>
 			
 			<!-- Hero Content -->
 			<div class="absolute inset-0 flex flex-col items-center justify-center z-10 pt-16">
 				<h1 class="text-5xl md:text-7xl font-bold mb-4 text-center">
-					placeholder
+					Freddie Philpot
 				</h1>
-				<p class="text-xl md:text-2xl text-gray-300 mb-8 text-center max-w-2xl px-4">
-					placeholder
+				<p class="text-xl md:text-2xl text-muted-foreground mb-2 text-center max-w-2xl px-4">
+					Student Technologist - Cloud, Linux, Security
+				</p>
+				<p class="text-base md:text-lg text-muted-foreground mb-8 text-center max-w-xl px-4">
+					Building secure Linux and cloud systems, with real-world exposure to enterprise cybersecurity.
 				</p>
 				<div class="flex gap-4">
-					<a href="/projects" class="px-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-200 transition">
+					<a href="/projects" class="px-6 py-3 bg-foreground text-background font-medium rounded-lg hover:opacity-90 transition">
 						View Projects
 					</a>
-					<a href="/contact" class="px-6 py-3 border border-white/30 rounded-lg hover:bg-white/10 transition">
+					<a href="/contact" class="px-6 py-3 border border-border rounded-lg hover:bg-muted transition">
 						Get in Touch
 					</a>
 				</div>

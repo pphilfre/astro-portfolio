@@ -9,57 +9,69 @@ import Navbar from '../../components/Navbar.tsx';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Security Tools | CyberSec Portfolio</title>
+		<title>Security Tools | Freddie Philpot</title>
+		<script is:inline>
+			(function() {
+				const theme = localStorage.getItem('theme') || 'system';
+				const root = document.documentElement;
+				if (theme === 'system') {
+					const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					root.classList.add(systemDark ? 'dark' : 'light');
+				} else {
+					root.classList.add(theme);
+				}
+			})();
+		</script>
 	</head>
 
-	<body class="bg-black text-white min-h-screen">
+	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
 		<main class="pt-24 px-4 max-w-4xl mx-auto">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4">Text1</h1>
-			<p class="text-gray-400 mb-8">Text2</p>
+			<h1 class="text-4xl md:text-5xl font-bold mb-4">Security Tools</h1>
+			<p class="text-muted-foreground mb-8">Custom tools & scripts I've built</p>
 			
 			<div class="space-y-6">
-				<article class="p-6 bg-white/5 rounded-lg border border-white/10">
+				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
 					<div class="flex items-center justify-between mb-4">
 						<h2 class="text-xl font-semibold">Text3</h2>
-						<a href="#" class="text-sm text-blue-400 hover:underline">GitHub →</a>
+						<a href="#" class="text-sm text-accent hover:underline">GitHub →</a>
 					</div>
-					<p class="text-gray-400 mb-4">
+					<p class="text-muted-foreground mb-4">
 						Text4
 					</p>
 					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text5</span>
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text6</span>
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text7</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text5</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text6</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text7</span>
 					</div>
 				</article>
 				
-				<article class="p-6 bg-white/5 rounded-lg border border-white/10">
+				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
 					<div class="flex items-center justify-between mb-4">
 						<h2 class="text-xl font-semibold">Text8</h2>
-						<a href="#" class="text-sm text-blue-400 hover:underline">GitHub →</a>
+						<a href="#" class="text-sm text-accent hover:underline">GitHub →</a>
 					</div>
-					<p class="text-gray-400 mb-4">
+					<p class="text-muted-foreground mb-4">
 						Text9
 					</p>
 					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text10</span>
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text11</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text10</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text11</span>
 					</div>
 				</article>
 				
-				<article class="p-6 bg-white/5 rounded-lg border border-white/10">
+				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
 					<div class="flex items-center justify-between mb-4">
 						<h2 class="text-xl font-semibold">Text12</h2>
-						<a href="#" class="text-sm text-blue-400 hover:underline">GitHub →</a>
+						<a href="#" class="text-sm text-accent hover:underline">GitHub →</a>
 					</div>
-					<p class="text-gray-400 mb-4">
+					<p class="text-muted-foreground mb-4">
 						Text13
 					</p>
 					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text14</span>
-						<span class="px-2 py-1 text-xs bg-white/10 rounded">Text15</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text14</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Text15</span>
 					</div>
 				</article>
 			</div>

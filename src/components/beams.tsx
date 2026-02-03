@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useEffect, useRef, useMemo } from 'react';
+import { forwardRef, useImperativeHandle, useEffect, useRef, useMemo, useState } from 'react';
 import type { FC, ReactNode } from 'react';
 
 import * as THREE from 'three';
@@ -6,6 +6,57 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { degToRad } from 'three/src/math/MathUtils.js';
+
+/* Property	Type	Default	Description
+beamWidth
+number
+
+2
+Width of each beam.
+
+beamHeight
+number
+
+15
+Height of each beam.
+
+beamNumber
+number
+
+12
+Number of beams to display.
+
+lightColor
+string
+
+'#ffffff'
+Color of the directional light.
+
+speed
+number
+
+2
+Speed of the animation.
+
+noiseIntensity
+number
+
+1.75
+Intensity of the noise effect overlay.
+
+scale
+number
+
+0.2
+Scale of the noise pattern.
+
+rotation
+number
+
+0
+Rotation of the entire beams system in degrees.
+
+ */
 
 type UniformValue = THREE.IUniform<unknown> | unknown;
 
@@ -172,10 +223,17 @@ interface BeamsProps {
   beamHeight?: number;
   beamNumber?: number;
   lightColor?: string;
+  darkLightColor?: string;
+  lightLightColor?: string;
+  darkDiffuseColor?: string;
+  lightDiffuseColor?: string;
   speed?: number;
   noiseIntensity?: number;
   scale?: number;
   rotation?: number;
+  backgroundColor?: string;
+  darkBackgroundColor?: string;
+  lightBackgroundColor?: string;
 }
 
 const Beams: FC<BeamsProps> = ({
@@ -183,12 +241,47 @@ const Beams: FC<BeamsProps> = ({
   beamHeight = 15,
   beamNumber = 12,
   lightColor = '#ffffff',
+  darkLightColor = '#ffffff',
+  lightLightColor = '#a3a3a3',
+  darkDiffuseColor = '#000000',
+  lightDiffuseColor = '#ffffff',
   speed = 2,
   noiseIntensity = 1.75,
   scale = 0.2,
-  rotation = 0
+  rotation = 0,
+  backgroundColor,
+  darkBackgroundColor = '#000000',
+  lightBackgroundColor = '#ffffff'
 }) => {
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(null!);
+  const [bgColor, setBgColor] = useState(darkBackgroundColor);
+  const [beamLightColor, setBeamLightColor] = useState(darkLightColor);
+  const [diffuseColor, setDiffuseColor] = useState(darkDiffuseColor);
+
+  useEffect(() => {
+    // Get initial theme
+    const updateColors = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setBgColor(isDark ? darkBackgroundColor : lightBackgroundColor);
+      setBeamLightColor(isDark ? darkLightColor : lightLightColor);
+      setDiffuseColor(isDark ? darkDiffuseColor : lightDiffuseColor);
+    };
+    
+    updateColors();
+    
+    // Watch for class changes on html element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          updateColors();
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, { attributes: true });
+    
+    return () => observer.disconnect();
+  }, [darkBackgroundColor, lightBackgroundColor, darkLightColor, lightLightColor, darkDiffuseColor, lightDiffuseColor]);
 
   const beamMaterial = useMemo(
     () =>
@@ -234,7 +327,7 @@ const Beams: FC<BeamsProps> = ({
         },
         material: { fog: true },
         uniforms: {
-          diffuse: new THREE.Color(...hexToNormalizedRGB('#000000')),
+          diffuse: new THREE.Color(...hexToNormalizedRGB(diffuseColor)),
           time: { shared: true, mixed: true, linked: true, value: 0 },
           roughness: 0.3,
           metalness: 0.3,
@@ -244,17 +337,17 @@ const Beams: FC<BeamsProps> = ({
           uScale: scale
         }
       }),
-    [speed, noiseIntensity, scale]
+    [speed, noiseIntensity, scale, diffuseColor]
   );
 
   return (
     <CanvasWrapper>
       <group rotation={[0, 0, degToRad(rotation)]}>
         <PlaneNoise ref={meshRef} material={beamMaterial} count={beamNumber} width={beamWidth} height={beamHeight} />
-        <DirLight color={lightColor} position={[0, 3, 10]} />
+        <DirLight color={beamLightColor} position={[0, 3, 10]} />
       </group>
       <ambientLight intensity={1} />
-      <color attach="background" args={['#000000']} />
+      <color attach="background" args={[backgroundColor || bgColor]} />
       <PerspectiveCamera makeDefault position={[0, 0, 20]} fov={30} />
     </CanvasWrapper>
   );
