@@ -12,7 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ChevronDownIcon, MenuIcon } from "lucide-react";
+import { ChevronDownIcon, MenuIcon, Download } from "lucide-react";
 
 const navLinkStyle = "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors";
 const navLinkActiveStyle = "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-foreground hover:bg-transparent transition-colors";
@@ -383,6 +383,19 @@ const Navbar = () => {
             </NavigationMenuLink>
           </NavigationMenuItem>
 
+          {/* CV Download Button */}
+          <NavigationMenuItem>
+            <a
+              href="/cv.pdf"
+              download
+              className="inline-flex h-9 items-center justify-center rounded-md bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted px-3 py-2 text-sm font-medium transition-colors gap-2"
+              aria-label="Download CV"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden lg:inline">CV</span>
+            </a>
+          </NavigationMenuItem>
+
           {/* Theme Toggle */}
           <NavigationMenuItem>
             <div className="relative ml-2" data-theme-menu>
@@ -433,8 +446,20 @@ const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu>
 
-      {/* Mobile Theme Toggle (visible on right side on mobile) */}
-      <div className="md:hidden absolute right-4" data-theme-menu>
+      {/* Mobile CV + Theme Toggle (visible on right side on mobile) */}
+      <div className="md:hidden absolute right-4 flex items-center gap-2">
+        {/* CV Download */}
+        <a
+          href="/cv.pdf"
+          download
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          aria-label="Download CV"
+        >
+          <Download className="h-4 w-4" />
+        </a>
+        
+        {/* Theme Toggle */}
+        <div data-theme-menu>
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -477,6 +502,7 @@ const Navbar = () => {
             </button>
           </div>
         )}
+        </div>
       </div>
     </nav>
   );

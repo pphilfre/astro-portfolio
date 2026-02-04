@@ -9,7 +9,8 @@ import Navbar from '../../components/Navbar.tsx';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Projects | CyberSec Portfolio</title>
+		<meta name="description" content="Security projects, networking tools, and infrastructure setups by Freddie Philpot. Explore VPN configurations, DNS filtering, cloud hosting, and more." />
+		<title>Projects | Freddie Philpot</title>
 		<script is:inline>
 			(function() {
 				const theme = localStorage.getItem('theme') || 'system';
@@ -27,45 +28,97 @@ import Navbar from '../../components/Navbar.tsx';
 	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<main class="pt-24 px-4 max-w-6xl mx-auto">
+		<main class="pt-24 px-4 max-w-6xl mx-auto pb-16">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
-			<p class="text-muted-foreground mb-8">Security research, tools, and CTF writeups</p>
+			<p class="text-muted-foreground mb-8">Infrastructure, networking, and security projects from my home lab</p>
 			
+			<!-- Networking & Security Section -->
+			<h2 class="text-2xl font-semibold mb-4 mt-8">Networking & Security</h2>
+			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+				
+				<a href="https://github.com/philfreddie/tailscale" target="_blank" rel="noopener noreferrer" class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition group">
+					<div class="text-xs text-emerald-500 dark:text-emerald-400 mb-2">VPN / Mesh Network</div>
+					<h3 class="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">Tailscale VPN Setup</h3>
+					<p class="text-muted-foreground text-sm mb-4">
+						Secure mesh VPN configuration for remote access to home network devices. Deployed on Raspberry Pi for 24/7 connectivity.
+					</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-2 py-1 text-xs bg-muted rounded">Tailscale</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Linux</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Raspberry Pi</span>
+					</div>
+				</a>
+				
+				<a href="https://github.com/philfreddie/twingate" target="_blank" rel="noopener noreferrer" class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition group">
+					<div class="text-xs text-blue-500 dark:text-blue-400 mb-2">Zero Trust Access</div>
+					<h3 class="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">Twingate Private Access</h3>
+					<p class="text-muted-foreground text-sm mb-4">
+						Zero-trust network access for private resources. Deployed alongside Pi-hole and Tailscale for layered security.
+					</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-2 py-1 text-xs bg-muted rounded">Twingate</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Docker</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Zero Trust</span>
+					</div>
+				</a>
+				
+				<a href="https://github.com/philfreddie/tcpshield" target="_blank" rel="noopener noreferrer" class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition group">
+					<div class="text-xs text-red-500 dark:text-red-400 mb-2">DDoS Protection</div>
+					<h3 class="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">TCPShield Configuration</h3>
+					<p class="text-muted-foreground text-sm mb-4">
+						DDoS protection and security filtering for Minecraft servers. Configured DNS routing and bot filtering.
+					</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-2 py-1 text-xs bg-muted rounded">TCPShield</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">DNS</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">DDoS Mitigation</span>
+					</div>
+				</a>
+
+			</div>
+			
+			<!-- System & Infrastructure Section -->
+			<h2 class="text-2xl font-semibold mb-4">System & Infrastructure</h2>
 			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-emerald-500 dark:text-emerald-400 mb-2">Text1</div>
-					<h2 class="text-xl font-semibold mb-2">Text2</h2>
-					<p class="text-muted-foreground text-sm mb-4">
-						Text3
-					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text4</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text5</span>
-					</div>
-				</article>
 				
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-accent mb-2">Text6</div>
-					<h2 class="text-xl font-semibold mb-2">Text7</h2>
+				<a href="https://github.com/philfreddie/pihole" target="_blank" rel="noopener noreferrer" class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition group">
+					<div class="text-xs text-purple-500 dark:text-purple-400 mb-2">DNS / Ad Blocking</div>
+					<h3 class="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">Pi-hole DNS Setup</h3>
 					<p class="text-muted-foreground text-sm mb-4">
-						Text8
+						Network-wide ad blocking and DNS server. Custom blocklists, local DNS records, and dnsmasq configuration.
 					</p>
-					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text9</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text10</span>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-2 py-1 text-xs bg-muted rounded">Pi-hole</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">DNS</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Raspberry Pi</span>
 					</div>
-				</article>
+				</a>
 				
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="text-xs text-purple-500 dark:text-purple-400 mb-2">Text11</div>
-					<h2 class="text-xl font-semibold mb-2">Text12</h2>
+				<a href="https://github.com/philfreddie/oracle" target="_blank" rel="noopener noreferrer" class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition group">
+					<div class="text-xs text-orange-500 dark:text-orange-400 mb-2">Cloud Infrastructure</div>
+					<h3 class="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">Oracle Cloud Hosting</h3>
 					<p class="text-muted-foreground text-sm mb-4">
-						Text13
+						Pterodactyl Panel and Wings on Oracle Cloud free tier. Docker services, Traefik reverse proxy, and Cloudflare integration.
 					</p>
-					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text14</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text15</span>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-2 py-1 text-xs bg-muted rounded">Oracle Cloud</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Docker</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Traefik</span>
 					</div>
-				</article>
+				</a>
+
+				<a href="https://github.com/philfreddie/projects" target="_blank" rel="noopener noreferrer" class="block p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition group">
+					<div class="text-xs text-muted-foreground mb-2">Meta</div>
+					<h3 class="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">All Projects Index</h3>
+					<p class="text-muted-foreground text-sm mb-4">
+						Categorized list of all my public GitHub projects. Browse the full collection of documentation and configs.
+					</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="px-2 py-1 text-xs bg-muted rounded">GitHub</span>
+						<span class="px-2 py-1 text-xs bg-muted rounded">Documentation</span>
+					</div>
+				</a>
+
 			</div>
 		</main>
 	</body>
