@@ -1,8 +1,9 @@
 ---
 import '../styles/global.css';
 // Component Imports
-import Beams from '../components/beams.tsx';
+import Grainient from '../components/Grainient.tsx';
 import Navbar from '../components/Navbar.tsx';
+import TechLogoLoop from '../components/TechLogoLoop.tsx';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/basics/astro-components/
@@ -34,22 +35,34 @@ import Navbar from '../components/Navbar.tsx';
 	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<div class="relative w-full h-screen" id="beams-container">
-			<Beams
+		<div class="relative w-full h-screen" id="grainient-container">
+			<Grainient
 				client:load
-				beamWidth={3}
-				beamHeight={30}
-				beamNumber={20}
-				darkLightColor="#ffffff"
-				lightLightColor="#737373"
-				darkDiffuseColor="#000000"
-				lightDiffuseColor="#fafafa"
-				speed={2}
-				noiseIntensity={0.5}
-				scale={0.2}
-				rotation={30}
-				darkBackgroundColor="#0a0a0a"
-				lightBackgroundColor="#fafafa"
+				darkColor1="#2f3032"
+				darkColor2="#8d8f9a"
+				darkColor3="#333333"
+				lightColor1="#e1d6e1"
+				lightColor2="#7c61e5"
+				lightColor3="#cfc2f5"
+				timeSpeed={0.25}
+				colorBalance={0}
+				warpStrength={1}
+				warpFrequency={5}
+				warpSpeed={2}
+				warpAmplitude={50}
+				blendAngle={0}
+				blendSoftness={0.05}
+				rotationAmount={500}
+				noiseScale={2}
+				grainAmount={0.1}
+				grainScale={2}
+				grainAnimated={false}
+				contrast={1.5}
+				gamma={1}
+				saturation={1}
+				centerX={0}
+				centerY={0}
+				zoom={0.9}
 			/>
 			
 			<!-- Hero Content -->
@@ -64,13 +77,18 @@ import Navbar from '../components/Navbar.tsx';
 					Building secure Linux and cloud systems, with real-world exposure to enterprise cybersecurity.
 				</p>
 				<div class="flex gap-4">
-					<a href="/projects" class="px-6 py-3 bg-foreground text-background font-medium rounded-lg hover:opacity-90 transition">
+					<a href="/projects" class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-6 bg-foreground text-background hover:bg-foreground/90 transition-colors">
 						View Projects
 					</a>
-					<a href="/contact" class="px-6 py-3 border border-border rounded-lg hover:bg-muted transition">
+					<a href="/contact" class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-6 border border-border bg-background hover:bg-muted transition-colors">
 						Get in Touch
 					</a>
 				</div>
+			</div>
+			
+			<!-- Tech Stack Logo Loop at Bottom -->
+			<div class="absolute bottom-0 left-0 right-0 z-10 opacity-100">
+				<TechLogoLoop client:load />
 			</div>
 		</div>
 	</body>

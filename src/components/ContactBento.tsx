@@ -51,7 +51,7 @@ export function ContactBento() {
 
       {/* LinkedIn */}
       <ContactCard 
-        href="#LINKEDIN_URL"
+        href="https://www.linkedin.com/in/freddiephilpot/"
         external
         className="p-4"
       >

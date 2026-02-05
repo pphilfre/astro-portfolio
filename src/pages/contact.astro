@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Navbar from '../components/Navbar.tsx';
 import { ContactBento } from '../components/ContactBento.tsx';
+import { ContactForm } from '../components/ContactForm.tsx';
 ---
 
 <html lang="en">
@@ -34,6 +35,7 @@ import { ContactBento } from '../components/ContactBento.tsx';
 			<p class="text-muted-foreground mb-8">Get in touch</p>
 			
 			<ContactBento client:load />
+			<ContactForm client:load />
 		</main>
 	</body>
 </html>

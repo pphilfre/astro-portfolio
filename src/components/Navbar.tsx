@@ -91,10 +91,49 @@ const Navbar = () => {
     }
   };
 
-  const handleThemeChange = (newTheme: Theme) => {
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    applyTheme(newTheme);
+  const handleThemeChange = async (newTheme: Theme, event?: React.MouseEvent) => {
+    const button = event?.currentTarget as HTMLElement | undefined;
+    const buttonRect = button?.getBoundingClientRect();
+    
+    // Determine what the actual target theme will be
+    let targetTheme: "light" | "dark";
+    if (newTheme === "system") {
+      targetTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } else {
+      targetTheme = newTheme;
+    }
+    
+    // Only animate if actually changing themes
+    const currentActualTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    
+    if (buttonRect && targetTheme !== currentActualTheme && document.startViewTransition) {
+      const centerX = buttonRect.left + buttonRect.width / 2;
+      const centerY = buttonRect.top + buttonRect.height / 2;
+      
+      // Set CSS variables for clip-path origin
+      document.documentElement.style.setProperty("--transition-x", `${centerX}px`);
+      document.documentElement.style.setProperty("--transition-y", `${centerY}px`);
+      
+      // Add class for transition direction
+      document.documentElement.classList.add(`theme-transition-${targetTheme}`);
+      
+      // Use View Transitions API
+      const transition = document.startViewTransition(() => {
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
+        applyTheme(newTheme);
+      });
+      
+      transition.finished.then(() => {
+        document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
+      });
+    } else {
+      // Fallback for browsers without View Transitions
+      setTheme(newTheme);
+      localStorage.setItem("theme", newTheme);
+      applyTheme(newTheme);
+    }
+    
     setIsThemeMenuOpen(false);
   };
 
@@ -413,7 +452,7 @@ const Navbar = () => {
               {isThemeMenuOpen && (
                 <div className="absolute right-0 mt-2 w-36 bg-popover backdrop-blur-md rounded-md border border-border shadow-lg py-1 z-50">
                   <button
-                    onClick={() => handleThemeChange("light")}
+                    onClick={(e) => handleThemeChange("light", e)}
                     className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-colors ${theme === "light" ? "text-foreground" : "text-muted-foreground"}`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -422,7 +461,7 @@ const Navbar = () => {
                     Light
                   </button>
                   <button
-                    onClick={() => handleThemeChange("dark")}
+                    onClick={(e) => handleThemeChange("dark", e)}
                     className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-colors ${theme === "dark" ? "text-foreground" : "text-muted-foreground"}`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -431,7 +470,7 @@ const Navbar = () => {
                     Dark
                   </button>
                   <button
-                    onClick={() => handleThemeChange("system")}
+                    onClick={(e) => handleThemeChange("system", e)}
                     className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-colors ${theme === "system" ? "text-foreground" : "text-muted-foreground"}`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -474,7 +513,7 @@ const Navbar = () => {
         {isThemeMenuOpen && (
           <div className="absolute right-0 mt-2 w-36 bg-popover backdrop-blur-md rounded-md border border-border shadow-lg py-1 z-50">
             <button
-              onClick={() => handleThemeChange("light")}
+              onClick={(e) => handleThemeChange("light", e)}
               className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-colors ${theme === "light" ? "text-foreground" : "text-muted-foreground"}`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -483,7 +522,7 @@ const Navbar = () => {
               Light
             </button>
             <button
-              onClick={() => handleThemeChange("dark")}
+              onClick={(e) => handleThemeChange("dark", e)}
               className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-colors ${theme === "dark" ? "text-foreground" : "text-muted-foreground"}`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -492,7 +531,7 @@ const Navbar = () => {
               Dark
             </button>
             <button
-              onClick={() => handleThemeChange("system")}
+              onClick={(e) => handleThemeChange("system", e)}
               className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-colors ${theme === "system" ? "text-foreground" : "text-muted-foreground"}`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
