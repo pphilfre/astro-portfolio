@@ -60,6 +60,21 @@
 
 :root {
   --radius: 0.625rem;
+  --scrollbar-width: 0px;
+}
+
+/* Always reserve space for scrollbar to prevent layout shifts */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Prevent layout shift when sheet/modal is open */
+html.sheet-open {
+  overflow: hidden;
+}
+
+html.sheet-open body {
+  overflow: hidden;
 }
 
 /* Light mode (default) */

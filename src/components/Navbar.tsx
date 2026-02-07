@@ -78,6 +78,18 @@ const Navbar = () => {
     };
   }, []);
 
+  // Prevent body scroll when mobile menu sheet is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.documentElement.classList.add('sheet-open');
+    } else {
+      document.documentElement.classList.remove('sheet-open');
+    }
+    return () => {
+      document.documentElement.classList.remove('sheet-open');
+    };
+  }, [isMobileMenuOpen]);
+
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
     

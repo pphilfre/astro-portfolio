@@ -1,5 +1,5 @@
 import * as React from "react";
-import { X } from "lucide-react";
+import { X, ExternalLink } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,6 +17,8 @@ export interface DetailSheetData {
   images?: string[];
   tags?: string[];
   icon?: React.ReactNode;
+  link?: string;
+  linkLabel?: string;
 }
 
 interface DetailSheetProps {
@@ -32,19 +34,15 @@ export function DetailSheet({ open, onOpenChange, data }: DetailSheetProps) {
     setCurrentImageIndex(0);
   }, [data]);
 
-  // Prevent body scroll and navbar shift when sheet is open
+  // Prevent body scroll when sheet is open
   React.useEffect(() => {
     if (open) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.documentElement.classList.add('sheet-open');
     } else {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
+      document.documentElement.classList.remove('sheet-open');
     }
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
+      document.documentElement.classList.remove('sheet-open');
     };
   }, [open]);
 
@@ -70,7 +68,7 @@ export function DetailSheet({ open, onOpenChange, data }: DetailSheetProps) {
 
         <SheetHeader className="pt-8 px-6 shrink-0">
           {data.icon && (
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center mb-4">
               {data.icon}
             </div>
           )}
@@ -132,7 +130,18 @@ export function DetailSheet({ open, onOpenChange, data }: DetailSheetProps) {
         </div>
 
         {/* Footer with close button */}
-        <SheetFooter className="px-6 py-6 shrink-0 border-t border-border">
+        <SheetFooter className="px-6 py-6 shrink-0 border-t border-border flex flex-col gap-3">
+          {data.link && (
+            <a
+              href={data.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 px-4 bg-accent text-accent-foreground font-medium rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            >
+              <ExternalLink className="w-4 h-4" />
+              {data.linkLabel || "View Credential"}
+            </a>
+          )}
           <SheetClose asChild>
             <button className="w-full py-3 px-4 bg-foreground text-background font-medium rounded-xl hover:opacity-90 transition-opacity">
               Close
