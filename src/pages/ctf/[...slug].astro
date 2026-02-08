@@ -1,18 +1,34 @@
 ---
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
-import { TagList } from '../../components/Tag.tsx';
+
+// Difficulty colors
+const getDifficultyColor = (difficulty: string): { bg: string; text: string } => {
+  switch (difficulty) {
+    case 'easy':
+      return { bg: "bg-green-200/40 dark:bg-green-900/30", text: "text-green-700 dark:text-green-300" };
+    case 'medium':
+      return { bg: "bg-amber-200/40 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-300" };
+    case 'hard':
+      return { bg: "bg-orange-200/40 dark:bg-orange-900/30", text: "text-orange-700 dark:text-orange-300" };
+    case 'insane':
+      return { bg: "bg-red-200/40 dark:bg-red-900/30", text: "text-red-700 dark:text-red-300" };
+    default:
+      return { bg: "bg-gray-200/40 dark:bg-gray-900/30", text: "text-gray-700 dark:text-gray-300" };
+  }
+};
 
 const { slug } = Astro.params;
 
-const entry = await getEntry('blog', slug as string);
+const entry = await getEntry('ctf', slug as string);
 
 if (!entry || entry.data.draft) {
   return Astro.redirect('/404');
 }
 
 const { Content } = await entry.render();
+const difficultyColor = getDifficultyColor(entry.data.difficulty);
 ---
 
 <html lang="en">
@@ -22,7 +38,7 @@ const { Content } = await entry.render();
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={entry.data.description} />
-    <title>{entry.data.title} | CyberSec Portfolio</title>
+    <title>{entry.data.title} | CTF Writeup</title>
     <script is:inline>
       (function() {
         const theme = localStorage.getItem('theme') || 'system';
@@ -52,11 +68,17 @@ const { Content } = await entry.render();
     <main class="pt-24 px-4 max-w-4xl mx-auto pb-16">
       <article>
         <header class="mb-8">
-          <a href="/blog" class="text-muted-foreground hover:text-foreground transition mb-4 inline-block">
-            ← Back to Blog
+          <a href="/projects/ctf" class="text-muted-foreground hover:text-foreground transition mb-4 inline-block">
+            ← Back to CTF Writeups
           </a>
           <h1 class="text-4xl md:text-5xl font-bold mb-4">{entry.data.title}</h1>
-          <div class="flex items-center gap-4 text-muted-foreground">
+          <div class="flex items-center gap-4 text-muted-foreground flex-wrap">
+            <span class={`px-2 py-1 text-xs rounded capitalize ${difficultyColor.bg} ${difficultyColor.text}`}>
+              {entry.data.difficulty}
+            </span>
+            {entry.data.platform && (
+              <span>{entry.data.platform}</span>
+            )}
             <time datetime={entry.data.pubDate.toISOString()}>
               {entry.data.pubDate.toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -65,9 +87,6 @@ const { Content } = await entry.render();
               })}
             </time>
           </div>
-          {entry.data.tags && entry.data.tags.length > 0 && (
-            <TagList tags={entry.data.tags} className="mt-4" />
-          )}
         </header>
         
         <div class="prose max-w-none">

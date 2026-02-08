@@ -27,7 +27,7 @@ function BentoCard({ children, onClick, className = "", clickable = true }: Bent
 // Card data with full descriptions for the sheet
 const cardDetails: Record<string, DetailSheetData> = {
   whoIAm: {
-    title: "Who I Am",
+    title: "Who Am I?",
     description: "I am currently completing my GCSEs and will be studying Maths, Further Maths, Physics, and Economics at A-level. Outside of formal education, I spend time working with Linux systems, cloud infrastructure, and maintaining a home lab environment. Through placements at Tesco's Head Office, I have gained early exposure to enterprise technology operations and cyber security practices in a corporate setting.\n\nI have a strong interest in understanding how complex systems work, identifying potential vulnerabilities, and building reliable infrastructure. My approach combines academic study with practical experimentation.",
     tags: ["Student", "Linux Enthusiast", "Self-taught", "Enterprise Experience"],
     icon: <User className="w-6 h-6 text-foreground" />,
@@ -105,7 +105,7 @@ export function AboutBento() {
           <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-6">
             <User className="w-6 h-6 text-foreground" />
           </div>
-          <h2 className="text-2xl font-bold mb-4">Who I Am</h2>
+          <h2 className="text-2xl font-bold mb-4">Who Am I?</h2>
           <p className="text-muted-foreground leading-relaxed flex-1">
             I am currently completing my GCSEs and will be studying Maths, Further Maths, Physics, and Economics at A-level. 
             Outside of formal education, I spend time working with Linux systems, cloud infrastructure, and maintaining a home lab environment.

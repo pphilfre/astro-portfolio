@@ -1,6 +1,23 @@
 ---
+import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
+import { CTFFilter } from '../../components/CTFFilter.tsx';
+
+// Get all CTF posts, filter out drafts
+const allPosts = await getCollection('ctf', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Transform posts to serializable format for client component
+const posts = allPosts.map((post) => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description,
+  pubDate: post.data.pubDate.toISOString(),
+  platform: post.data.platform,
+  difficulty: post.data.difficulty,
+}));
 ---
 
 <html lang="en">
@@ -36,44 +53,25 @@ import Navbar from '../../components/Navbar.tsx';
 	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<main class="pt-24 px-4 max-w-4xl mx-auto">
+		<main class="pt-24 px-4 max-w-4xl mx-auto pb-16">
+			<!-- TryHackMe Badge -->
+			<div class="mb-8 flex justify-center">
+				<iframe 
+					src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4309136" 
+					style="border:none; width: 500px; height: 100px; overflow: hidden;"
+					scrolling="no"
+					title="TryHackMe Profile Badge"
+				></iframe>
+			</div>
+
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">CTF Writeups</h1>
 			<p class="text-muted-foreground mb-8">Capture The Flag challenges & solutions</p>
 			
-			<div class="space-y-4">
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="flex items-center gap-4 mb-2">
-						<span class="px-2 py-1 text-xs bg-accent/20 text-accent rounded">Text2</span>
-						<span class="text-sm text-muted-foreground">Text3</span>
-					</div>
-					<h2 class="text-xl font-semibold mb-2">Text4</h2>
-					<p class="text-muted-foreground text-sm">
-						Text5
-					</p>
-				</article>
-				
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="flex items-center gap-4 mb-2">
-						<span class="px-2 py-1 text-xs bg-accent/20 text-accent rounded">Text6</span>
-						<span class="text-sm text-muted-foreground">Text7</span>
-					</div>
-					<h2 class="text-xl font-semibold mb-2">Text8</h2>
-					<p class="text-muted-foreground text-sm">
-						Text9
-					</p>
-				</article>
-				
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="flex items-center gap-4 mb-2">
-						<span class="px-2 py-1 text-xs bg-accent/20 text-accent rounded">Text10</span>
-						<span class="text-sm text-muted-foreground">Text11</span>
-					</div>
-					<h2 class="text-xl font-semibold mb-2">Text12</h2>
-					<p class="text-muted-foreground text-sm">
-						Text13
-					</p>
-				</article>
-			</div>
+			{posts.length === 0 ? (
+				<p class="text-muted-foreground">No CTF writeups yet. Check back soon!</p>
+			) : (
+				<CTFFilter client:load posts={posts} />
+			)}
 		</main>
 	</body>
 </html>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Building2, Server, Cloud, Network, Award, Star, CalendarCheck, ExternalLink, Shield } from "lucide-react";
+import { Building2, Server, Cloud, Network, Award, Star, CalendarCheck, ExternalLink, Shield, Lock } from "lucide-react";
 import { SiCisco } from "react-icons/si";
 import { DetailSheet, type DetailSheetData } from "./DetailSheet";
 
@@ -130,6 +130,315 @@ function CertificationCard({ cert, onCardClick }: { cert: Certification; onCardC
   );
 }
 
+// Locked future certification card
+interface LockedCertification {
+  name: string;
+  issuer: string;
+  shortDescription: string;
+  fullDescription: string;
+  tags: string[];
+}
+
+const futureCertifications: LockedCertification[] = [
+  {
+    name: "CCNA",
+    issuer: "Cisco",
+    shortDescription: "Cisco Certified Network Associate",
+    fullDescription: "The CCNA certification validates the ability to install, configure, operate, and troubleshoot medium-size routed and switched networks. This includes implementing and verifying connections to remote sites in a WAN, basic network security, and understanding of network fundamentals and access.\n\nThis certification is a key goal as it provides industry-recognized validation of networking skills and opens doors to network engineering roles.",
+    tags: ["Networking", "Routing", "Switching", "Network Security", "Cisco"],
+  },
+  {
+    name: "CISSP",
+    issuer: "ISC²",
+    shortDescription: "Certified Information Systems Security Professional",
+    fullDescription: "The CISSP is an advanced-level certification for IT professionals serious about careers in information security. It covers eight domains including Security and Risk Management, Asset Security, Security Architecture and Engineering, and more.\n\nThis is a long-term goal requiring significant experience and expertise in the cybersecurity field. It represents a commitment to the highest standards of professional security practice.",
+    tags: ["Security Management", "Risk Assessment", "Security Architecture", "Governance", "Advanced"],
+  },
+  {
+    name: "CCISO",
+    issuer: "EC-Council",
+    shortDescription: "Certified Chief Information Security Officer",
+    fullDescription: "The CCISO certification is designed for executive-level information security professionals. It focuses on the application of information security management principles from an executive management perspective.\n\nThis represents an aspirational career goal, combining technical knowledge with business acumen and leadership skills required at the C-suite level.",
+    tags: ["Leadership", "Security Strategy", "Executive Management", "Governance", "Enterprise"],
+  },
+];
+
+// Modal for inspecting locked certification cards
+function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification | null; isOpen: boolean; onClose: () => void }) {
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = React.useState({ rotateX: 0, rotateY: 0 });
+  const [isHovering, setIsHovering] = React.useState(false);
+  const [isAnimating, setIsAnimating] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+      // Trigger animation
+      setIsAnimating(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+      });
+    } else {
+      setIsVisible(false);
+      const timeout = setTimeout(() => setIsAnimating(false), 300);
+      return () => clearTimeout(timeout);
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = ((y - centerY) / centerY) * -15;
+    const rotateY = ((x - centerX) / centerX) * 15;
+    
+    setTransform({ rotateX, rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setTransform({ rotateX: 0, rotateY: 0 });
+    setIsHovering(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(onClose, 300);
+  };
+
+  if (!isAnimating && !isOpen) return null;
+  if (!cert) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={handleClose}
+    >
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-300"
+        style={{ opacity: isVisible ? 1 : 0 }}
+      />
+      
+      {/* Card */}
+      <div 
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onMouseEnter={handleMouseEnter}
+        onClick={(e) => e.stopPropagation()}
+        className="relative z-10 transition-all duration-300 ease-out"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? 'scale(1)' : 'scale(0.8)',
+        }}
+      >
+        <div
+          className="relative overflow-hidden rounded-3xl border border-border/50 p-10 bg-muted/40 backdrop-blur-md w-[400px] sm:w-[450px]"
+          style={{
+            transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${isHovering ? 1.02 : 1})`,
+            transformStyle: 'preserve-3d',
+            transition: isHovering ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out',
+          }}
+        >
+          {/* Subtle hover highlight */}
+          <div 
+            className="absolute inset-0 rounded-3xl pointer-events-none bg-foreground/20"
+            style={{
+              opacity: isHovering ? 0.2 : 0,
+              transition: 'opacity 0.3s ease-out',
+            }}
+          />
+          
+          {/* Lock badge */}
+          <div className="absolute top-4 right-4 z-20" style={{ transform: 'translateZ(50px)' }}>
+            <div className="w-10 h-10 rounded-full bg-muted/60 flex items-center justify-center border border-border/50 backdrop-blur-sm">
+              <Lock className="w-5 h-5 text-muted-foreground" />
+            </div>
+          </div>
+          
+          {/* Card content */}
+          <div className="relative z-10 flex flex-col" style={{ transform: 'translateZ(40px)' }}>
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-14 h-14 rounded-xl bg-muted/60 flex items-center justify-center border border-border/30 backdrop-blur-sm">
+                {cert.issuer === "Cisco" ? (
+                  <SiCisco className="w-8 h-8 text-muted-foreground" />
+                ) : (
+                  <Shield className="w-8 h-8 text-muted-foreground" />
+                )}
+              </div>
+            </div>
+            
+            {/* Title section */}
+            <h2 className="text-3xl font-bold text-foreground/90 mb-1">{cert.name}</h2>
+            <p className="text-base text-muted-foreground mb-2">{cert.issuer}</p>
+            <p className="text-xs text-accent uppercase tracking-wider mb-6">Future Goal</p>
+            
+            {/* Description */}
+            <div>
+              <p className="text-base text-muted-foreground/80 leading-relaxed whitespace-pre-line">
+                {cert.fullDescription}
+              </p>
+            </div>
+            
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-border/30">
+              {cert.tags.map((tag) => (
+                <span 
+                  key={tag} 
+                  className="px-3 py-1 text-sm bg-muted/50 rounded-full text-muted-foreground border border-border/30"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          {/* Decorative pattern */}
+          <div className="absolute -bottom-8 -right-8 w-32 h-32 opacity-[0.03]" style={{ transform: 'translateZ(20px)' }}>
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full text-foreground">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      {/* Close hint */}
+      <p 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-muted-foreground transition-opacity duration-300 delay-150"
+        style={{ opacity: isVisible ? 1 : 0 }}
+      >
+        Click anywhere or press Esc to close
+      </p>
+    </div>
+  );
+}
+
+function LockedCertCard({ cert, onClick }: { cert: LockedCertification; onClick?: () => void }) {
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = React.useState({ rotateX: 0, rotateY: 0 });
+  const [pointer, setPointer] = React.useState({ x: 50, y: 50, fromCenter: 0 });
+  const [isHovering, setIsHovering] = React.useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // Calculate rotation (subtle effect)
+    const rotateX = ((y - centerY) / centerY) * -12;
+    const rotateY = ((x - centerX) / centerX) * 12;
+    
+    // Calculate pointer position as percentage
+    const pointerX = (x / rect.width) * 100;
+    const pointerY = (y / rect.height) * 100;
+    
+    // Calculate distance from center (0-1)
+    const fromCenter = Math.min(
+      Math.sqrt(
+        Math.pow((pointerY - 50) / 50, 2) + Math.pow((pointerX - 50) / 50, 2)
+      ),
+      1
+    );
+    
+    setTransform({ rotateX, rotateY });
+    setPointer({ x: pointerX, y: pointerY, fromCenter });
+  };
+
+  const handleMouseLeave = () => {
+    setTransform({ rotateX: 0, rotateY: 0 });
+    setPointer({ x: 50, y: 50, fromCenter: 0 });
+    setIsHovering(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  return (
+    <div 
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+      onClick={onClick}
+      className="relative"
+    >
+      <div
+        className="group relative overflow-hidden rounded-2xl border border-border/50 p-6 cursor-pointer bg-muted/30"
+        style={{
+          transform: `perspective(800px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${isHovering ? 1.02 : 1})`,
+          transformStyle: 'preserve-3d',
+          transition: isHovering ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out',
+        }}
+      >
+      {/* Subtle hover highlight */}
+      <div 
+        className="absolute inset-0 rounded-2xl pointer-events-none bg-foreground/20"
+        style={{
+          opacity: isHovering ? 0.25 : 0,
+          transition: 'opacity 0.3s ease-out',
+        }}
+      />
+      
+      {/* Lock icon in corner */}
+      <div className="absolute top-4 right-4 z-20" style={{ transform: 'translateZ(40px)' }}>
+        <div className="w-8 h-8 rounded-full bg-muted/60 flex items-center justify-center border border-border/50 backdrop-blur-sm">
+          <Lock className="w-4 h-4 text-muted-foreground" />
+        </div>
+      </div>
+      
+      {/* Card content */}
+      <div className="relative z-10" style={{ transform: 'translateZ(30px)' }}>
+        <div className="w-12 h-12 rounded-xl bg-muted/60 flex items-center justify-center mb-4 border border-border/30 backdrop-blur-sm">
+          {cert.issuer === "Cisco" ? (
+            <SiCisco className="w-6 h-6 text-muted-foreground" />
+          ) : (
+            <Shield className="w-6 h-6 text-muted-foreground" />
+          )}
+        </div>
+        
+        <h3 className="text-xl font-bold text-muted-foreground/80 mb-1">{cert.name}</h3>
+        <p className="text-sm text-muted-foreground/60 mb-3">{cert.issuer}</p>
+        <p className="text-xs text-muted-foreground/50">{cert.shortDescription}</p>
+        <span className="text-xs text-accent mt-3 block">Click to learn more →</span>
+      </div>
+      
+      {/* Decorative pattern */}
+      <div className="absolute -bottom-6 -right-6 w-24 h-24 opacity-[0.03]" style={{ transform: 'translateZ(10px)' }}>
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full text-foreground">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+        </svg>
+      </div>
+      </div>
+    </div>
+  );
+}
+
 interface BentoCardProps {
   children: React.ReactNode;
   onClick?: () => void;
@@ -187,7 +496,9 @@ const cardDetails: Record<string, DetailSheetData> = {
 export function AchievementsBento() {
   const [selectedCard, setSelectedCard] = React.useState<string | null>(null);
   const [selectedCert, setSelectedCert] = React.useState<Certification | null>(null);
+  const [selectedLockedCert, setSelectedLockedCert] = React.useState<LockedCertification | null>(null);
   const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [cardModalOpen, setCardModalOpen] = React.useState(false);
 
   const handleCardClick = (cardId: string) => {
     setSelectedCard(cardId);
@@ -199,6 +510,18 @@ export function AchievementsBento() {
     setSelectedCert(cert);
     setSelectedCard(null);
     setSheetOpen(true);
+  };
+
+  const handleLockedCertClick = (cert: LockedCertification) => {
+    setSelectedLockedCert(cert);
+    setCardModalOpen(true);
+  };
+
+  const handleCardModalClose = () => {
+    setCardModalOpen(false);
+    setTimeout(() => {
+      setSelectedLockedCert(null);
+    }, 300);
   };
 
   const handleSheetClose = (open: boolean) => {
@@ -225,7 +548,7 @@ export function AchievementsBento() {
   const currentSheetData = selectedCard 
     ? cardDetails[selectedCard] 
     : selectedCert 
-      ? getCertSheetData(selectedCert) 
+      ? getCertSheetData(selectedCert)
       : null;
 
   return (
@@ -367,24 +690,31 @@ export function AchievementsBento() {
           </div>
         </article>
 
-        {/* Future Certifications Note */}
-        <article className="md:col-span-2 lg:col-span-4 p-6 bg-muted/30 rounded-2xl border border-border/50">
-          <p className="text-muted-foreground text-center mb-4">
-            Additional certifications will be pursued through structured training or degree apprenticeship programmes.
+        {/* Future Certifications - Locked Cards */}
+        <article className="md:col-span-2 lg:col-span-4 p-6 bg-secondary rounded-2xl border border-border">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+              <Lock className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <h2 className="text-xl font-semibold">Future Certifications</h2>
+          </div>
+          <p className="text-muted-foreground text-sm mb-6">
+            Certifications to be pursued through structured training or degree apprenticeship programmes.
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <span className="px-3 py-1.5 text-sm rounded-lg bg-muted/50 text-muted-foreground/60 border border-border/30">
-              CCNA
-            </span>
-            <span className="px-3 py-1.5 text-sm rounded-lg bg-muted/50 text-muted-foreground/60 border border-border/30">
-              CISSP
-            </span>
-            <span className="px-3 py-1.5 text-sm rounded-lg bg-muted/50 text-muted-foreground/60 border border-border/30">
-              CCISO
-            </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {futureCertifications.map((cert) => (
+              <LockedCertCard key={cert.name} cert={cert} onClick={() => handleLockedCertClick(cert)} />
+            ))}
           </div>
         </article>
       </div>
+
+      {/* Locked Cert Card Modal */}
+      <LockedCertModal 
+        cert={selectedLockedCert} 
+        isOpen={cardModalOpen} 
+        onClose={handleCardModalClose} 
+      />
 
       {/* Detail Sheet */}
       <DetailSheet
