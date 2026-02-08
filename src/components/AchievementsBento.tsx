@@ -196,6 +196,40 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
     };
   }, [isOpen, onClose]);
 
+  // Gyroscope support for mobile
+  React.useEffect(() => {
+    if (!isOpen) return;
+    
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta === null || e.gamma === null) return;
+      
+      // Clamp values and calculate rotation
+      const rotateX = Math.max(-15, Math.min(15, (e.beta - 45) * 0.3));
+      const rotateY = Math.max(-15, Math.min(15, e.gamma * 0.3));
+      
+      setTransform({ rotateX: -rotateX, rotateY });
+    };
+
+    // Request permission on iOS 13+
+    if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+      // iOS 13+ requires permission
+      (DeviceOrientationEvent as any).requestPermission()
+        .then((permissionState: string) => {
+          if (permissionState === 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation);
+          }
+        })
+        .catch(console.error);
+    } else {
+      // Non iOS 13+ devices
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, [isOpen]);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     
@@ -238,6 +272,18 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
         className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-300"
         style={{ opacity: isVisible ? 1 : 0 }}
       />
+
+      {/* Close button */}
+      <button
+        onClick={handleClose}
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-all duration-300"
+        style={{ opacity: isVisible ? 1 : 0 }}
+        aria-label="Close"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
       
       {/* Card */}
       <div 
@@ -253,7 +299,7 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
         }}
       >
         <div
-          className="relative overflow-hidden rounded-3xl border border-border/50 p-10 bg-muted/40 backdrop-blur-md w-[400px] sm:w-[450px]"
+          className="relative overflow-hidden rounded-3xl border border-border/50 p-6 sm:p-10 bg-muted/40 backdrop-blur-md w-[300px] sm:w-[450px]"
           style={{
             transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${isHovering ? 1.02 : 1})`,
             transformStyle: 'preserve-3d',

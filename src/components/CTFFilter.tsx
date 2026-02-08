@@ -27,15 +27,15 @@ const difficultyOrder: Record<string, number> = {
 const getDifficultyColor = (difficulty: string): { bg: string; text: string } => {
   switch (difficulty) {
     case 'easy':
-      return { bg: "bg-green-200/40 dark:bg-green-900/30", text: "text-green-700 dark:text-green-300" };
+      return { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-800 dark:text-green-300" };
     case 'medium':
-      return { bg: "bg-amber-200/40 dark:bg-amber-900/30", text: "text-amber-700 dark:text-amber-300" };
+      return { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-800 dark:text-amber-300" };
     case 'hard':
-      return { bg: "bg-orange-200/40 dark:bg-orange-900/30", text: "text-orange-700 dark:text-orange-300" };
+      return { bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-800 dark:text-orange-300" };
     case 'insane':
-      return { bg: "bg-red-200/40 dark:bg-red-900/30", text: "text-red-700 dark:text-red-300" };
+      return { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-800 dark:text-red-300" };
     default:
-      return { bg: "bg-gray-200/40 dark:bg-gray-900/30", text: "text-gray-700 dark:text-gray-300" };
+      return { bg: "bg-gray-100 dark:bg-gray-900/30", text: "text-gray-800 dark:text-gray-300" };
   }
 };
 
