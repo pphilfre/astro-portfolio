@@ -203,9 +203,9 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
     const handleOrientation = (e: DeviceOrientationEvent) => {
       if (e.beta === null || e.gamma === null) return;
       
-      // Clamp values and calculate rotation
-      const rotateX = Math.max(-15, Math.min(15, (e.beta - 45) * 0.3));
-      const rotateY = Math.max(-15, Math.min(15, e.gamma * 0.3));
+      // Clamp values and calculate rotation (increased sensitivity for mobile)
+      const rotateX = Math.max(-20, Math.min(20, (e.beta - 45) * 0.8));
+      const rotateY = Math.max(-20, Math.min(20, e.gamma * 0.8));
       
       setTransform({ rotateX: -rotateX, rotateY });
     };
@@ -292,14 +292,14 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleMouseEnter}
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 transition-all duration-300 ease-out"
+        className="relative z-10 transition-all duration-300 ease-out max-h-[85vh] overflow-y-auto"
         style={{
           opacity: isVisible ? 1 : 0,
           transform: isVisible ? 'scale(1)' : 'scale(0.8)',
         }}
       >
         <div
-          className="relative overflow-hidden rounded-3xl border border-border/50 p-6 sm:p-10 bg-muted/40 backdrop-blur-md w-[300px] sm:w-[450px]"
+          className="relative overflow-hidden rounded-3xl border border-border/50 p-6 sm:p-10 bg-muted/40 backdrop-blur-md w-[min(300px,90vw)] sm:w-[450px]"
           style={{
             transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${isHovering ? 1.02 : 1})`,
             transformStyle: 'preserve-3d',

@@ -3,19 +3,19 @@ import { getCollection, getEntry } from 'astro:content';
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
 
-// Difficulty colors
-const getDifficultyColor = (difficulty: string): { bg: string; text: string } => {
+// Difficulty colors - inline styles for guaranteed visibility
+const getDifficultyStyle = (difficulty: string): { lightBg: string; lightText: string; darkBg: string; darkText: string } => {
   switch (difficulty) {
     case 'easy':
-      return { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-800 dark:text-green-300" };
+      return { lightBg: '#16a34a', lightText: '#ffffff', darkBg: 'rgba(34, 197, 94, 0.3)', darkText: '#86efac' };
     case 'medium':
-      return { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-800 dark:text-amber-300" };
+      return { lightBg: '#f59e0b', lightText: '#ffffff', darkBg: 'rgba(245, 158, 11, 0.3)', darkText: '#fcd34d' };
     case 'hard':
-      return { bg: "bg-orange-100 dark:bg-orange-900/30", text: "text-orange-800 dark:text-orange-300" };
+      return { lightBg: '#ea580c', lightText: '#ffffff', darkBg: 'rgba(249, 115, 22, 0.3)', darkText: '#fdba74' };
     case 'insane':
-      return { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-800 dark:text-red-300" };
+      return { lightBg: '#dc2626', lightText: '#ffffff', darkBg: 'rgba(239, 68, 68, 0.3)', darkText: '#fca5a5' };
     default:
-      return { bg: "bg-gray-100 dark:bg-gray-900/30", text: "text-gray-800 dark:text-gray-300" };
+      return { lightBg: '#4b5563', lightText: '#ffffff', darkBg: 'rgba(107, 114, 128, 0.3)', darkText: '#d1d5db' };
   }
 };
 
@@ -28,7 +28,7 @@ if (!entry || entry.data.draft) {
 }
 
 const { Content } = await entry.render();
-const difficultyColor = getDifficultyColor(entry.data.difficulty);
+const difficultyStyle = getDifficultyStyle(entry.data.difficulty);
 ---
 
 <html lang="en">
@@ -73,7 +73,10 @@ const difficultyColor = getDifficultyColor(entry.data.difficulty);
           </a>
           <h1 class="text-4xl md:text-5xl font-bold mb-4">{entry.data.title}</h1>
           <div class="flex items-center gap-4 text-muted-foreground flex-wrap">
-            <span class={`px-2 py-1 text-xs rounded capitalize ${difficultyColor.bg} ${difficultyColor.text}`}>
+            <span 
+              class="difficulty-badge px-2 py-1 text-xs rounded capitalize font-medium"
+              style={`--light-bg: ${difficultyStyle.lightBg}; --light-text: ${difficultyStyle.lightText}; --dark-bg: ${difficultyStyle.darkBg}; --dark-text: ${difficultyStyle.darkText};`}
+            >
               {entry.data.difficulty}
             </span>
             {entry.data.platform && (
@@ -96,3 +99,15 @@ const difficultyColor = getDifficultyColor(entry.data.difficulty);
     </main>
   </body>
 </html>
+
+<style>
+  .difficulty-badge {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+  }
+  
+  :global(.dark) .difficulty-badge {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+  }
+</style>
