@@ -264,8 +264,13 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       onClick={handleClose}
+      style={{ 
+        minHeight: '100dvh',
+        paddingTop: 'max(16px, env(safe-area-inset-top))',
+        paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
+      }}
     >
       {/* Backdrop */}
       <div 
@@ -292,14 +297,14 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleMouseEnter}
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 transition-all duration-300 ease-out max-h-[85vh] overflow-y-auto"
+        className="relative z-10 transition-all duration-300 ease-out"
         style={{
           opacity: isVisible ? 1 : 0,
           transform: isVisible ? 'scale(1)' : 'scale(0.8)',
         }}
       >
         <div
-          className="relative overflow-hidden rounded-3xl border border-border/50 p-6 sm:p-10 bg-muted/40 backdrop-blur-md w-[min(300px,90vw)] sm:w-[450px]"
+          className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/50 p-5 sm:p-10 bg-muted/40 backdrop-blur-md w-[85vw] max-w-[320px] sm:w-[450px] sm:max-w-[450px]"
           style={{
             transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg) scale(${isHovering ? 1.02 : 1})`,
             transformStyle: 'preserve-3d',
@@ -316,43 +321,43 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
           />
           
           {/* Lock badge */}
-          <div className="absolute top-4 right-4 z-20" style={{ transform: 'translateZ(50px)' }}>
-            <div className="w-10 h-10 rounded-full bg-muted/60 flex items-center justify-center border border-border/50 backdrop-blur-sm">
-              <Lock className="w-5 h-5 text-muted-foreground" />
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20" style={{ transform: 'translateZ(50px)' }}>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-muted/60 flex items-center justify-center border border-border/50 backdrop-blur-sm">
+              <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
             </div>
           </div>
           
           {/* Card content */}
           <div className="relative z-10 flex flex-col" style={{ transform: 'translateZ(40px)' }}>
             {/* Header */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-xl bg-muted/60 flex items-center justify-center border border-border/30 backdrop-blur-sm">
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-muted/60 flex items-center justify-center border border-border/30 backdrop-blur-sm">
                 {cert.issuer === "Cisco" ? (
-                  <SiCisco className="w-8 h-8 text-muted-foreground" />
+                  <SiCisco className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
                 ) : (
-                  <Shield className="w-8 h-8 text-muted-foreground" />
+                  <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
                 )}
               </div>
             </div>
             
             {/* Title section */}
-            <h2 className="text-3xl font-bold text-foreground/90 mb-1">{cert.name}</h2>
-            <p className="text-base text-muted-foreground mb-2">{cert.issuer}</p>
-            <p className="text-xs text-accent uppercase tracking-wider mb-6">Future Goal</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground/90 mb-1">{cert.name}</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-1 sm:mb-2">{cert.issuer}</p>
+            <p className="text-xs text-accent uppercase tracking-wider mb-4 sm:mb-6">Future Goal</p>
             
             {/* Description */}
             <div>
-              <p className="text-base text-muted-foreground/80 leading-relaxed whitespace-pre-line">
-                {cert.fullDescription}
+              <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed">
+                {cert.fullDescription.split('\n\n')[0]}
               </p>
             </div>
             
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-border/30">
-              {cert.tags.map((tag) => (
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border/30">
+              {cert.tags.slice(0, 4).map((tag) => (
                 <span 
                   key={tag} 
-                  className="px-3 py-1 text-sm bg-muted/50 rounded-full text-muted-foreground border border-border/30"
+                  className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm bg-muted/50 rounded-full text-muted-foreground border border-border/30"
                 >
                   {tag}
                 </span>
@@ -369,9 +374,9 @@ function LockedCertModal({ cert, isOpen, onClose }: { cert: LockedCertification 
         </div>
       </div>
       
-      {/* Close hint */}
+      {/* Close hint - hidden on mobile */}
       <p 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-muted-foreground transition-opacity duration-300 delay-150"
+        className="hidden sm:block absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-muted-foreground transition-opacity duration-300 delay-150"
         style={{ opacity: isVisible ? 1 : 0 }}
       >
         Click anywhere or press Esc to close
