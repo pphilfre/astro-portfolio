@@ -3,6 +3,34 @@ import { Checkbox } from "./ui/checkbox";
 import { getTagColor, Tag } from "./Tag";
 import { ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
 
+// Inline-style color lookup for filter dropdown badges
+const FILTER_COLORS = [
+  { light: { bg: "rgba(251,113,133,0.25)", text: "#be123c" }, dark: { bg: "rgba(136,19,55,0.3)", text: "#fda4af" } },
+  { light: { bg: "rgba(147,197,253,0.25)", text: "#1d4ed8" }, dark: { bg: "rgba(30,58,138,0.3)", text: "#93c5fd" } },
+  { light: { bg: "rgba(134,239,172,0.25)", text: "#15803d" }, dark: { bg: "rgba(20,83,45,0.3)", text: "#86efac" } },
+  { light: { bg: "rgba(216,180,254,0.25)", text: "#7e22ce" }, dark: { bg: "rgba(88,28,135,0.3)", text: "#d8b4fe" } },
+  { light: { bg: "rgba(253,230,138,0.25)", text: "#b45309" }, dark: { bg: "rgba(120,53,15,0.3)", text: "#fcd34d" } },
+  { light: { bg: "rgba(165,243,252,0.25)", text: "#0e7490" }, dark: { bg: "rgba(22,78,99,0.3)", text: "#a5f3fc" } },
+  { light: { bg: "rgba(249,168,212,0.25)", text: "#be185d" }, dark: { bg: "rgba(131,24,67,0.3)", text: "#f9a8d4" } },
+  { light: { bg: "rgba(199,210,254,0.25)", text: "#4338ca" }, dark: { bg: "rgba(49,46,129,0.3)", text: "#c7d2fe" } },
+  { light: { bg: "rgba(153,246,228,0.25)", text: "#0f766e" }, dark: { bg: "rgba(19,78,74,0.3)", text: "#99f6e4" } },
+  { light: { bg: "rgba(253,186,116,0.25)", text: "#c2410c" }, dark: { bg: "rgba(124,45,18,0.3)", text: "#fdba74" } },
+];
+
+function hashTag(tag: string): number {
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash);
+}
+
+function getFilterTagStyle(tag: string, isDark: boolean) {
+  const palette = FILTER_COLORS[hashTag(tag) % FILTER_COLORS.length];
+  const theme = isDark ? palette.dark : palette.light;
+  return { backgroundColor: theme.bg, color: theme.text };
+}
+
 interface BlogPost {
   slug: string;
   title: string;
@@ -21,8 +49,18 @@ export function BlogFilter({ posts, allTags }: BlogFilterProps) {
   const [sortOrder, setSortOrder] = React.useState<"newest" | "oldest">("newest");
   const [isTagsOpen, setIsTagsOpen] = React.useState(false);
   const [isSortOpen, setIsSortOpen] = React.useState(false);
+  const [isDark, setIsDark] = React.useState(false);
   const tagsDropdownRef = React.useRef<HTMLDivElement>(null);
   const sortDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  // Detect dark mode
+  React.useEffect(() => {
+    const check = () => setIsDark(document.documentElement.classList.contains('dark'));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   // Close dropdowns when clicking outside
   React.useEffect(() => {
@@ -128,7 +166,7 @@ export function BlogFilter({ posts, allTags }: BlogFilterProps) {
             <div className="absolute top-full left-0 mt-1 w-44 bg-popover border border-border rounded-md shadow-lg z-50 p-2">
               <div className="space-y-1">
                 {allTags.map((tag) => {
-                  const color = getTagColor(tag);
+                  const style = getFilterTagStyle(tag, isDark);
                   return (
                     <label
                       key={tag}
@@ -138,7 +176,10 @@ export function BlogFilter({ posts, allTags }: BlogFilterProps) {
                         checked={selectedTags.has(tag)}
                         onCheckedChange={() => toggleTag(tag)}
                       />
-                      <span className={`px-2 py-0.5 text-xs rounded ${color.bg} ${color.text}`}>
+                      <span
+                        className="px-2 py-0.5 text-xs rounded font-medium"
+                        style={style}
+                      >
                         {tag}
                       </span>
                     </label>

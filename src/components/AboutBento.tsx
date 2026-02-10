@@ -94,168 +94,140 @@ export function AboutBento() {
 
   return (
     <>
-      {/* Bento Grid - Top Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[minmax(140px,auto)]">
-        
-        {/* Bio - Large Feature Card */}
+      {/* Bio / Direction / Approach — equal 3-column row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+        {/* Bio */}
         <BentoCard
           onClick={() => handleCardClick("whoIAm")}
-          className="md:col-span-2 lg:row-span-2 p-8 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+          className="p-5 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
         >
-          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-6">
-            <User className="w-6 h-6 text-foreground" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <User className="w-4 h-4 text-foreground" />
+            </div>
+            <h2 className="font-semibold">Who Am I?</h2>
           </div>
-          <h2 className="text-2xl font-bold mb-4">Who Am I?</h2>
-          <p className="text-muted-foreground leading-relaxed flex-1">
-            I am currently completing my GCSEs and will be studying Maths, Further Maths, Physics, and Economics at A-level. 
-            Outside of formal education, I spend time working with Linux systems, cloud infrastructure, and maintaining a home lab environment.
+          <p className="text-muted-foreground text-sm leading-relaxed flex-1">
+            Currently completing my GCSEs, studying Maths, Further Maths, Physics &amp; Economics at A-level. Outside of school I work with Linux systems, cloud infrastructure, and maintain a home lab environment.
           </p>
-          <span className="text-xs text-accent mt-4">Click to read more →</span>
+          <span className="text-xs text-accent mt-2">Click to read more →</span>
         </BentoCard>
 
         {/* Direction */}
         <BentoCard
           onClick={() => handleCardClick("direction")}
-          className="lg:col-span-2 p-6 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+          className="p-5 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
         >
-          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-4">
-            <Compass className="w-5 h-5 text-foreground" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <Compass className="w-4 h-4 text-foreground" />
+            </div>
+            <h2 className="font-semibold">Direction</h2>
           </div>
-          <h2 className="text-lg font-semibold mb-2">Direction</h2>
-          <p className="text-muted-foreground text-sm flex-1">
+          <p className="text-muted-foreground text-sm leading-relaxed flex-1">
             Working towards a technology degree apprenticeship in financial services, with a long-term focus on cyber security and infrastructure risk.
           </p>
-          <span className="text-xs text-accent mt-3">Click to read more →</span>
+          <span className="text-xs text-accent mt-2">Click to read more →</span>
         </BentoCard>
 
         {/* Approach */}
         <BentoCard
           onClick={() => handleCardClick("approach")}
-          className="lg:col-span-2 p-6 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+          className="p-5 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
         >
-          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-4">
-            <Target className="w-5 h-5 text-foreground" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <Target className="w-4 h-4 text-foreground" />
+            </div>
+            <h2 className="font-semibold">Approach</h2>
           </div>
-          <h2 className="text-lg font-semibold mb-2">Approach</h2>
-          <p className="text-muted-foreground text-sm flex-1">
+          <p className="text-muted-foreground text-sm leading-relaxed flex-1">
             Focus on security, reliability, and usability. Understanding how systems are designed, where they can fail, and how risk can be reduced.
           </p>
-          <span className="text-xs text-accent mt-3">Click to read more →</span>
+          <span className="text-xs text-accent mt-2">Click to read more →</span>
         </BentoCard>
       </div>
 
-      {/* Skills Section */}
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Skills</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Operating Systems */}
+      {/* Skills row */}
+      <div className="mt-4">
+        <h2 className="text-xl font-bold mb-3">Skills</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <BentoCard
             onClick={() => handleCardClick("operatingSystems")}
-            className="p-6 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+            className="p-4 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
           >
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <Monitor className="w-5 h-5 text-foreground" />
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                <Monitor className="w-4 h-4 text-foreground" />
+              </div>
+              <h3 className="font-semibold text-sm">Operating Systems</h3>
             </div>
-            <h3 className="font-semibold mb-3">Operating Systems</h3>
-            <ul className="text-sm text-muted-foreground space-y-1.5 flex-1">
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Linux (advanced, daily use)
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Windows (enterprise exposure)
-              </li>
+            <ul className="text-xs text-muted-foreground space-y-1 flex-1">
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Linux (advanced)</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Windows (enterprise)</li>
             </ul>
-            <span className="text-xs text-accent mt-3">Click for details →</span>
           </BentoCard>
 
-          {/* Cloud & Infrastructure */}
           <BentoCard
             onClick={() => handleCardClick("cloudInfra")}
-            className="p-6 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+            className="p-4 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
           >
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <Cloud className="w-5 h-5 text-foreground" />
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                <Cloud className="w-4 h-4 text-foreground" />
+              </div>
+              <h3 className="font-semibold text-sm">Cloud & Infra</h3>
             </div>
-            <h3 className="font-semibold mb-3">Cloud & Infrastructure</h3>
-            <ul className="text-sm text-muted-foreground space-y-1.5 flex-1">
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Azure, GCP, Oracle Cloud
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Docker containerisation
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Reverse proxy config
-              </li>
+            <ul className="text-xs text-muted-foreground space-y-1 flex-1">
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Azure, GCP, Oracle</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Docker & containers</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Reverse proxy</li>
             </ul>
-            <span className="text-xs text-accent mt-3">Click for details →</span>
           </BentoCard>
 
-          {/* Networking & Security */}
           <BentoCard
             onClick={() => handleCardClick("networkingSecurity")}
-            className="p-6 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+            className="p-4 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
           >
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <Shield className="w-5 h-5 text-foreground" />
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                <Shield className="w-4 h-4 text-foreground" />
+              </div>
+              <h3 className="font-semibold text-sm">Network & Security</h3>
             </div>
-            <h3 className="font-semibold mb-3">Networking & Security</h3>
-            <ul className="text-sm text-muted-foreground space-y-1.5 flex-1">
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                VPN and DNS management
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Identity-based access
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Security tooling exposure
-              </li>
+            <ul className="text-xs text-muted-foreground space-y-1 flex-1">
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>VPN & DNS</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Identity access</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Security tooling</li>
             </ul>
-            <span className="text-xs text-accent mt-3">Click for details →</span>
           </BentoCard>
 
-          {/* Development */}
           <BentoCard
             onClick={() => handleCardClick("development")}
-            className="p-6 bg-secondary rounded-2xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
+            className="p-4 bg-secondary rounded-xl border border-border hover:border-foreground/20 transition-all duration-300 flex flex-col"
           >
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <Code className="w-5 h-5 text-foreground" />
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                <Code className="w-4 h-4 text-foreground" />
+              </div>
+              <h3 className="font-semibold text-sm">Development</h3>
             </div>
-            <h3 className="font-semibold mb-3">Development</h3>
-            <ul className="text-sm text-muted-foreground space-y-1.5 flex-1">
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Python (automation)
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Git version control
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                PowerShell (exposure)
-              </li>
+            <ul className="text-xs text-muted-foreground space-y-1 flex-1">
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Python</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>Git & GitHub</li>
+              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span>PowerShell</li>
             </ul>
-            <span className="text-xs text-accent mt-3">Click for details →</span>
           </BentoCard>
         </div>
       </div>
 
-      {/* Education Note - Not clickable */}
-      <article className="mt-4 p-6 bg-muted/30 rounded-2xl border border-border/50 flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-          <GraduationCap className="w-5 h-5 text-foreground" />
+      {/* Education Note */}
+      <article className="mt-4 p-4 bg-muted/30 rounded-xl border border-border/50 flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+          <GraduationCap className="w-4 h-4 text-foreground" />
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           <span className="font-medium text-foreground">Next Steps:</span> A-levels in Maths, Further Maths, Physics, and Economics — then pursuing a degree apprenticeship in technology.
         </p>
       </article>

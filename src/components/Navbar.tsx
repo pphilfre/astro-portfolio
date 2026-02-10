@@ -259,7 +259,7 @@ const Navbar = () => {
                       className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      All Projects
+                      Home Lab
                     </a>
                     <a
                       href="/projects/ctf"
@@ -380,9 +380,9 @@ const Navbar = () => {
                 <ul className="grid gap-2">
                   <li>
                     <a href="/projects" className="block p-2 rounded hover:bg-muted transition-colors group">
-                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">All Projects</div>
+                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">Home Lab</div>
                       <p className="text-muted-foreground/70 text-xs">
-                        View all my security projects
+                        Infrastructure, virtualisation & self-hosted services
                       </p>
                     </a>
                   </li>

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Navbar from '../components/Navbar.tsx';
 import { AboutBento } from '../components/AboutBento.tsx';
 import TechLogoLoop from '../components/TechLogoLoop.tsx';
+import { Timeline } from '../components/Timeline.tsx';
 ---
 
 <html lang="en">
@@ -39,17 +40,23 @@ import TechLogoLoop from '../components/TechLogoLoop.tsx';
 	<body class="bg-background text-foreground min-h-screen">
 		<Navbar client:load />
 		
-		<main class="pt-24 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto pb-16">
-			<div class="mb-12">
-				<h1 class="text-4xl md:text-5xl font-bold mb-4">About</h1>
-				<p class="text-muted-foreground text-lg">Background and skills</p>
+		<main class="pt-20 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto pb-12">
+			<div class="mb-8">
+				<h1 class="text-3xl md:text-4xl font-bold mb-1">About</h1>
+				<p class="text-muted-foreground">Background and skills</p>
+			</div>
+
+			<AboutBento client:load />
+
+			<!-- Journey Timeline -->
+			<div class="mt-8">
+				<h2 class="text-xl font-bold mb-4">Journey</h2>
+				<Timeline client:load />
 			</div>
 			
-			<AboutBento client:load />
-			
 			<!-- Tech Stack Logo Loop -->
-			<div class="mt-16">
-				<h2 class="text-2xl font-bold mb-6">Tech Stack</h2>
+			<div class="mt-8">
+				<h2 class="text-xl font-bold mb-4">Tech Stack</h2>
 				<TechLogoLoop client:load />
 			</div>
 		</main>
