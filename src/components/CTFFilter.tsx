@@ -23,18 +23,8 @@ const difficultyOrder: Record<string, number> = {
   insane: 4,
 };
 
-// Difficulty Badge Component with proper light/dark mode support
+// Difficulty Badge Component with CSS custom properties for instant dark/light mode
 function DifficultyBadge({ difficulty, size = 'sm' }: { difficulty: string; size?: 'sm' | 'md' }) {
-  const [isDark, setIsDark] = React.useState(false);
-  
-  React.useEffect(() => {
-    const checkDark = () => setIsDark(document.documentElement.classList.contains('dark'));
-    checkDark();
-    const observer = new MutationObserver(checkDark);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-  
   const colors: Record<string, { light: { bg: string; text: string }; dark: { bg: string; text: string } }> = {
     easy: { light: { bg: '#16a34a', text: '#ffffff' }, dark: { bg: 'rgba(34, 197, 94, 0.3)', text: '#86efac' } },
     medium: { light: { bg: '#f59e0b', text: '#ffffff' }, dark: { bg: 'rgba(245, 158, 11, 0.3)', text: '#fcd34d' } },
@@ -43,13 +33,17 @@ function DifficultyBadge({ difficulty, size = 'sm' }: { difficulty: string; size
   };
   
   const color = colors[difficulty] || colors.easy;
-  const theme = isDark ? color.dark : color.light;
   const padding = size === 'md' ? 'px-2 py-1' : 'px-2 py-0.5';
   
   return (
     <span 
-      className={`${padding} text-xs rounded capitalize font-medium`}
-      style={{ backgroundColor: theme.bg, color: theme.text }}
+      className={`diff-badge ${padding} text-xs rounded capitalize font-medium`}
+      style={{
+        '--badge-bg-light': color.light.bg,
+        '--badge-text-light': color.light.text,
+        '--badge-bg-dark': color.dark.bg,
+        '--badge-text-dark': color.dark.text,
+      } as React.CSSProperties}
     >
       {difficulty}
     </span>

@@ -3,6 +3,7 @@ import '../styles/global.css';
 // Component Imports
 import Grainient from '../components/Grainient.tsx';
 import Navbar from '../components/Navbar.tsx';
+import { LoadingScreen } from '../components/LoadingScreen.tsx';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/basics/astro-components/
@@ -27,6 +28,12 @@ import Navbar from '../components/Navbar.tsx';
 				} else {
 					root.classList.add(theme);
 				}
+				// Mark first visit for loading animation (before React hydrates)
+				if (!sessionStorage.getItem('portfolio-visited')) {
+					root.classList.add('first-visit');
+				} else {
+					root.classList.add('reveal-content');
+				}
 			})();
 		</script>
 		<!-- PostHog Analytics -->
@@ -41,6 +48,16 @@ import Navbar from '../components/Navbar.tsx';
 	</head>
 
 	<body class="bg-background text-foreground min-h-screen">
+		<!-- Black overlay covering page until canvas takes over (only on first visit) -->
+		<script is:inline>
+			if (!sessionStorage.getItem('portfolio-visited')) {
+				document.write('<div id="loading-overlay-fallback" style="position:fixed;inset:0;z-index:100000;background:#000;pointer-events:all;"></div>');
+			}
+		</script>
+
+		<div data-loading-screen>
+			<LoadingScreen client:load />
+		</div>
 		<Navbar client:load />
 		
 		<div class="relative w-full h-screen" id="grainient-container">
@@ -75,16 +92,16 @@ import Navbar from '../components/Navbar.tsx';
 			
 			<!-- Hero Content -->
 			<div class="absolute inset-0 flex flex-col items-center justify-center z-10 pt-16">
-				<h1 class="text-5xl md:text-7xl font-bold mb-4 text-center">
+				<h1 class="hero-animate text-5xl md:text-7xl font-bold mb-4 text-center" style="--reveal-delay: 0s">
 					Freddie Philpot
 				</h1>
-				<p class="text-xl md:text-2xl text-muted-foreground mb-2 text-center max-w-2xl px-4">
+				<p class="hero-animate text-xl md:text-2xl text-muted-foreground mb-2 text-center max-w-2xl px-4" style="--reveal-delay: 0.12s">
 					Student Technologist - Cloud, Linux, Security
 				</p>
-				<p class="text-base md:text-lg text-muted-foreground mb-8 text-center max-w-xl px-4">
+				<p class="hero-animate text-base md:text-lg text-muted-foreground mb-8 text-center max-w-xl px-4" style="--reveal-delay: 0.24s">
 					Building secure Linux and cloud systems, with real-world exposure to enterprise cybersecurity.
 				</p>
-				<div class="flex gap-4">
+				<div class="hero-animate flex gap-4" style="--reveal-delay: 0.36s">
 					<a href="/projects" class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-6 bg-foreground text-background hover:bg-foreground/90 transition-colors">
 						View Projects
 					</a>

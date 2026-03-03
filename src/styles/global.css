@@ -278,3 +278,51 @@ html {
   @apply italic;
 }
 
+/* Tag badge colors - uses CSS custom properties for instant dark/light mode switching */
+.tag-badge {
+  background-color: var(--tag-bg-light);
+  color: var(--tag-text-light);
+}
+
+.dark .tag-badge {
+  background-color: var(--tag-bg-dark);
+  color: var(--tag-text-dark);
+}
+
+/* Difficulty badge colors */
+.diff-badge {
+  background-color: var(--badge-bg-light);
+  color: var(--badge-text-light);
+}
+
+.dark .diff-badge {
+  background-color: var(--badge-bg-dark);
+  color: var(--badge-text-dark);
+}
+
+/* Loading screen: hide ALL page content on first visit until animation completes */
+.first-visit body > *:not(#loading-overlay-fallback):not([data-loading-screen]) {
+  visibility: hidden !important;
+}
+
+.first-visit .hero-animate {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.reveal-content .hero-animate {
+  animation: heroReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+@keyframes heroReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

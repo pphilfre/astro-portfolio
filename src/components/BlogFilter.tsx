@@ -25,10 +25,14 @@ function hashTag(tag: string): number {
   return Math.abs(hash);
 }
 
-function getFilterTagStyle(tag: string, isDark: boolean) {
+function getFilterTagStyle(tag: string): React.CSSProperties {
   const palette = FILTER_COLORS[hashTag(tag) % FILTER_COLORS.length];
-  const theme = isDark ? palette.dark : palette.light;
-  return { backgroundColor: theme.bg, color: theme.text };
+  return {
+    '--tag-bg-light': palette.light.bg,
+    '--tag-text-light': palette.light.text,
+    '--tag-bg-dark': palette.dark.bg,
+    '--tag-text-dark': palette.dark.text,
+  } as React.CSSProperties;
 }
 
 interface BlogPost {
@@ -49,18 +53,8 @@ export function BlogFilter({ posts, allTags }: BlogFilterProps) {
   const [sortOrder, setSortOrder] = React.useState<"newest" | "oldest">("newest");
   const [isTagsOpen, setIsTagsOpen] = React.useState(false);
   const [isSortOpen, setIsSortOpen] = React.useState(false);
-  const [isDark, setIsDark] = React.useState(false);
   const tagsDropdownRef = React.useRef<HTMLDivElement>(null);
   const sortDropdownRef = React.useRef<HTMLDivElement>(null);
-
-  // Detect dark mode
-  React.useEffect(() => {
-    const check = () => setIsDark(document.documentElement.classList.contains('dark'));
-    check();
-    const observer = new MutationObserver(check);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
 
   // Close dropdowns when clicking outside
   React.useEffect(() => {
@@ -166,7 +160,6 @@ export function BlogFilter({ posts, allTags }: BlogFilterProps) {
             <div className="absolute top-full left-0 mt-1 w-44 bg-popover border border-border rounded-md shadow-lg z-50 p-2">
               <div className="space-y-1">
                 {allTags.map((tag) => {
-                  const style = getFilterTagStyle(tag, isDark);
                   return (
                     <label
                       key={tag}
@@ -177,8 +170,8 @@ export function BlogFilter({ posts, allTags }: BlogFilterProps) {
                         onCheckedChange={() => toggleTag(tag)}
                       />
                       <span
-                        className="px-2 py-0.5 text-xs rounded font-medium"
-                        style={style}
+                        className="tag-badge px-2 py-0.5 text-xs rounded font-medium"
+                        style={getFilterTagStyle(tag)}
                       >
                         {tag}
                       </span>
