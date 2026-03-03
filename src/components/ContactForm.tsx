@@ -22,11 +22,11 @@ declare global {
 }
 
 interface ContactFormProps {
-  turnstileSiteKey?: string;
+  turnstileSiteKey: string;
 }
 
 export function ContactForm({ 
-  turnstileSiteKey = "0x4AAAAAACYIXwKzjELumsak" 
+  turnstileSiteKey 
 }: ContactFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

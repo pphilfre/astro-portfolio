@@ -39,32 +39,23 @@ export const getTagColor = (tag: string): { bg: string; text: string } => {
   return twColors[hashTag(tag) % twColors.length];
 };
 
-function useIsDark() {
-  const [isDark, setIsDark] = React.useState(false);
-  React.useEffect(() => {
-    const check = () => setIsDark(document.documentElement.classList.contains('dark'));
-    check();
-    const observer = new MutationObserver(check);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-  return isDark;
-}
-
 interface TagProps {
   tag: string;
   className?: string;
 }
 
 export function Tag({ tag, className = "" }: TagProps) {
-  const isDark = useIsDark();
   const palette = TAG_COLORS[hashTag(tag) % TAG_COLORS.length];
-  const theme = isDark ? palette.dark : palette.light;
 
   return (
     <span
-      className={`px-2 py-1 text-xs rounded font-medium ${className}`}
-      style={{ backgroundColor: theme.bg, color: theme.text }}
+      className={`tag-badge px-2 py-1 text-xs rounded font-medium ${className}`}
+      style={{
+        '--tag-bg-light': palette.light.bg,
+        '--tag-text-light': palette.light.text,
+        '--tag-bg-dark': palette.dark.bg,
+        '--tag-text-dark': palette.dark.text,
+      } as React.CSSProperties}
     >
       {tag}
     </span>

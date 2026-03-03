@@ -74,8 +74,8 @@ const difficultyStyle = getDifficultyStyle(entry.data.difficulty);
           <h1 class="text-4xl md:text-5xl font-bold mb-4">{entry.data.title}</h1>
           <div class="flex items-center gap-4 text-muted-foreground flex-wrap">
             <span 
-              class="difficulty-badge px-2 py-1 text-xs rounded capitalize font-medium"
-              style={`--light-bg: ${difficultyStyle.lightBg}; --light-text: ${difficultyStyle.lightText}; --dark-bg: ${difficultyStyle.darkBg}; --dark-text: ${difficultyStyle.darkText};`}
+              class="diff-badge px-2 py-1 text-xs rounded capitalize font-medium"
+              style={`--badge-bg-light: ${difficultyStyle.lightBg}; --badge-text-light: ${difficultyStyle.lightText}; --badge-bg-dark: ${difficultyStyle.darkBg}; --badge-text-dark: ${difficultyStyle.darkText};`}
             >
               {entry.data.difficulty}
             </span>
@@ -99,15 +99,3 @@ const difficultyStyle = getDifficultyStyle(entry.data.difficulty);
     </main>
   </body>
 </html>
-
-<style>
-  .difficulty-badge {
-    background-color: var(--light-bg);
-    color: var(--light-text);
-  }
-  
-  :global(.dark) .difficulty-badge {
-    background-color: var(--dark-bg);
-    color: var(--dark-text);
-  }
-</style>

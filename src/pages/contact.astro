@@ -3,6 +3,8 @@ import '../styles/global.css';
 import Navbar from '../components/Navbar.tsx';
 import { ContactBento } from '../components/ContactBento.tsx';
 import { ContactForm } from '../components/ContactForm.tsx';
+
+const turnstileSiteKey = import.meta.env.TURNSTILE_SITE_KEY;
 ---
 
 <html lang="en">
@@ -44,7 +46,7 @@ import { ContactForm } from '../components/ContactForm.tsx';
 			<p class="text-muted-foreground mb-8">Get in touch</p>
 			
 			<ContactBento client:load />
-			<ContactForm client:load />
+			<ContactForm client:load turnstileSiteKey={turnstileSiteKey} />
 		</main>
 	</body>
 </html>
