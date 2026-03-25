@@ -14,12 +14,15 @@ import {
 } from "@/components/ui/sheet";
 import { ChevronDownIcon, MenuIcon, Download } from "lucide-react";
 
-const navLinkStyle = "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors";
-const navLinkActiveStyle = "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-foreground hover:bg-transparent transition-colors";
+const navLinkStyle =
+  "inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted";
+const navLinkActiveStyle =
+  "inline-flex h-9 w-max items-center justify-center rounded-md bg-muted px-4 py-2 text-sm font-medium text-foreground transition-colors";
 
-const mobileNavLinkStyle = "flex items-center px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors";
-const mobileNavLinkActiveStyle = "flex items-center px-4 py-3 text-base font-medium text-foreground bg-muted rounded-md transition-colors";
-
+const mobileNavLinkStyle =
+  "block px-4 py-3 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors rounded-md";
+const mobileNavLinkActiveStyle =
+  "block px-4 py-3 text-base font-medium text-foreground bg-muted transition-colors rounded-md";
 type Theme = "light" | "dark" | "system";
 
 const Navbar = () => {
@@ -92,60 +95,52 @@ const Navbar = () => {
 
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
-    
+    root.classList.remove("light", "dark");
+
     if (newTheme === "system") {
       const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      root.classList.remove("light", "dark");
       root.classList.add(systemDark ? "dark" : "light");
-    } else {
-      root.classList.remove("light", "dark");
-      root.classList.add(newTheme);
+      return;
     }
+
+    root.classList.add(newTheme);
   };
 
-  const handleThemeChange = async (newTheme: Theme, event?: React.MouseEvent) => {
-    const button = event?.currentTarget as HTMLElement | undefined;
-    const buttonRect = button?.getBoundingClientRect();
-    
-    // Determine what the actual target theme will be
-    let targetTheme: "light" | "dark";
-    if (newTheme === "system") {
-      targetTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    } else {
-      targetTheme = newTheme;
-    }
-    
-    // Only animate if actually changing themes
+  const handleThemeChange = (newTheme: Theme, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+
+    const buttonRect = e?.currentTarget instanceof HTMLElement ? e.currentTarget.getBoundingClientRect() : null;
+    const startViewTransition = (document as unknown as { startViewTransition?: (cb: () => void) => { finished: Promise<void> } }).startViewTransition;
+
+    const targetTheme: "light" | "dark" =
+      newTheme === "system"
+        ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        : newTheme;
+
     const currentActualTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    
-    if (buttonRect && targetTheme !== currentActualTheme && document.startViewTransition) {
-      const centerX = buttonRect.left + buttonRect.width / 2;
-      const centerY = buttonRect.top + buttonRect.height / 2;
-      
-      // Set CSS variables for clip-path origin
-      document.documentElement.style.setProperty("--transition-x", `${centerX}px`);
-      document.documentElement.style.setProperty("--transition-y", `${centerY}px`);
-      
-      // Add class for transition direction
-      document.documentElement.classList.add(`theme-transition-${targetTheme}`);
-      
-      // Use View Transitions API
-      const transition = document.startViewTransition(() => {
-        setTheme(newTheme);
-        localStorage.setItem("theme", newTheme);
-        applyTheme(newTheme);
-      });
-      
-      transition.finished.then(() => {
-        document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
-      });
-    } else {
-      // Fallback for browsers without View Transitions
+
+    const applyChange = () => {
       setTheme(newTheme);
       localStorage.setItem("theme", newTheme);
       applyTheme(newTheme);
+    };
+
+    if (buttonRect && targetTheme !== currentActualTheme && startViewTransition) {
+      const centerX = buttonRect.left + buttonRect.width / 2;
+      const centerY = buttonRect.top + buttonRect.height / 2;
+
+      document.documentElement.style.setProperty("--transition-x", `${centerX}px`);
+      document.documentElement.style.setProperty("--transition-y", `${centerY}px`);
+      document.documentElement.classList.add(`theme-transition-${targetTheme}`);
+
+      const transition = startViewTransition(() => applyChange());
+      transition.finished.finally(() => {
+        document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
+      });
+    } else {
+      applyChange();
     }
-    
+
     setIsThemeMenuOpen(false);
   };
 
@@ -273,7 +268,7 @@ const Navbar = () => {
                       className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Security Tools
+                      Markup
                     </a>
                   </div>
                 )}
@@ -396,9 +391,9 @@ const Navbar = () => {
                   </li>
                   <li>
                     <a href="/projects/tools" className="block p-2 rounded hover:bg-muted transition-colors group">
-                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">Security Tools</div>
+                      <div className="font-medium text-muted-foreground group-hover:text-foreground transition-colors">Markup</div>
                       <p className="text-muted-foreground/70 text-xs">
-                        Custom tools & scripts I've built
+                        A fully featured markdown workspace
                       </p>
                     </a>
                   </li>

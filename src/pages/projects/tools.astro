@@ -1,6 +1,101 @@
 ---
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
+import { marked } from 'marked';
+const markdownBody = [
+	'Markup is a productivity-first markdown workspace I built with a focus on speed, keyboard ergonomics, and flexible document types (notes, whiteboards, mind maps). It combines a full-featured Markdown editor with live preview, graph/backlink views, collaborative cloud sync, and an optional native desktop experience via Tauri.',
+	'',
+	'### What it does',
+	'',
+	'- Provides a keyboard-first Markdown editing experience with split preview and a distraction-free mode.',
+	'- Renders math (KaTeX), diagrams (Mermaid), and code blocks with syntax highlighting.',
+	'- Supports multiple document types: standard markdown notes, whiteboards (canvas), and mind maps; all can be saved, synced, and shared.',
+	'- Offers workspace state persistence (open tabs, folders, UI settings) plus a Spotlight-style quick-search across notes and features.',
+	'- Syncs user data to Convex (cloud) and supports offline-first behavior with local hydration and later sync.',
+	'- Exports and desktop-sync via Tauri: maps a local folder to notes and supports packaged desktop builds and auto-updates.',
+	'',
+	'### Key features',
+	'',
+	'- Keyboard-first Markdown editor (CodeMirror 6) with extensible keybindings',
+	'- Live split preview with:',
+	'  - GitHub-flavored markdown, math (remark-math + rehype-katex)',
+	'  - Syntax highlighting and code block rendering',
+	'  - Mermaid diagrams and LaTeX support',
+	'- Backlink/graph view (built with d3 + custom graph code)',
+	'- Whiteboard and mindmap modes with JSON-serialised canvas/mindmap state',
+	'- Shareable note viewer (public/private shares)',
+	'- Spotlight search for fast navigation and feature access',
+	'- Convex-powered cloud sync (users, tabs, workspaces, mindmaps, whiteboards)',
+	'- Tauri desktop support with local filesystem sync and auto-update integration',
+	'',
+	'### Tech stack',
+	'',
+	'- Framework: Next.js (App Router)',
+	'- Language: TypeScript',
+	'- UI: Tailwind CSS, shadcn/ui (Radix primitives), Lucide icons',
+	'- Editor: CodeMirror 6 and various editor extensions',
+	'- Data & backend: Convex (serverless data + functions)',
+	'- Auth: WorkOS AuthKit (Next.js integration)',
+	'- State: Zustand',
+	'- Desktop: Tauri (v2) with multiple platform bundle targets and the Tauri updater plugin',
+	'- Extras: mermaid, KaTeX, rehype/remark pipeline, d3-force, jszip, file-saver',
+	'',
+	'Notable dependencies (high level): next, react, convex, tauri tooling, codemirror, mermaid, katex, zustand, tailwindcss.',
+	'',
+	'### Architecture & data model (high level)',
+	'',
+	'- The app is a Next.js app using the App Router for client and server routes.',
+	'- Convex stores the core data model: `users`, `tabs` (documents), `workspaces` (UI state + settings), `whiteboards`, `mindmaps`, and `sharedNotes`. The schema and key queries live in the `convex/` folder.',
+	'- The UI is modular: `src/components/editor` holds the editor and preview components; `src/components/shell` manages the main shell views (sidebar, file tree, graph, whiteboard, spotlight search). Global sync logic and helpers are in `src/lib`.',
+	'- Desktop builds use a static export (when building for Tauri) and a lightweight relay for OAuth to support WorkOS desktop sign-in flows.',
+	'',
+	'### Role / responsibilities',
+	'',
+	'I designed, implemented, and maintain the full-stack product including:',
+	'',
+	'- UX and keyboard-first editor interactions',
+	'- Client architecture and state synchronization',
+	'- Convex schema design and server functions',
+	'- Tauri desktop integration and build tooling',
+	'- Authentication flows with WorkOS',
+	'',
+	'### How to run (development)',
+	'',
+	'From the project root (Windows PowerShell):',
+	'',
+	'```powershell',
+	'npm install',
+	'npm run dev',
+	'```',
+	'',
+	'This runs Next.js and Convex locally in parallel. For desktop development (Tauri):',
+	'',
+	'```powershell',
+	'# run Tauri dev with Convex',
+	'npm run tauri:dev',
+	'```',
+	'',
+	'Build for production (web + Convex deploy):',
+	'',
+	'```powershell',
+	'npm run build',
+	'```',
+	'',
+	'Build a packaged desktop app (requires Rust + Tauri toolchain):',
+	'',
+	'```powershell',
+	'npm run build:tauri',
+	'```',
+	'',
+	'Environment notes',
+	'',
+	'- The app requires Convex deployment and WorkOS credentials to enable cloud sync and authentication. Create a `.env.local` with the required keys (e.g. `NEXT_PUBLIC_CONVEX_URL`, `WORKOS_CLIENT_ID`, `WORKOS_API_KEY`, `WORKOS_COOKIE_PASSWORD`, `NEXT_PUBLIC_WORKOS_REDIRECT_URI`).',
+	'',
+	'### Links',
+	'',
+	'- Repo: https://github.com/pphilfre/markup',
+	'- Site: https://markup.freddiephilpot.dev',
+].join('\n');
 ---
 
 <html lang="en">
@@ -9,7 +104,11 @@ import Navbar from '../../components/Navbar.tsx';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Security Tools | Freddie Philpot</title>
+		<meta
+			name="description"
+			content="Markup is a keyboard-first, fully featured markdown workspace with live preview, backlinks/graph views, and cloud sync."
+		/>
+		<title>Markup | Freddie Philpot</title>
 		<script is:inline>
 			(function() {
 				const theme = localStorage.getItem('theme') || 'system';
@@ -37,53 +136,12 @@ import Navbar from '../../components/Navbar.tsx';
 		<Navbar client:load />
 		
 		<main class="pt-24 px-4 max-w-4xl mx-auto">
-			<h1 class="text-4xl md:text-5xl font-bold mb-4">Security Tools</h1>
-			<p class="text-muted-foreground mb-8">Custom tools & scripts I've built</p>
-			
-			<div class="space-y-6">
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="flex items-center justify-between mb-4">
-						<h2 class="text-xl font-semibold">Text3</h2>
-						<a href="#" class="text-sm text-accent hover:underline">GitHub →</a>
-					</div>
-					<p class="text-muted-foreground mb-4">
-						Text4
-					</p>
-					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text5</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text6</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text7</span>
-					</div>
-				</article>
-				
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="flex items-center justify-between mb-4">
-						<h2 class="text-xl font-semibold">Text8</h2>
-						<a href="#" class="text-sm text-accent hover:underline">GitHub →</a>
-					</div>
-					<p class="text-muted-foreground mb-4">
-						Text9
-					</p>
-					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text10</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text11</span>
-					</div>
-				</article>
-				
-				<article class="p-6 bg-secondary rounded-lg border border-border hover:border-foreground/20 transition">
-					<div class="flex items-center justify-between mb-4">
-						<h2 class="text-xl font-semibold">Text12</h2>
-						<a href="#" class="text-sm text-accent hover:underline">GitHub →</a>
-					</div>
-					<p class="text-muted-foreground mb-4">
-						Text13
-					</p>
-					<div class="flex gap-2">
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text14</span>
-						<span class="px-2 py-1 text-xs bg-muted rounded">Text15</span>
-					</div>
-				</article>
-			</div>
+			<h1 class="text-4xl md:text-5xl font-bold mb-4">Markup</h1>
+			<p class="text-muted-foreground mb-8">
+				A keyboard-first, fully featured markdown workspace
+			</p>
+
+			<div class="prose max-w-none" set:html={marked.parse(markdownBody)} />
 		</main>
 	</body>
 </html>
