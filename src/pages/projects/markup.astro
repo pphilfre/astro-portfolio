@@ -1,101 +1,45 @@
 ---
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
+import matter from 'gray-matter';
 import { marked } from 'marked';
-const markdownBody = [
-  'Markup is a productivity-first markdown workspace I built with a focus on speed, keyboard ergonomics, and flexible document types (notes, whiteboards, mind maps). It combines a full-featured Markdown editor with live preview, graph/backlink views, collaborative cloud sync, and an optional native desktop experience via Tauri.',
-  '',
-  '### What it does',
-  '',
-  '- Provides a keyboard-first Markdown editing experience with split preview and a distraction-free mode.',
-  '- Renders math (KaTeX), diagrams (Mermaid), and code blocks with syntax highlighting.',
-  '- Supports multiple document types: standard markdown notes, whiteboards (canvas), and mind maps; all can be saved, synced, and shared.',
-  '- Offers workspace state persistence (open tabs, folders, UI settings) plus a Spotlight-style quick-search across notes and features.',
-  '- Syncs user data to Convex (cloud) and supports offline-first behavior with local hydration and later sync.',
-  '- Exports and desktop-sync via Tauri: maps a local folder to notes and supports packaged desktop builds and auto-updates.',
-  '',
-  '### Key features',
-  '',
-  '- Keyboard-first Markdown editor (CodeMirror 6) with extensible keybindings',
-  '- Live split preview with:',
-  '  - GitHub-flavored markdown, math (remark-math + rehype-katex)',
-  '  - Syntax highlighting and code block rendering',
-  '  - Mermaid diagrams and LaTeX support',
-  '- Backlink/graph view (built with d3 + custom graph code)',
-  '- Whiteboard and mindmap modes with JSON-serialised canvas/mindmap state',
-  '- Shareable note viewer (public/private shares)',
-  '- Spotlight search for fast navigation and feature access',
-  '- Convex-powered cloud sync (users, tabs, workspaces, mindmaps, whiteboards)',
-  '- Tauri desktop support with local filesystem sync and auto-update integration',
-  '',
-  '### Tech stack',
-  '',
-  '- Framework: Next.js (App Router)',
-  '- Language: TypeScript',
-  '- UI: Tailwind CSS, shadcn/ui (Radix primitives), Lucide icons',
-  '- Editor: CodeMirror 6 and various editor extensions',
-  '- Data & backend: Convex (serverless data + functions)',
-  '- Auth: WorkOS AuthKit (Next.js integration)',
-  '- State: Zustand',
-  '- Desktop: Tauri (v2) with multiple platform bundle targets and the Tauri updater plugin',
-  '- Extras: mermaid, KaTeX, rehype/remark pipeline, d3-force, jszip, file-saver',
-  '',
-  'Notable dependencies (high level): next, react, convex, tauri tooling, codemirror, mermaid, katex, zustand, tailwindcss.',
-  '',
-  '### Architecture & data model (high level)',
-  '',
-  '- The app is a Next.js app using the App Router for client and server routes.',
-  '- Convex stores the core data model: `users`, `tabs` (documents), `workspaces` (UI state + settings), `whiteboards`, `mindmaps`, and `sharedNotes`. The schema and key queries live in the `convex/` folder.',
-  '- The UI is modular: `src/components/editor` holds the editor and preview components; `src/components/shell` manages the main shell views (sidebar, file tree, graph, whiteboard, spotlight search). Global sync logic and helpers are in `src/lib`.',
-  '- Desktop builds use a static export (when building for Tauri) and a lightweight relay for OAuth to support WorkOS desktop sign-in flows.',
-  '',
-  '### Role / responsibilities',
-  '',
-  'I designed, implemented, and maintain the full-stack product including:',
-  '',
-  '- UX and keyboard-first editor interactions',
-  '- Client architecture and state synchronization',
-  '- Convex schema design and server functions',
-  '- Tauri desktop integration and build tooling',
-  '- Authentication flows with WorkOS',
-  '',
-  '### How to run (development)',
-  '',
-  'From the project root (Windows PowerShell):',
-  '',
-  '```powershell',
-  'npm install',
-  'npm run dev',
-  '```',
-  '',
-  'This runs Next.js and Convex locally in parallel. For desktop development (Tauri):',
-  '',
-  '```powershell',
-  '# run Tauri dev with Convex',
-  'npm run tauri:dev',
-  '```',
-  '',
-  'Build for production (web + Convex deploy):',
-  '',
-  '```powershell',
-  'npm run build',
-  '```',
-  '',
-  'Build a packaged desktop app (requires Rust + Tauri toolchain):',
-  '',
-  '```powershell',
-  'npm run build:tauri',
-  '```',
-  '',
-  'Environment notes',
-  '',
-  '- The app requires Convex deployment and WorkOS credentials to enable cloud sync and authentication. Create a `.env.local` with the required keys (e.g. `NEXT_PUBLIC_CONVEX_URL`, `WORKOS_CLIENT_ID`, `WORKOS_API_KEY`, `WORKOS_COOKIE_PASSWORD`, `NEXT_PUBLIC_WORKOS_REDIRECT_URI`).',
-  '',
-  '### Links',
-  '',
-  '- Repo: https://github.com/pphilfre/markup',
-  '- Site: https://markup.freddiephilpot.dev',
-].join('\n');
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
+import markupProjectRaw from '../../data/projects/markup.md?raw';
+
+type ProjectLink = {
+  name: string;
+  repo: string;
+  site: string;
+};
+
+type ProjectFrontmatter = {
+  title?: string;
+  description?: string;
+  carouselImages?: string[];
+  projects?: ProjectLink[];
+};
+
+marked.use(
+  markedHighlight({
+    langPrefix: 'hljs language-',
+    highlight(code, language) {
+      const lang = language && hljs.getLanguage(language) ? language : 'plaintext';
+      return hljs.highlight(code, { language: lang }).value;
+    },
+  }),
+);
+
+const { data, content } = matter(markupProjectRaw);
+const frontmatter = data as ProjectFrontmatter;
+
+const title = frontmatter.title ?? 'Markup';
+const description =
+  frontmatter.description ??
+  'Productivity-first markdown workspace focused on speed and keyboard ergonomics.';
+const carouselImages = Array.isArray(frontmatter.carouselImages) ? frontmatter.carouselImages : [];
+const projects = Array.isArray(frontmatter.projects) ? frontmatter.projects : [];
+const markdownBody = marked.parse(content);
 ---
 
 <html lang="en">
@@ -130,9 +74,150 @@ const markdownBody = [
 
   <body class="bg-background text-foreground min-h-screen">
     <Navbar client:load />
-    <main class="pt-24 px-4 max-w-4xl mx-auto">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">Markup</h1>
-      <div class="prose max-w-none" set:html={marked.parse(markdownBody)}/>
+    <main class="pt-24">
+      <section class="relative isolate overflow-hidden min-h-[52vh] md:min-h-[60vh]" data-carousel-root>
+        <div class="absolute inset-0" data-carousel-slides>
+          {carouselImages.map((image, index) => (
+            <div
+              class={`absolute inset-0 transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+              data-carousel-slide
+            >
+              <div class="h-full w-full flex items-center justify-center p-4 md:p-8 bg-black/20">
+                <img
+                  src={image}
+                  alt={`${title} preview ${index + 1}`}
+                  class="h-full w-full object-contain"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          class="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/35 bg-black/40 text-white backdrop-blur-sm hover:bg-black/55 transition"
+          data-carousel-prev
+          aria-label="Previous slide"
+        >
+          <span aria-hidden="true" class="text-xl leading-none">&larr;</span>
+        </button>
+        <button
+          type="button"
+          class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 h-10 w-10 md:h-12 md:w-12 rounded-full border border-white/35 bg-black/40 text-white backdrop-blur-sm hover:bg-black/55 transition"
+          data-carousel-next
+          aria-label="Next slide"
+        >
+          <span aria-hidden="true" class="text-xl leading-none">&rarr;</span>
+        </button>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/70" />
+        <div class="relative z-10 max-w-6xl mx-auto px-4 min-h-[52vh] md:min-h-[60vh] flex items-center">
+          <div class="max-w-2xl text-white">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight">{title}</h1>
+            <p class="mt-4 text-base md:text-xl text-white/90 leading-relaxed">{description}</p>
+          </div>
+        </div>
+        <div class="absolute bottom-6 left-0 right-0 z-10">
+          <div class="max-w-6xl mx-auto px-4 flex gap-2" data-carousel-dots>
+            {carouselImages.map((_, index) => (
+              <button
+                type="button"
+                class={`h-2.5 rounded-full transition-all ${index === 0 ? 'w-10 bg-white' : 'w-2.5 bg-white/55 hover:bg-white/75'}`}
+                data-carousel-dot
+                data-carousel-index={index}
+                aria-label={`Show slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="px-4 mt-8 max-w-6xl mx-auto">
+        <h2 class="text-2xl font-semibold">Repositories and sites</h2>
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+          {projects.map((project) => (
+            <article class="rounded-xl border border-border bg-card p-5">
+              <h3 class="text-lg font-semibold">{project.name}</h3>
+              <div class="mt-3 space-y-1 text-sm">
+                <p>
+                  Repo:{' '}
+                  <a class="text-accent underline hover:text-accent/80" href={project.repo} target="_blank" rel="noopener noreferrer">
+                    {project.repo}
+                  </a>
+                </p>
+                <p>
+                  Site:{' '}
+                  <a class="text-accent underline hover:text-accent/80" href={project.site} target="_blank" rel="noopener noreferrer">
+                    {project.site}
+                  </a>
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="px-4 py-10 max-w-4xl mx-auto">
+        <div class="prose max-w-none" set:html={markdownBody} />
+      </section>
     </main>
+
+    <script is:inline>
+      (() => {
+        const root = document.querySelector('[data-carousel-root]');
+        if (!root) return;
+
+        const slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
+        const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
+        const prevButton = root.querySelector('[data-carousel-prev]');
+        const nextButton = root.querySelector('[data-carousel-next]');
+        if (slides.length <= 1) return;
+
+        let currentIndex = 0;
+        let intervalId;
+
+        const setActiveSlide = (nextIndex) => {
+          currentIndex = (nextIndex + slides.length) % slides.length;
+          slides.forEach((slide, index) => {
+            slide.classList.toggle('opacity-100', index === currentIndex);
+            slide.classList.toggle('opacity-0', index !== currentIndex);
+          });
+          dots.forEach((dot, index) => {
+            dot.classList.toggle('w-10', index === currentIndex);
+            dot.classList.toggle('bg-white', index === currentIndex);
+            dot.classList.toggle('w-2.5', index !== currentIndex);
+            dot.classList.toggle('bg-white/55', index !== currentIndex);
+          });
+        };
+
+        const startRotation = () => {
+          if (intervalId) window.clearInterval(intervalId);
+          intervalId = window.setInterval(() => {
+            setActiveSlide(currentIndex + 1);
+          }, 5000);
+        };
+
+        dots.forEach((dot) => {
+          dot.addEventListener('click', () => {
+            const index = Number(dot.getAttribute('data-carousel-index'));
+            setActiveSlide(index);
+            startRotation();
+          });
+        });
+
+        prevButton?.addEventListener('click', () => {
+          setActiveSlide(currentIndex - 1);
+          startRotation();
+        });
+
+        nextButton?.addEventListener('click', () => {
+          setActiveSlide(currentIndex + 1);
+          startRotation();
+        });
+
+        setActiveSlide(0);
+        startRotation();
+      })();
+    </script>
   </body>
 </html>

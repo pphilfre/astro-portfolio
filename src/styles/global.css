@@ -250,6 +250,43 @@ html {
   @apply bg-transparent p-0;
 }
 
+.prose pre code.hljs {
+  color: #dbe4ff;
+}
+
+.prose .hljs-comment,
+.prose .hljs-quote {
+  color: #8b98b8;
+  font-style: italic;
+}
+
+.prose .hljs-keyword,
+.prose .hljs-selector-tag,
+.prose .hljs-type,
+.prose .hljs-title {
+  color: #8bc5ff;
+}
+
+.prose .hljs-string,
+.prose .hljs-attr,
+.prose .hljs-template-variable {
+  color: #9ee493;
+}
+
+.prose .hljs-number,
+.prose .hljs-literal,
+.prose .hljs-symbol,
+.prose .hljs-bullet {
+  color: #f8c471;
+}
+
+.prose .hljs-function,
+.prose .hljs-built_in,
+.prose .hljs-variable,
+.prose .hljs-params {
+  color: #f7a8d7;
+}
+
 .prose img {
   @apply rounded-lg my-4;
 }
