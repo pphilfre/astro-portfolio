@@ -2,9 +2,11 @@
 title: Markup
 description: Productivity-first markdown workspace focused on speed, keyboard ergonomics, and flexible document types.
 carouselImages:
-  - /projects/markup/hero-editor.svg
-  - /projects/markup/hero-graph.svg
-  - /projects/markup/hero-desktop.svg
+  - /projects/markup/markup-1.png
+  - /projects/markup/markup-2.jpg
+  - /projects/markup/markup-3.jpg
+  - /projects/markup/markup-4.jpg
+  - /projects/markup/markup-5.jpg
 projects:
   - name: Markup
     repo: https://github.com/pphilfre/markup
