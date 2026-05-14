@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Building2, Server, Cloud, Network, Award, Star, CalendarCheck, ExternalLink, Shield, Lock } from "lucide-react";
+import { Building2, Server, Cloud, Network, Award, Star, Cpu, ExternalLink, Shield, Lock } from "lucide-react";
 import { SiCisco } from "react-icons/si";
 import { DetailSheet, type DetailSheetData } from "./DetailSheet";
 
@@ -689,17 +689,17 @@ export function AchievementsBento() {
                 <Star className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <p className="font-medium text-sm">Headteacher Awards</p>
-                <p className="text-xs text-muted-foreground">Multiple recognitions</p>
+                <p className="font-medium text-sm">7 Headteacher Awards</p>
+                <p className="text-xs text-muted-foreground">For academic excellence</p>
               </div>
             </div>
             <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
               <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shrink-0">
-                <CalendarCheck className="w-5 h-5 text-foreground" />
+                <Cpu className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <p className="font-medium text-sm">Attendance</p>
-                <p className="text-xs text-muted-foreground">100% recognition</p>
+                <p className="font-medium text-sm">KS4 Computer Science</p>
+                <p className="text-xs text-muted-foreground">Subject award</p>
               </div>
             </div>
           </div>
