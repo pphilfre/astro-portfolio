@@ -113,7 +113,7 @@ const Navbar = () => {
     const documentWithViewTransition = document as unknown as {
       startViewTransition?: (cb: () => void) => { finished: Promise<void> };
     };
-    const startViewTransition = documentWithViewTransition.startViewTransition;
+    const startViewTransition = documentWithViewTransition.startViewTransition?.bind(documentWithViewTransition);
 
     const targetTheme: "light" | "dark" =
       newTheme === "system"
@@ -140,8 +140,13 @@ const Navbar = () => {
       };
 
       try {
-        const transition = documentWithViewTransition.startViewTransition(() => applyChange());
-        transition.finished.finally(clearTransition);
+        const transition = startViewTransition(() => applyChange());
+        if (transition?.finished) {
+          transition.finished.finally(clearTransition);
+        } else {
+          clearTransition();
+          applyChange();
+        }
       } catch {
         clearTransition();
         applyChange();
