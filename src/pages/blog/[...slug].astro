@@ -1,18 +1,19 @@
 ---
-import { getEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
 import { TagList } from '../../components/Tag.tsx';
 
 const { slug } = Astro.params;
 
-const entry = await getEntry('blog', slug as string);
+const entries = await getCollection('blog', ({ data }) => data.draft !== true);
+const entry = entries.find((item) => item.id.replace(/\.(md|mdx)$/i, '') === slug);
 
 if (!entry || entry.data.draft) {
   return Astro.redirect('/404');
 }
 
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <html lang="en">

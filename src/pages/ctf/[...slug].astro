@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar.tsx';
 
@@ -21,13 +21,14 @@ const getDifficultyStyle = (difficulty: string): { lightBg: string; lightText: s
 
 const { slug } = Astro.params;
 
-const entry = await getEntry('ctf', slug as string);
+const entries = await getCollection('ctf', ({ data }) => data.draft !== true);
+const entry = entries.find((item) => item.id.replace(/\.(md|mdx)$/i, '') === slug);
 
 if (!entry || entry.data.draft) {
   return Astro.redirect('/404');
 }
 
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 const difficultyStyle = getDifficultyStyle(entry.data.difficulty);
 ---
 
