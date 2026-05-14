@@ -135,19 +135,15 @@ const Navbar = () => {
       document.documentElement.style.setProperty("--transition-x", `${centerX}px`);
       document.documentElement.style.setProperty("--transition-y", `${centerY}px`);
       document.documentElement.classList.add(`theme-transition-${targetTheme}`);
+      const clearTransition = () => {
+        document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
+      };
 
       try {
-        const transition = documentWithViewTransition.startViewTransition?.(() => applyChange());
-        if (transition) {
-          transition.finished.finally(() => {
-            document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
-          });
-        } else {
-          document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
-          applyChange();
-        }
+        const transition = documentWithViewTransition.startViewTransition(() => applyChange());
+        transition.finished.finally(clearTransition);
       } catch {
-        document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
+        clearTransition();
         applyChange();
       }
     } else {
