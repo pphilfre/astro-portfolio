@@ -690,7 +690,7 @@ export function AchievementsBento() {
               </div>
               <div>
                 <p className="font-medium text-sm">7 Headteacher Awards</p>
-                <p className="text-xs text-muted-foreground">Seven recognitions</p>
+                <p className="text-xs text-muted-foreground">For academic excellence</p>
               </div>
             </div>
             <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
@@ -699,7 +699,7 @@ export function AchievementsBento() {
               </div>
               <div>
                 <p className="font-medium text-sm">KS4 Computer Science</p>
-                <p className="text-xs text-muted-foreground">Award</p>
+                <p className="text-xs text-muted-foreground">Subject award</p>
               </div>
             </div>
           </div>
