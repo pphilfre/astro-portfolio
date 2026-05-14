@@ -122,7 +122,9 @@ const Navbar = () => {
 
     const currentActualTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
 
+    let didApply = false;
     const applyChange = () => {
+      didApply = true;
       setTheme(newTheme);
       localStorage.setItem("theme", newTheme);
       applyTheme(newTheme);
@@ -145,11 +147,15 @@ const Navbar = () => {
           transition.finished.finally(clearTransition);
         } else {
           clearTransition();
-          applyChange();
+          if (!didApply) {
+            applyChange();
+          }
         }
       } catch {
         clearTransition();
-        applyChange();
+        if (!didApply) {
+          applyChange();
+        }
       }
     } else {
       applyChange();
