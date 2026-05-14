@@ -110,7 +110,10 @@ const Navbar = () => {
     e?.stopPropagation();
 
     const buttonRect = e?.currentTarget instanceof HTMLElement ? e.currentTarget.getBoundingClientRect() : null;
-    const startViewTransition = (document as unknown as { startViewTransition?: (cb: () => void) => { finished: Promise<void> } }).startViewTransition;
+    const documentWithViewTransition = document as unknown as {
+      startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+    };
+    const startViewTransition = documentWithViewTransition.startViewTransition?.bind(documentWithViewTransition);
 
     const targetTheme: "light" | "dark" =
       newTheme === "system"
@@ -119,24 +122,41 @@ const Navbar = () => {
 
     const currentActualTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
 
+    let didApply = false;
     const applyChange = () => {
+      didApply = true;
       setTheme(newTheme);
       localStorage.setItem("theme", newTheme);
       applyTheme(newTheme);
     };
 
-    if (buttonRect && targetTheme !== currentActualTheme && startViewTransition) {
+    if (buttonRect && targetTheme !== currentActualTheme && typeof startViewTransition === "function") {
       const centerX = buttonRect.left + buttonRect.width / 2;
       const centerY = buttonRect.top + buttonRect.height / 2;
 
       document.documentElement.style.setProperty("--transition-x", `${centerX}px`);
       document.documentElement.style.setProperty("--transition-y", `${centerY}px`);
       document.documentElement.classList.add(`theme-transition-${targetTheme}`);
-
-      const transition = startViewTransition(() => applyChange());
-      transition.finished.finally(() => {
+      const clearTransition = () => {
         document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
-      });
+      };
+
+      try {
+        const transition = startViewTransition(() => applyChange());
+        if (transition?.finished) {
+          transition.finished.finally(clearTransition);
+        } else {
+          clearTransition();
+          if (!didApply) {
+            applyChange();
+          }
+        }
+      } catch {
+        clearTransition();
+        if (!didApply) {
+          applyChange();
+        }
+      }
     } else {
       applyChange();
     }
