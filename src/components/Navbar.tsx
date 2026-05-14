@@ -110,9 +110,10 @@ const Navbar = () => {
     e?.stopPropagation();
 
     const buttonRect = e?.currentTarget instanceof HTMLElement ? e.currentTarget.getBoundingClientRect() : null;
-    const startViewTransition = (document as unknown as {
+    const documentWithViewTransition = document as unknown as {
       startViewTransition?: (cb: () => void) => { finished: Promise<void> };
-    }).startViewTransition;
+    };
+    const startViewTransition = documentWithViewTransition.startViewTransition;
 
     const targetTheme: "light" | "dark" =
       newTheme === "system"
@@ -136,10 +137,15 @@ const Navbar = () => {
       document.documentElement.classList.add(`theme-transition-${targetTheme}`);
 
       try {
-        const transition = startViewTransition.call(document, () => applyChange());
-        transition.finished.finally(() => {
+        const transition = documentWithViewTransition.startViewTransition?.(() => applyChange());
+        if (transition) {
+          transition.finished.finally(() => {
+            document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
+          });
+        } else {
           document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
-        });
+          applyChange();
+        }
       } catch {
         document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
         applyChange();
