@@ -110,8 +110,9 @@ const Navbar = () => {
     e?.stopPropagation();
 
     const buttonRect = e?.currentTarget instanceof HTMLElement ? e.currentTarget.getBoundingClientRect() : null;
-    const startViewTransition = (document as unknown as { startViewTransition?: (cb: () => void) => { finished: Promise<void> } })
-      .startViewTransition?.bind(document);
+    const startViewTransition = (document as unknown as {
+      startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+    }).startViewTransition;
 
     const targetTheme: "light" | "dark" =
       newTheme === "system"
@@ -126,7 +127,7 @@ const Navbar = () => {
       applyTheme(newTheme);
     };
 
-    if (buttonRect && targetTheme !== currentActualTheme && startViewTransition) {
+    if (buttonRect && targetTheme !== currentActualTheme && typeof startViewTransition === "function") {
       const centerX = buttonRect.left + buttonRect.width / 2;
       const centerY = buttonRect.top + buttonRect.height / 2;
 
@@ -135,7 +136,7 @@ const Navbar = () => {
       document.documentElement.classList.add(`theme-transition-${targetTheme}`);
 
       try {
-        const transition = startViewTransition(() => applyChange());
+        const transition = startViewTransition.call(document, () => applyChange());
         transition.finished.finally(() => {
           document.documentElement.classList.remove(`theme-transition-${targetTheme}`);
         });
