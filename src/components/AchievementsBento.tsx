@@ -689,8 +689,8 @@ export function AchievementsBento() {
                 <Star className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <p className="font-medium text-sm">Headteacher Awards</p>
-                <p className="text-xs text-muted-foreground">Multiple recognitions</p>
+                <p className="font-medium text-sm">7 Headteacher Awards</p>
+                <p className="text-xs text-muted-foreground">Seven recognitions</p>
               </div>
             </div>
             <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
