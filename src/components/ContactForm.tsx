@@ -1,262 +1,267 @@
-import * as React from "react";
-import { useState, useEffect, useRef } from "react";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 
 declare global {
   interface Window {
     turnstile?: {
-      render: (container: HTMLElement, options: {
-        sitekey: string;
-        callback: (token: string) => void;
-        'expired-callback'?: () => void;
-        theme?: 'light' | 'dark' | 'auto';
-      }) => string;
-      reset: (widgetId: string) => void;
-      remove: (widgetId: string) => void;
+      render: (
+        container: HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          'expired-callback': () => void;
+          'error-callback': () => void;
+          theme: 'light' | 'dark';
+          size: 'flexible';
+        },
+      ) => string;
+      reset: (id: string) => void;
+      remove: (id: string) => void;
     };
   }
 }
 
-interface ContactFormProps {
+export function ContactForm({
+  turnstileSiteKey = '0x4AAAAAACYIXwKzjELumsak',
+}: {
   turnstileSiteKey?: string;
-}
+}) {
+  const slot = useRef<HTMLDivElement>(null);
+  const widget = useRef<string | null>(null);
+  const [token, setToken] = useState('');
+  const [captchaState, setCaptchaState] = useState<
+    'loading' | 'ready' | 'error'
+  >('loading');
+  const [attempt, setAttempt] = useState(0);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState('');
+  const [success, setSuccess] = useState(false);
 
-export function ContactForm({ 
-  turnstileSiteKey = "0x4AAAAAACYIXwKzjELumsak" 
-}: ContactFormProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isDark, setIsDark] = useState(false);
-  
-  const turnstileRef = useRef<HTMLDivElement>(null);
-  const widgetIdRef = useRef<string | null>(null);
-
-  // Check for dark mode
   useEffect(() => {
-    const checkDarkMode = () => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    };
-    checkDarkMode();
-    
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, { 
-      attributes: true, 
-      attributeFilter: ['class'] 
+    const syncTheme = () =>
+      setTheme(
+        document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+      );
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
     });
-    
     return () => observer.disconnect();
   }, []);
 
-  // Load Turnstile script
   useEffect(() => {
-    if (document.querySelector('script[src*="turnstile"]')) return;
-    
-    const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-  }, []);
-
-  // Render Turnstile widget
-  useEffect(() => {
-    const renderWidget = () => {
-      if (!window.turnstile || !turnstileRef.current) return;
-      
-      // Remove existing widget if any
-      if (widgetIdRef.current) {
-        try {
-          window.turnstile.remove(widgetIdRef.current);
-        } catch {
-          // Widget might already be removed
-        }
+    let stopped = false;
+    setToken('');
+    setCaptchaState('loading');
+    const fail = () => {
+      if (!stopped) {
+        setToken('');
+        setCaptchaState('error');
       }
-      
-      // Clear the container
-      turnstileRef.current.innerHTML = '';
-      
-      widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-        sitekey: turnstileSiteKey,
-        callback: (token: string) => {
-          setCaptchaToken(token);
-        },
-        'expired-callback': () => {
-          setCaptchaToken(null);
-        },
-        theme: isDark ? 'dark' : 'light',
-      });
     };
-
-    // Wait for Turnstile to load
-    const checkTurnstile = setInterval(() => {
-      if (window.turnstile) {
-        clearInterval(checkTurnstile);
-        renderWidget();
+    let script = document.querySelector<HTMLScriptElement>(
+      'script[data-turnstile]',
+    );
+    if (script?.dataset.failed === 'true') {
+      script.remove();
+      script = null;
+    }
+    if (!script) {
+      script = document.createElement('script');
+      script.src =
+        'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.dataset.turnstile = 'true';
+      document.head.appendChild(script);
+    }
+    const scriptError = () => {
+      if (script) script.dataset.failed = 'true';
+      fail();
+    };
+    script.addEventListener('error', scriptError);
+    const deadline = window.setTimeout(() => {
+      window.clearInterval(poll);
+      fail();
+    }, 15000);
+    const poll = window.setInterval(() => {
+      if (!window.turnstile || !slot.current || stopped) return;
+      window.clearInterval(poll);
+      try {
+        window.clearTimeout(deadline);
+        setCaptchaState('ready');
+        widget.current = window.turnstile.render(slot.current, {
+          sitekey: turnstileSiteKey,
+          theme,
+          size: 'flexible',
+          callback: (value) => {
+            if (!stopped) {
+              window.clearTimeout(deadline);
+              setToken(value);
+              setCaptchaState('ready');
+            }
+          },
+          'expired-callback': () => {
+            if (!stopped) {
+              setToken('');
+              setCaptchaState('ready');
+            }
+          },
+          'error-callback': fail,
+        });
+      } catch {
+        fail();
       }
     }, 100);
-
     return () => {
-      clearInterval(checkTurnstile);
+      stopped = true;
+      window.clearInterval(poll);
+      window.clearTimeout(deadline);
+      script?.removeEventListener('error', scriptError);
+      if (widget.current) {
+        try {
+          window.turnstile?.remove(widget.current);
+        } catch {}
+        widget.current = null;
+      }
     };
-  }, [turnstileSiteKey, isDark]);
+  }, [turnstileSiteKey, attempt, theme]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!captchaToken) {
-      setError("Please complete the CAPTCHA verification");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setError(null);
-
+  async function submit(event: SyntheticEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!token || pending) return;
+    const form = event.currentTarget;
+    const values = new FormData(form);
+    setPending(true);
+    setStatus('Sending your message…');
+    setSuccess(false);
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name,
-          email,
-          message,
-          captchaToken,
+          name: values.get('name'),
+          email: values.get('email'),
+          message: values.get('message'),
+          captchaToken: token,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
-
-      setIsSuccess(true);
-      setName("");
-      setEmail("");
-      setMessage("");
-      setCaptchaToken(null);
-      
-      // Reset success state after animation
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 3000);
-      
-    } catch {
-      setError("Failed to send message. Please try again.");
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(
+          result.error ||
+            'The message could not be sent. Please use the email link.',
+        );
+      setSuccess(true);
+      setStatus('Message sent. Thanks for getting in touch.');
+      form.reset();
+    } catch (error) {
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : 'The message could not be sent. Please use the email link.',
+      );
     } finally {
-      setIsSubmitting(false);
+      setToken('');
+      if (widget.current) {
+        try {
+          window.turnstile?.reset(widget.current);
+        } catch {
+          setCaptchaState('error');
+        }
+      }
+      setPending(false);
     }
-  };
-
-  const isFormValid = name.trim() && email.trim() && message.trim() && captchaToken;
+  }
 
   return (
-    <div className="bg-secondary rounded-lg border border-border p-6 mt-6">
-      <h2 className="text-xl font-semibold mb-4">Send a Message</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
+    <section className="contact-form" aria-labelledby="form-title">
+      <h2 id="form-title">Or leave a message.</h2>
+      <form onSubmit={submit}>
+        <div className="form-pair">
+          <div className="form-field">
+            <label htmlFor="name">Name</label>
+            <input
               id="name"
-              type="text"
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              autoComplete="name"
               required
-              disabled={isSubmitting}
+              maxLength={100}
+              disabled={pending}
             />
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
+            <input
               id="email"
+              name="email"
               type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
-              disabled={isSubmitting}
+              maxLength={254}
+              disabled={pending}
             />
           </div>
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="message">Message</Label>
-          <Textarea
+        <div className="form-field">
+          <label htmlFor="message">Message</label>
+          <textarea
             id="message"
-            placeholder="Your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            name="message"
             required
-            disabled={isSubmitting}
+            minLength={10}
+            maxLength={5000}
+            disabled={pending}
           />
         </div>
-        
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div 
-            ref={turnstileRef} 
-            className="cf-turnstile"
-          />
-          
-          <Button
-            type="submit"
-            disabled={!isFormValid || isSubmitting}
-            className={`min-w-[140px] transition-all duration-300 ${
-              isSuccess 
-                ? 'bg-green-600 hover:bg-green-600' 
-                : ''
-            }`}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Sending...
-              </>
-            ) : isSuccess ? (
-              <>
-                <CheckCircle2 className="w-4 h-4 animate-[scale-in_0.3s_ease-out]" />
-                Sent!
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                Send Message
-              </>
-            )}
-          </Button>
+        <div className="captcha-slot" ref={slot} />
+        <div className="captcha-status" aria-live="polite">
+          {captchaState === 'loading' && (
+            <p>
+              Loading verification. You can also{' '}
+              <a href="mailto:contact@freddiephilpot.dev">
+                send an email directly
+              </a>
+              .
+            </p>
+          )}
+          {captchaState === 'error' && (
+            <p>
+              Verification is unavailable.{' '}
+              <button
+                className="text-link"
+                type="button"
+                onClick={() => setAttempt((value) => value + 1)}
+              >
+                Try again
+              </button>{' '}
+              or{' '}
+              <a href="mailto:contact@freddiephilpot.dev">
+                send an email directly
+              </a>
+              .
+            </p>
+          )}
+          {captchaState === 'ready' && !token && (
+            <p>Please complete verification before sending.</p>
+          )}
         </div>
-        
-        {error && (
-          <p className="text-destructive text-sm">{error}</p>
-        )}
+        <button className="button" type="submit" disabled={!token || pending}>
+          {pending ? 'Sending…' : 'Send message'}
+        </button>
+        <p
+          className={'form-status' + (success ? ' success' : '')}
+          role="status"
+          aria-live="polite"
+        >
+          {status}
+        </p>
+        <noscript>
+          This form needs JavaScript for verification. Please use the email link
+          instead.
+        </noscript>
       </form>
-      
-      <style>{`
-        @keyframes scale-in {
-          0% {
-            transform: scale(0);
-            opacity: 0;
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </div>
+    </section>
   );
 }

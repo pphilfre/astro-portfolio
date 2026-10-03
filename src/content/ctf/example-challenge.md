@@ -4,7 +4,7 @@ description: "A placeholder CTF writeup to demonstrate the structure. Replace wi
 pubDate: 2025-01-15
 platform: "TryHackMe"
 difficulty: "easy"
-draft: false
+draft: true
 ---
 
 # Overview

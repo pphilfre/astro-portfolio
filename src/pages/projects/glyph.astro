@@ -1,0 +1,105 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/main.astro';
+import CaseHeader from '../../components/CaseHeader.astro';
+---
+
+<Layout
+  title="Glyph"
+  description="An editor and reader for Markdown and mathematical notes, built with Next.js, Clerk and Convex."
+>
+  <article class="wrap page">
+    <CaseHeader
+      title="Glyph"
+      description="Edit and publish Markdown & mathematical notes."
+      stack="Next.js / TypeScript / Clerk / Convex"
+    >
+      <a class="text-link" href="https://github.com/pphilfre/glyph">
+        View source ↗
+      </a>
+    </CaseHeader>
+    <div class="glyph-feature">
+      <div>
+        <span class="glyph-word">Glyph</span>
+        <p>
+          Markdown, maths
+          <br />
+          and a link to share.
+        </p>
+      </div>
+      <div class="publish-flow" aria-label="Publishing workflow">
+        <span>Write a private draft</span>
+        <i aria-hidden="true">↓</i>
+        <span>Edit & preview</span>
+        <i aria-hidden="true">↓</i>
+        <span>Publish at your own URL</span>
+        <p>Unpublish to withdraw public access.</p>
+      </div>
+    </div>
+    <section class="case-section">
+      <h2>Editing & preview</h2>
+      <div>
+        <p>
+          Create a note in the BlockNote editor or import a Markdown or LaTeX
+          file. Notes support headings, lists, code and mathematical notation,
+          with a preview of the rendered document before publishing.
+        </p>
+        <p>
+          The reader includes heading navigation, code copying and print styles.
+          LaTeX imports convert supported text and equations into Markdown;
+          unsupported commands remain as source with a conversion notice.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Implementation</h2>
+      <div>
+        <p>
+          Next.js renders notes using remark, rehype and KaTeX. Clerk handles
+          sign-in, and Convex stores note metadata and source files. Private
+          drafts are retrieved for the signed-in owner.
+        </p>
+        <pre
+          class="source-example"
+          tabindex="0"
+          aria-label="Scrollable code example"
+        ><code>const ownerId = await requireOwner(ctx);
+const noteId = ctx.db.normalizeId('notes', id);
+const note = noteId ? await ctx.db.get('notes', noteId) : null;
+return note?.ownerId === ownerId ? note : null;</code></pre>
+        <a
+          class="text-link"
+          href="https://github.com/pphilfre/glyph/blob/main/convex/notes.ts"
+        >
+          Read the ownership check ↗
+        </a>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Publishing</h2>
+      <div>
+        <p>
+          Choose a custom URL when publishing a note. Published notes must be
+          unpublished before editing, so saving a draft does not change the live
+          document. Unpublishing also removes public access to the note.
+        </p>
+        <p>
+          The test suite covers note access, file uploads, rendering and
+          publication, including unpublishing and deleting notes.
+        </p>
+        <a
+          class="text-link"
+          href="https://github.com/pphilfre/glyph/blob/main/tests/notes-security.test.ts"
+        >
+          View tests ↗
+        </a>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/markup">
+      <span>Next project</span>
+      <strong>
+        Markup <span aria-hidden="true">↗</span>
+      </strong>
+    </a>
+  </article>
+</Layout>

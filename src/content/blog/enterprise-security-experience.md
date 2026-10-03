@@ -1,53 +1,32 @@
 ---
-title: "What I Learned from Enterprise Cybersecurity Exposure"
-description: "Reflections on my work placement at Tesco Head Office and what enterprise-level security operations taught me."
+title: 'Shadowing technology teams at Tesco'
+description: 'What I observed during software development, IT operations and cybersecurity placements.'
 pubDate: 2026-01-28
-tags: ["cybersecurity", "career"]
+updatedDate: 2026-10-03
+tags: ['cybersecurity', 'career']
 draft: false
 ---
 
-# What I Learned from Enterprise Cybersecurity Exposure
+In 2025, I spent time at Tesco Headquarters on a software development placement and was invited back for a dedicated week with the cybersecurity team.
 
-Earlier this year, I had the opportunity to spend time at Tesco's Head Office, initially for a Software Development placement. After performing well, I was invited back for a second week—this time focusing on Cyber Security.
+The experience was an opportunity to observe how people work together. I was shadowing staff, rather than administering Tesco’s systems.
 
-This experience fundamentally changed how I think about security.
+## Software development
 
-## The Scale of Enterprise Security
+I attended team stand-ups and observed code reviews, automated testing and deployment workflows. Seeing those activities together helped put the individual tools into context: writing code is one part of getting a change ready for other people to use.
 
-The first thing that struck me was the sheer scale. Protecting a large organisation isn't just about firewalls and antivirus—it's a complex ecosystem of people, processes, and technology working together.
+It also gave me a clearer reason to pay attention to tests and review in my own projects.
 
-I observed how security teams handle:
-- **Threat detection** at massive scale, processing millions of events
-- **Incident response** procedures that are rehearsed and refined
-- **Security architecture** decisions that balance security with business needs
-- **Compliance** requirements that shape how data is handled
+## Cybersecurity
 
-## Key Takeaways
+I shadowed security staff to learn how SOC teams investigate alerts and coordinate incident response. The placement gave me an introduction to the work of a security team and reinforced my interest in cybersecurity.
 
-### Security is a Team Sport
-No single person or tool can secure an organisation. It requires coordination across teams—security analysts, developers, network engineers, and business stakeholders all play a role.
+## Earlier IT operations shadowing
 
-### Process Matters as Much as Technology
-Having the best tools means nothing without proper processes. I saw how documented procedures, runbooks, and clear escalation paths make the difference between chaos and controlled response during incidents.
+In 2024, I observed infrastructure automation and incident management at Tesco and practised basic PowerShell scripting. That was another view of the work behind the applications people use every day.
 
-### The Attacker's Perspective
-Understanding how attackers think is crucial. The security team constantly considers: "How would someone try to break this?" This adversarial mindset informs defensive decisions.
+## Where it fits now
 
-### Communication is Critical
-Technical skills alone aren't enough. Security professionals need to communicate risks to non-technical stakeholders, write clear reports, and collaborate effectively. The best security advice is useless if no one understands it.
+I’m now in Year 12, studying Mathematics, Further Mathematics, Physics and Economics. Alongside school, I’m building web applications, running a home lab and looking for further cybersecurity work experience.
 
-## How It Shaped My Goals
-
-This placement reinforced my interest in pursuing cybersecurity as a career. But more importantly, it gave me context for my learning. Now when I study a concept or build something in my home lab, I can connect it to real-world applications I've seen.
-
-I'm now focused on:
-- Building a strong foundation in networking and systems administration
-- Understanding both offensive and defensive security
-- Developing communication skills alongside technical abilities
-- Working towards a degree apprenticeship in financial services where security is paramount
-
-## Advice for Others
-
-If you're interested in cybersecurity, seek out work experience opportunities. Even a short placement provides invaluable insight into how security works in practice. Theoretical knowledge is important, but seeing how it's applied in a corporate environment is transformative.
-
-The professionals I met were generous with their time and advice. The security community, in my experience, is welcoming to newcomers who show genuine interest and willingness to learn.
+[Glyph](/projects/glyph) is one place I’ve been able to explore a concrete security problem myself: checking note ownership and making public access revocable.

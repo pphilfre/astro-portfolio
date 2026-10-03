@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  stack: string;
+}
+const { title, description, stack } = Astro.props;
+---
+
+<header class="case-heading">
+  <a class="back-link" href="/projects">
+    ← Projects
+  </a>
+  <h1>{title}</h1>
+  <p class="case-description">{description}</p>
+  <div class="case-meta">
+    <span>{stack}</span>
+    <div class="link-group">
+      <slot />
+    </div>
+  </div>
+</header>

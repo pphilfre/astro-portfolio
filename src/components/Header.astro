@@ -1,0 +1,160 @@
+---
+const path = Astro.url.pathname;
+const links = [
+  ['/projects', 'Projects'],
+  ['/about', 'About'],
+  ['/certifications', 'Experience'],
+  ['/blog', 'Writing'],
+  ['/contact', 'Contact'],
+];
+const active = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header class="site-header wrap">
+  <a class="brand" href="/" aria-label="Freddie Philpot, home">
+    <img
+      class="brand-avatar"
+      src="/github-avatar.png"
+      alt=""
+      width="32"
+      height="32"
+    />
+    <span>Freddie Philpot</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Main navigation">
+    {links.map(([href, label]) => (
+      <a href={href} aria-current={active(href) ? 'page' : undefined}>
+        {label}
+      </a>
+    ))}
+  </nav>
+  <div class="header-actions">
+    <details class="theme-menu">
+      <summary aria-label="Change colour theme" title="Change colour theme">
+        <svg data-theme-icon="light" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+        </svg>
+        <svg
+          data-theme-icon="dark"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          data-inactive
+        >
+          <path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z" />
+        </svg>
+        <svg
+          data-theme-icon="system"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          data-inactive
+        >
+          <rect x="3" y="4" width="18" height="13" rx="2" />
+          <path d="M8 21h8m-4-4v4" />
+        </svg>
+      </summary>
+      <div class="theme-options" role="group" aria-label="Colour theme">
+        {['light', 'dark', 'system'].map((theme) => (
+          <button
+            type="button"
+            data-theme={theme}
+            aria-label={`Use ${theme} theme`}
+            aria-pressed="false"
+            title={
+              theme === 'system'
+                ? 'System theme'
+                : `${theme[0].toUpperCase()}${theme.slice(1)} theme`
+            }
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              {theme === 'light' ? (
+                <>
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+                </>
+              ) : theme === 'dark' ? (
+                <path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z" />
+              ) : (
+                <>
+                  <rect x="3" y="4" width="18" height="13" rx="2" />
+                  <path d="M8 21h8m-4-4v4" />
+                </>
+              )}
+            </svg>
+          </button>
+        ))}
+      </div>
+    </details>
+    <details class="mobile-menu">
+      <summary>
+        Menu <span aria-hidden="true">+</span>
+      </summary>
+      <nav aria-label="Mobile navigation">
+        {links.map(([href, label]) => (
+          <a href={href} aria-current={active(href) ? 'page' : undefined}>
+            {label}
+          </a>
+        ))}
+        <a href="/cv.pdf">Download CV (PDF)</a>
+      </nav>
+    </details>
+  </div>
+</header>
+<script>
+  const themeMenu = document.querySelector<HTMLDetailsElement>('.theme-menu');
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme]');
+  const media = matchMedia('(prefers-color-scheme: dark)');
+  let selected = 'system';
+  try {
+    selected = localStorage.getItem('theme') || 'system';
+  } catch {}
+  if (!['light', 'dark', 'system'].includes(selected)) selected = 'system';
+  const apply = () => {
+    document.documentElement.classList.toggle(
+      'dark',
+      selected === 'dark' || (selected === 'system' && media.matches),
+    );
+    buttons.forEach((button) =>
+      button.setAttribute(
+        'aria-pressed',
+        String(button.dataset.theme === selected),
+      ),
+    );
+    document
+      .querySelectorAll<SVGElement>('[data-theme-icon]')
+      .forEach((icon) =>
+        icon.toggleAttribute(
+          'data-inactive',
+          icon.dataset.themeIcon !== selected,
+        ),
+      );
+  };
+  buttons.forEach((button) =>
+    button.addEventListener('click', () => {
+      selected = button.dataset.theme || 'system';
+      try {
+        localStorage.setItem('theme', selected);
+      } catch {}
+      apply();
+      if (themeMenu) themeMenu.open = false;
+      themeMenu?.querySelector('summary')?.focus();
+    }),
+  );
+  apply();
+  media.addEventListener('change', apply);
+  const menu = document.querySelector<HTMLDetailsElement>('.mobile-menu');
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape')
+      [menu, themeMenu].forEach((item) => {
+        if (item?.open) {
+          item.open = false;
+          item.querySelector('summary')?.focus();
+        }
+      });
+  });
+  document.addEventListener('click', (event) => {
+    if (menu?.open && !menu.contains(event.target as Node)) menu.open = false;
+    if (themeMenu?.open && !themeMenu.contains(event.target as Node))
+      themeMenu.open = false;
+  });
+</script>

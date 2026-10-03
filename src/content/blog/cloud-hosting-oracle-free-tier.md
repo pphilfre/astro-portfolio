@@ -1,117 +1,36 @@
 ---
-title: "Free Cloud Hosting with Oracle Cloud"
-description: "How I use Oracle Cloud's generous free tier to host Pterodactyl Panel, Docker services, and more."
+title: 'Running lab services on Oracle Cloud'
+description: 'A cloud Linux environment, with resource limits and recovery to think about.'
 pubDate: 2026-02-01
-tags: ["cloud", "docker"]
+updatedDate: 2026-10-03
+tags: ['cloud', 'docker']
 draft: false
 ---
 
-# Free Cloud Hosting with Oracle Cloud
+Oracle Cloud gives me another Linux environment alongside the services I run at home. My February 2026 setup notes described Pterodactyl and supporting services, Docker containers, monitoring and Traefik.
 
-Not everything in my infrastructure runs locally. Some services need to be publicly accessible or require more resources than my Raspberry Pi can provide. That's where Oracle Cloud's free tier comes in.
+Always Free resources are subject to eligibility, capacity and resource limits. Before provisioning anything, I need to check which resources qualify and what the account would charge for usage outside that allowance.
 
-## Why Oracle Cloud?
+## The application stack
 
-Oracle's Always Free tier is genuinely generous:
+The game-server setup described in the original notes used Pterodactyl Panel, MariaDB, Redis and Wings. Other services included Uptime Kuma and Portainer. Traefik handled request routing and TLS certificates.
 
-- **4 vCPU + 24 GB RAM** (Ampere A1 ARM instances)
-- **200 GB block storage**
-- **Public IPv4 + IPv6**
-- **No time limit** — It's actually free forever, not a trial
+Keeping service configuration explicit makes it easier to understand the dependencies. The database, application data and deployment configuration matter separately when planning recovery.
 
-This is enough to run real workloads, not just toy projects.
+## Before making a service public
 
-## What I Host
+Cloud network rules and the host firewall both affect reachability. I check the intended ports at both layers, keep administrative access separate from public application access, and check whether the selected images support the instance architecture.
 
-On my Oracle Cloud instance, I run:
+A reverse proxy does not remove the need for application authentication or software updates.
 
-### Pterodactyl Panel
-A game server management panel for hosting and managing Minecraft servers. It provides a web interface for server administration without needing SSH access for routine tasks.
+## Limits and recovery
 
-### Supporting Services
-- **MariaDB** — Database for Pterodactyl
-- **Redis** — Caching layer
-- **Wings Daemon** — Pterodactyl's server management daemon (runs in Docker)
+Oracle documents the possible reclamation of idle Always Free compute instances. A periodic cron job is not a recovery plan or a guarantee against reclamation.
 
-### Other Docker Services
-- **Uptime Kuma** — Self-hosted monitoring for all my services
-- **Portainer** — Visual Docker management
+The [Always Free resource documentation](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm) is the source to check before provisioning. Verify the current allowance and billing status in the account as well.
 
-### Traefik Reverse Proxy
-All services sit behind Traefik, which handles:
-- Routing requests to the correct container
-- Automatic SSL certificates via Let's Encrypt
-- Basic security headers
+A useful recovery plan needs backups of persistent data outside the instance and a tested way to recreate services. I have not published a restore test for this setup, so I am not presenting automated restarts as evidence of recoverability.
 
-## Initial Setup
+## What belongs in the lab notes
 
-### Creating the Instance
-
-1. Sign up for Oracle Cloud (requires a credit card but won't be charged for free tier)
-2. Create an Ampere A1 instance with Ubuntu 22.04
-3. Configure security lists to allow HTTP/HTTPS traffic
-4. Set up SSH access
-
-### Basic Hardening
-
-Before deploying services, I secured the instance:
-
-```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
-
-# Set up UFW firewall
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufw allow https
-sudo ufw enable
-
-# Install fail2ban for brute force protection
-sudo apt install fail2ban
-```
-
-### Docker Setup
-
-Docker makes deploying services reproducible and isolated:
-
-```bash
-# Install Docker
-curl -fsSL https://get.docker.com | sh
-
-# Install Docker Compose
-sudo apt install docker-compose-plugin
-
-# Add user to docker group
-sudo usermod -aG docker $USER
-```
-
-## DNS and HTTPS
-
-I use Cloudflare to manage DNS:
-- A records point to Oracle's public IP
-- Orange cloud (proxy) enabled for DDoS protection and HTTPS
-
-Traefik automatically obtains Let's Encrypt certificates, so all services get proper HTTPS.
-
-## Lessons Learned
-
-### ARM Architecture
-Oracle's free instances use ARM (aarch64), not x86. Most Docker images support ARM now, but occasionally you'll need to find ARM-compatible alternatives or build your own images.
-
-### Instance Stability
-Oracle occasionally reclaims resources from idle instances. I run a lightweight cron job to keep the instance active, and all services are configured to restart automatically.
-
-### Network Considerations
-Free tier instances have limited network throughput. For my use case (game servers and dashboards), it's plenty. But if you're planning to serve lots of traffic, keep this in mind.
-
-## Cost
-
-Total monthly cost: **£0**
-
-Seriously. I've been running this setup for months without spending anything. The free tier covers everything I need.
-
-## Conclusion
-
-Oracle Cloud's free tier is an incredible resource for learning and hosting real services. Combined with Docker and Cloudflare, you can run a professional setup without any hosting costs.
-
-If you're looking to expand beyond your home lab or need publicly accessible services, I highly recommend exploring Oracle Cloud's free tier.
+The next useful documentation is specific: the configuration needed to rebuild a service, the data it needs, and the result of restoring it. That would say more about reliability than an uptime claim or an undated cost total.

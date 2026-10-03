@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import markup from '../assets/markup-1.png';
+---
+
+<div class="project-collection">
+  <a class="project-link glyph-project" href="/projects/glyph">
+    <div class="project-art glyph-art" aria-hidden="true">
+      <span class="glyph-word">Glyph</span>
+      <div class="glyph-paper">
+        <span>Mathematical notes</span>
+        <span class="paper-equation">f(x) = x² + 2x + 1</span>
+        <span>Markdown & LaTeX.</span>
+        <div class="paper-lines"></div>
+      </div>
+      <span class="art-caption">Write. Edit. Publish.</span>
+    </div>
+    <div class="project-caption">
+      <div>
+        <h3>Glyph</h3>
+        <p>Markdown & mathematical note publishing</p>
+      </div>
+      <span class="project-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </div>
+  </a>
+  <a class="project-link markup-project" href="/projects/markup">
+    <div class="project-art markup-art">
+      <span class="art-word" aria-hidden="true">
+        Markup
+      </span>
+      <Image
+        src={markup}
+        alt="Markup workspace with folders, note tabs and a rendered Markdown document"
+        widths={[480, 800, 1200]}
+        sizes="(max-width: 700px) 90vw, 50vw"
+        loading="lazy"
+        format="webp"
+      />
+    </div>
+    <div class="project-caption">
+      <div>
+        <h3>Markup</h3>
+        <p>A Markdown workspace for web & desktop</p>
+      </div>
+      <span class="project-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </div>
+  </a>
+  <a class="project-link lab-project" href="/projects/homelab">
+    <div class="project-art lab-art" aria-hidden="true">
+      <span class="lab-dot"></span>
+      <div class="lab-mini">
+        <span>Linux</span>
+        <i></i>
+        <div>
+          <span>Home</span>
+          <span>Cloud</span>
+        </div>
+        <i></i>
+        <span>Build / observe / learn</span>
+      </div>
+    </div>
+    <div class="project-caption">
+      <div>
+        <h3>Home lab</h3>
+        <p>Linux services, networking & monitoring</p>
+      </div>
+      <span class="project-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </div>
+  </a>
+</div>

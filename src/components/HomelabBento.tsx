@@ -25,7 +25,7 @@ const cardDetails: Record<string, DetailSheetData> = {
     title: "Proxmox Server",
     subtitle: "Virtualisation Host",
     description:
-      "The core of the home lab is a Proxmox VE hypervisor running multiple virtual machines and LXC containers. It provides full isolation between services while keeping resource usage efficient.\n\nVMs include a dedicated Docker host, a Windows Server instance for Active Directory testing, and several lightweight Debian containers for individual services. Backups are automated to a local NAS share.",
+      "The core of the home lab is a Proxmox VE hypervisor used to isolate services into virtual machines and LXC containers, ensuring strict separation between workloads and controlled resource allocation.\n\nThe design prioritises isolation to reduce blast radius in the event of compromise, with different services running in dedicated environments rather than sharing a single host.\n\nA dedicated Docker VM hosts containerised services, alongside a Windows Server instance for Active Directory experimentation and multiple Debian containers for infrastructure workloads such as tooling and monitoring.\n\nBackups are automated to a local NAS to enable recovery from VM corruption, misconfiguration, or accidental deletion.",
     tags: ["Proxmox VE", "KVM", "LXC", "Virtualisation", "Backups"],
     icon: <Server className="w-6 h-6 text-foreground" />,
   },
@@ -33,7 +33,7 @@ const cardDetails: Record<string, DetailSheetData> = {
     title: "Firewall & Network",
     subtitle: "OPNsense / pfSense",
     description:
-      "Network traffic is managed through a dedicated firewall appliance running OPNsense. It handles VLAN segmentation, intrusion detection (Suricata), DNS over TLS, and strict firewall rules between lab, IoT, and trusted segments.\n\nAll inter-VLAN traffic is logged and monitored. The firewall also serves as the DHCP server and provides WireGuard site-to-site tunnels for remote access.",
+      "Network traffic is enforced through an OPNsense firewall acting as the central security boundary for inspection, segmentation, and policy control.\n\nThe network is divided into VLANs (Trusted, Lab, IoT, Guest) to reduce lateral movement risk and isolate devices with different trust levels. Inter-VLAN routing is strictly allow-listed rather than implicitly trusted.\n\nSuricata is deployed for intrusion detection to identify suspicious or malicious traffic patterns at the network level.\n\nDNS over TLS and Pi-hole are used to enforce encrypted and filtered DNS resolution, reducing exposure to DNS-based tracking and manipulation. WireGuard provides secure remote access without exposing internal services directly to the public internet.",
     tags: ["OPNsense", "VLANs", "Suricata IDS", "WireGuard", "Firewall Rules", "DNS over TLS"],
     icon: <Shield className="w-6 h-6 text-foreground" />,
   },
@@ -41,7 +41,7 @@ const cardDetails: Record<string, DetailSheetData> = {
     title: "Raspberry Pi Fleet",
     subtitle: "Edge & DNS Services",
     description:
-      "Multiple Raspberry Pis run critical always-on services. The primary Pi hosts Pi-hole for network-wide DNS filtering with custom blocklists and local DNS records.\n\nA second Pi runs Tailscale as a subnet router, providing secure mesh VPN access to the entire lab from anywhere. A third handles monitoring with Uptime Kuma and lightweight log collection.",
+       "Multiple Raspberry Pi devices provide always-on edge services supporting network resilience and remote access.\n\nThe primary Pi runs Pi-hole for network-wide DNS filtering and local resolution, reducing unwanted traffic and improving visibility into DNS queries.\n\nA second Pi operates as a Tailscale subnet router, enabling secure mesh VPN access into the home lab without requiring direct port exposure. A third handles uptime monitoring and lightweight log collection for service availability tracking.",
     tags: ["Raspberry Pi", "Pi-hole", "Tailscale", "Uptime Kuma", "ARM", "24/7 Uptime"],
     icon: <Cpu className="w-6 h-6 text-foreground" />,
   },
@@ -49,7 +49,7 @@ const cardDetails: Record<string, DetailSheetData> = {
     title: "Self-Hosted Services",
     subtitle: "Docker Stack",
     description:
-      "A wide range of services are self-hosted via Docker Compose on the Proxmox Docker VM. These include:\n\n• Traefik — reverse proxy with automatic Let's Encrypt SSL\n• Portainer — container management UI\n• Uptime Kuma — service monitoring and alerting\n• Vaultwarden — self-hosted password manager\n• Cloudflare Tunnel — secure external access without port forwarding\n• Pterodactyl — game server management panel\n• Gitea — self-hosted Git for private repos\n\nAll services are behind Traefik with TLS termination and are accessible only through Tailscale or Cloudflare Tunnel.",
+       "A range of self-hosted services are deployed via Docker Compose on a dedicated Proxmox VM, providing internal tooling, automation, and infrastructure services.\n\nServices are exposed through a reverse proxy (Traefik) with TLS termination, and external access is restricted through Tailscale or Cloudflare Tunnel rather than direct port forwarding.\n\nKey services include container management, monitoring, password storage, version control, and game server infrastructure, each deployed with isolation and access control considerations in mind.",
     tags: ["Docker", "Traefik", "Portainer", "Vaultwarden", "Cloudflare Tunnel", "Gitea"],
     icon: <Container className="w-6 h-6 text-foreground" />,
   },
@@ -57,7 +57,7 @@ const cardDetails: Record<string, DetailSheetData> = {
     title: "Network Architecture",
     subtitle: "VLANs & Segmentation",
     description:
-      "The network is segmented into multiple VLANs: Trusted (personal devices), Lab (servers and VMs), IoT (smart home devices), and Guest. Inter-VLAN routing is handled by the firewall with strict allow-lists.\n\nA managed switch provides 802.1Q tagging across all ports. Wireless access points broadcast separate SSIDs mapped to each VLAN. All DNS queries are forced through Pi-hole regardless of client configuration.",
+  "The network is segmented into multiple VLANs (Trusted, Lab, IoT, Guest) to enforce separation between personal devices, infrastructure services, and untrusted or externally managed devices.\n\nA managed switch provides 802.1Q VLAN tagging across all wired connections, while wireless access points map SSIDs to corresponding VLANs.\n\nInter-VLAN communication is strictly controlled through firewall rules, and all DNS traffic is forced through internal filtering regardless of client configuration to maintain visibility and policy enforcement.",
     tags: ["VLANs", "802.1Q", "Managed Switch", "Network Segmentation", "DNS Enforcement"],
     icon: <Network className="w-6 h-6 text-foreground" />,
   },
@@ -65,7 +65,7 @@ const cardDetails: Record<string, DetailSheetData> = {
     title: "Monitoring & Logging",
     subtitle: "Observability Stack",
     description:
-      "Uptime Kuma monitors all services and sends alerts via Discord webhooks when something goes down. Logs from critical services are collected and accessible for troubleshooting.\n\nProxmox provides built-in resource monitoring for VMs and containers. The firewall dashboard shows real-time traffic flows, blocked connections, and IDS alerts.",
+      "System observability is implemented through uptime monitoring, infrastructure metrics, and network-level traffic visibility.\n\nUptime Kuma tracks service availability and triggers alerting via Discord webhooks on service disruption.\n\nProxmox provides host-level resource monitoring for virtual machines and containers, while the firewall dashboard exposes real-time traffic flows, blocked requests, and intrusion detection alerts via Suricata.\n\nThis setup enables rapid identification of failures, misconfigurations, and potential security anomalies across the environment.",
     tags: ["Uptime Kuma", "Discord Alerts", "Proxmox Metrics", "Suricata Logs", "Traffic Analysis"],
     icon: <Activity className="w-6 h-6 text-foreground" />,
   },

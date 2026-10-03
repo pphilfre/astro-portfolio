@@ -1,0 +1,98 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/main.astro';
+import CaseHeader from '../../components/CaseHeader.astro';
+---
+
+<Layout title="Home lab">
+  <article class="wrap page">
+    <CaseHeader
+      title="Home lab"
+      description="Linux services at home and on Oracle Cloud."
+      stack="Linux / Proxmox / Oracle Cloud / Docker Compose"
+    >
+      <a class="text-link" href="https://github.com/pphilfre/homelab">
+        Repository ↗
+      </a>
+      <a class="text-link" href="/blog/building-my-home-lab">
+        Lab notes
+      </a>
+    </CaseHeader>
+    <figure class="topology">
+      <figcaption>
+        Home lab <span>Service overview · October 2026</span>
+      </figcaption>
+      <div class="topology-tree">
+        <div class="topology-access">
+          <strong>My devices</strong>
+          <span>Tailscale remote access</span>
+        </div>
+        <div class="topology-hosts">
+          <div>
+            <h2>At home</h2>
+            <p>Proxmox virtual machines</p>
+            <p>Raspberry Pi / Pi-hole DNS</p>
+          </div>
+          <div>
+            <h2>In the cloud</h2>
+            <p>Oracle Cloud / Linux</p>
+            <p>Docker Compose / Traefik</p>
+          </div>
+        </div>
+        <div class="topology-observe">
+          <strong>Monitoring</strong>
+          <span>Wazuh log analysis</span>
+          <span>Prometheus metrics</span>
+          <span>Grafana dashboards</span>
+        </div>
+      </div>
+    </figure>
+    <section class="case-section">
+      <h2>Services</h2>
+      <div>
+        <p>
+          I maintain Linux services locally and on Oracle Cloud. Docker Compose
+          lets me describe services in configuration; Proxmox gives me virtual
+          machines for experimentation.
+        </p>
+        <p>
+          Pi-hole handles DNS filtering, Tailscale gives me remote access to
+          home devices, and Traefik routes requests to services. Wazuh,
+          Prometheus and Grafana help me look at logs and system performance.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>DNS troubleshooting</h2>
+      <div>
+        <p>
+          For DNS troubleshooting, I check which resolver a device is using,
+          inspect the Pi-hole query log, then compare a local record with a
+          public lookup. That separates a DNS issue from an unavailable
+          application.
+        </p>
+        <pre
+          class="source-example"
+          tabindex="0"
+          aria-label="Scrollable code example"
+        ><code># Example diagnostic commands; use your resolver address.
+nslookup pi.home.arpa 192.168.1.100
+nslookup example.com 192.168.1.100</code></pre>
+        <p class="muted">
+          These are illustrative commands, not an export of my network
+          configuration. The diagram groups services; it is not a map of
+          firewall rules or physical connections.
+        </p>
+        <a class="text-link" href="/blog/pihole-dns-filtering">
+          Read my DNS notes
+        </a>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/glyph">
+      <span>Next project</span>
+      <strong>
+        Glyph <span aria-hidden="true">↗</span>
+      </strong>
+    </a>
+  </article>
+</Layout>

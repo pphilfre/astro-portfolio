@@ -1,95 +1,36 @@
 ---
-title: "Zero Trust Access with Twingate"
-description: "Implementing zero-trust network access for private resources using Twingate alongside Tailscale and Pi-hole."
-pubDate: 2026-01-22
-tags: ["cybersecurity", "networking"]
+title: 'Twingate and Tailscale: different access paths'
+description: 'What experimenting with resource access taught me about policies and network reachability.'
+pubDate: 2026-01-20
+updatedDate: 2026-10-03
+tags: ['networking', 'cybersecurity', 'zero-trust']
 draft: false
 ---
 
-# Zero Trust Access with Twingate
+I experimented with Twingate alongside Tailscale in my Raspberry Pi setup. The useful comparison was how I described access to services, rather than which product could be labelled “more secure”.
 
-After setting up Tailscale for general remote access, I wanted to explore a different approach: zero-trust network access. Twingate provides this, and it complements my existing setup nicely.
+This is a note about that January 2026 experiment, not a claim that both access paths are required by my current lab.
 
-## What is Zero Trust?
+## Defining a resource
 
-The traditional security model is "castle and moat"—once you're inside the network, you're trusted. Zero trust flips this: **never trust, always verify**. Every access request is authenticated and authorised, regardless of where it comes from.
+In Twingate, a connector provides a path to private resources. I used its resource model to think about internal dashboards, development servers and local web applications as separate destinations.
 
-This is increasingly how enterprises approach security, and I wanted hands-on experience with the concept.
+That is a useful exercise even before choosing tooling: identify the service, the people who need it, and the conditions under which access should be allowed.
 
-## Why Twingate?
+## Tailscale also has access controls
 
-Twingate provides secure remote access without a traditional VPN:
+My earlier wording implied that Tailscale automatically lets every device talk to every other device. That is too broad. Its grants or ACLs control permitted connections, and its [access-control documentation](https://tailscale.com/docs/features/access-control) explains that policy model.
 
-- **Zero trust architecture** — Resources are only accessible after device and user authentication
-- **No port forwarding** — My Pi stays hidden from the public internet
-- **Split tunnelling** — Only private traffic goes through Twingate; everything else stays local
-- **Fine-grained access control** — I can specify exactly who can access what
+A device being connected to a tailnet and being authorised to reach a particular service are different things.
 
-## My Setup
+## Two routes are not two successive barriers
 
-I run Twingate on my Raspberry Pi 3 alongside Pi-hole and Tailscale. Each serves a different purpose:
+If a dashboard can be reached through either Twingate or Tailscale, a request normally uses one path. The two systems do not automatically check the same request in sequence.
 
-| Service | Purpose |
-|---------|---------|
-| **Pi-hole** | DNS filtering and ad blocking |
-| **Tailscale** | Full mesh VPN for device connectivity |
-| **Twingate** | Zero-trust access to specific applications |
+Both paths need appropriate policies. Adding another route can add work to the access review; it is not, by itself, proof of defence in depth.
 
-### Deploying the Connector
+## What I took from the experiment
 
-Twingate uses a "connector" that runs inside your network. I deployed it using Docker:
+The most useful outcome was thinking about permissions in terms of specific resources. For each service, I want to be able to explain who can reach it, how they authenticate, and what happens when that access should stop.
 
-```bash
-docker run -d \
-  --restart unless-stopped \
-  --name twingate-connector \
-  --network host \
-  -e TWINGATE_NETWORK="your-network" \
-  -e TWINGATE_ACCESS_TOKEN="your-access-token" \
-  -e TWINGATE_REFRESH_TOKEN="your-refresh-token" \
-  -e TWINGATE_LABEL="raspberrypi" \
-  twingate/connector:latest
-```
-
-### Defining Resources
-
-In Twingate's admin console, I defined the private resources I want to access:
-
-- Internal dashboards (Pi-hole admin, router config)
-- Development servers
-- Local web apps I'm testing
-
-Each resource can have specific access policies—who can access it, from which devices, under what conditions.
-
-### Client Setup
-
-On my iPhone and laptop, I installed the Twingate client and logged in. Now I can access defined resources from anywhere, and the connection is authenticated every time.
-
-## How It Differs from Tailscale
-
-You might wonder: why use both Tailscale and Twingate?
-
-**Tailscale** gives me a mesh network—all my devices can talk to each other directly. It's like extending my LAN across the internet. Great for SSH access, file sharing, and general connectivity.
-
-**Twingate** is more restrictive by design. It's about accessing specific resources with explicit permissions. I use it for services where I want extra assurance that access is controlled.
-
-In practice:
-- I use Tailscale for everyday remote access
-- I use Twingate when I want to test zero-trust patterns or access sensitive admin panels
-
-## Lessons Learned
-
-### Zero Trust Requires Planning
-You need to think carefully about what resources exist and who should access them. This planning exercise itself was valuable—it forced me to inventory my services.
-
-### The UX is Different
-With a traditional VPN, you "connect" and then have full access. With zero trust, you access specific resources as needed. It's more seamless in some ways, more restrictive in others.
-
-### Defense in Depth
-Running multiple access solutions isn't redundant—it's defense in depth. If one solution has a vulnerability, the other provides a fallback.
-
-## Conclusion
-
-Zero trust is the direction enterprise security is moving. Having hands-on experience with tools like Twingate gives me practical understanding of these concepts, not just theoretical knowledge.
-
-If you're already running Tailscale or a traditional VPN, consider experimenting with zero-trust access. Twingate's free tier is enough for personal use, and the learning experience is valuable.
+That question also applies to [publishing notes in Glyph](/projects/glyph): a public URL should stop working for future requests when its owner unpublishes the note.

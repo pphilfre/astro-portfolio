@@ -1,50 +1,143 @@
 ---
-import '../styles/global.css';
-import Navbar from '../components/Navbar.tsx';
-import { AchievementsBento } from '../components/AchievementsBento.tsx';
+export const prerender = true;
+import Layout from '../layouts/main.astro';
+const credentials = [
+  {
+    name: 'Claude 101',
+    provider: 'Anthropic',
+    date: 'August 2026',
+    href: 'https://verify.skilljar.com/c/4tg3p73xpsry',
+    id: '4tg3p73xpsry',
+  },
+  {
+    name: 'Endpoint Security',
+    provider: 'Cisco',
+    date: 'February 2026',
+    id: 'ca4e6574-c9fa-4659-a304-81892d9f6159',
+    href: 'https://www.credly.com/badges/ca4e6574-c9fa-4659-a304-81892d9f6159/public_url',
+  },
+  {
+    name: 'Network Defense',
+    provider: 'Cisco',
+    date: 'February 2026',
+    id: '01c39b81-fb15-494d-9b44-6626c50f3156',
+    href: 'https://www.credly.com/badges/01c39b81-fb15-494d-9b44-6626c50f3156/public_url',
+  },
+  {
+    name: 'Tata — Cybersecurity Analyst Job Simulation',
+    provider: 'Forage',
+    date: 'February 2026',
+    id: 'gJkaK49gtYXJoqkox',
+    href: '/certifications/tata.pdf',
+  },
+  {
+    name: 'Datacom — Cyber Security Operations Job Simulation',
+    provider: 'Forage',
+    date: 'February 2026',
+    id: 'hAhPowXmA6LgzKZnp',
+    href: '/certifications/datacom.pdf',
+  },
+  {
+    name: 'AIG — Shields Up: Cybersecurity Job Simulation',
+    provider: 'Forage',
+    date: 'February 2026',
+    id: 'kyHAiM9Ryyr3fehem',
+    href: '/certifications/aig.pdf',
+  },
+  {
+    name: 'Introduction to IoT',
+    provider: 'Cisco',
+    date: 'July 2024',
+    id: 'ccce8102-43f9-4d1e-90cd-9983457e756f',
+    href: 'https://www.credly.com/badges/ccce8102-43f9-4d1e-90cd-9983457e756f/public_url',
+  },
+  {
+    name: 'Introduction to Cybersecurity',
+    provider: 'Cisco',
+    date: 'July 2024',
+    id: '298659f6-54ff-4143-9a7d-62d555f88271',
+    href: 'https://www.credly.com/badges/298659f6-54ff-4143-9a7d-62d555f88271/public_url',
+  },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Achievements and certifications by Freddie Philpot. Enterprise cybersecurity experience, home lab projects, cloud identity setup, and networking knowledge." />
-		<title>Achievements | Freddie Philpot</title>
-		<script is:inline>
-			(function() {
-				const theme = localStorage.getItem('theme') || 'system';
-				const root = document.documentElement;
-				if (theme === 'system') {
-					const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-					root.classList.add(systemDark ? 'dark' : 'light');
-				} else {
-					root.classList.add(theme);
-				}
-			})();
-		</script>
-		<!-- PostHog Analytics -->
-		<script is:inline>
-			!function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init rs ls wi ns us ts ss capture calculateEventProperties vs register register_once register_for_session unregister unregister_for_session gs getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty fs ds createPersonProfile setInternalOrTestUser ps Qr opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing hs debug M cs getPageViewId captureTraceFeedback captureTraceMetric Kr".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-			posthog.init('phc_kHZWuiUzdGkjQ7OvXfER2jygjMyTK9oyFfjVeg5vuAg', {
-				api_host: 'https://us.i.posthog.com',
-				defaults: '2025-11-30',
-				person_profiles: 'identified_only',
-			})
-		</script>
-	</head>
-
-	<body class="bg-background text-foreground min-h-screen">
-		<Navbar client:load />
-		
-		<main class="pt-24 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto pb-16">
-			<div class="mb-12">
-				<h1 class="text-4xl md:text-5xl font-bold mb-4">Achievements</h1>
-				<p class="text-muted-foreground text-lg">Experience and learning progress</p>
-			</div>
-			
-			<AchievementsBento client:load />
-		</main>
-	</body>
-</html>
+<Layout title="Experience">
+  <div class="wrap page">
+    <header class="page-heading">
+      <h1>Experience</h1>
+    </header>
+    <section class="experience-feature">
+      <div>
+        <img
+          class="company-logo"
+          src="/brands/tesco.svg"
+          alt="Tesco"
+          width="140"
+          height="50"
+        />
+        <span>Headquarters, Welwyn Garden City</span>
+      </div>
+      <div>
+        <h2>Technology work placements</h2>
+        <p>
+          In 2025, I observed code reviews, automated testing and deployment,
+          and attended software team stand-ups. I was invited back for a
+          dedicated week with the cybersecurity team.
+        </p>
+        <p>
+          I shadowed security staff to learn how SOC teams investigate alerts
+          and coordinate incident response.
+        </p>
+        <p class="muted">
+          In 2024, I also shadowed IT operations, observed infrastructure
+          automation and incident management, and practised basic PowerShell.
+        </p>
+        <a class="text-link" href="/blog/enterprise-security-experience">
+          Read about the placement
+        </a>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-heading">
+        <h2>Licences & certifications</h2>
+      </div>
+      <div class="credential-list">
+        {credentials.map((item) => (
+          <div class="credential-row">
+            <img
+              class="credential-logo"
+              src={`/brands/${item.provider.toLowerCase()}.svg`}
+              alt=""
+              width="48"
+              height="48"
+              loading="lazy"
+            />
+            <div class="credential-details">
+              <span class="credential-provider">{item.provider}</span>
+              <h3>
+                <a href={item.href}>{item.name}</a>
+              </h3>
+              <p class="credential-id">Credential ID: {item.id}</p>
+              <a class="text-link credential-link" href={item.href}>
+                Show credential <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <span class="credential-date">Issued {item.date}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Achievements</h2>
+      <div>
+        <h3>KS4 Computer Science Student of the Year</h3>
+        <p>Monk’s Walk School.</p>
+        <h3>Duke of Edinburgh Bronze Award</h3>
+        <p>
+          Completed in 2025, with library volunteering supporting visitors and
+          reading programmes.
+        </p>
+      </div>
+    </section>
+  </div>
+</Layout>

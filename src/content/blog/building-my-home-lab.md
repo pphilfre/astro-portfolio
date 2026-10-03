@@ -1,61 +1,36 @@
 ---
-title: "Building My Home Lab: A Platform for Learning"
-description: "How I built and manage a comprehensive Linux-based home lab environment for hands-on cybersecurity and infrastructure learning."
+title: 'Building my home lab'
+description: 'Linux services, local virtual machines and a place to understand how the pieces fit together.'
 pubDate: 2026-01-15
-tags: ["home-lab", "linux", "docker"]
+updatedDate: 2026-10-03
+tags: ['home-lab', 'linux', 'docker']
 draft: false
 ---
 
-# Building My Home Lab: A Platform for Learning
+My home lab gives me somewhere to learn by running services myself. I use Linux, Docker Compose and Traefik across local Proxmox virtual machines and Oracle Cloud.
 
-One of the most valuable investments I've made in my learning journey is building a home lab. It's become my primary platform for experimentation, breaking things, fixing them, and truly understanding how systems work.
+This article began as a January 2026 overview. The tools below reflect my setup as of October 2026; the earlier list of plans is no longer a description of what is installed.
 
-## Why a Home Lab?
+## What runs where
 
-Reading documentation and watching tutorials only gets you so far. There's no substitute for hands-on experience—especially when things go wrong. A home lab gives you a safe environment to:
+Proxmox provides local virtual machines for experiments. Docker Compose describes the services I run, while Traefik routes requests to applications. Oracle Cloud provides another Linux environment outside my home network.
 
-- Experiment with configurations without fear of breaking production systems
-- Understand how different services interact
-- Learn troubleshooting by actually troubleshooting
-- Build a portfolio of real projects
+A Raspberry Pi runs Pi-hole for DNS filtering. I use Tailscale to reach home devices remotely. These tools solve separate problems: filtering DNS queries does not control every network connection, and remote access still needs an access policy.
 
-## My Infrastructure
+## Looking at the system
 
-Over time, I've built out a comprehensive setup that includes:
+I use Wazuh for lab log analysis, and Prometheus with Grafana for system metrics and dashboards. Logs help explain what happened; metrics help show how a system is behaving over time.
 
-### Docker Containers
-The backbone of my lab runs on Docker. Containerisation makes it easy to spin up services, test configurations, and tear things down without affecting other parts of the system. I run everything from web servers to monitoring tools.
+Keeping those views separate is useful. An application can be reachable while still returning errors, and a healthy host does not establish that every service on it works.
 
-### VPN Configuration
-Secure remote access is essential. I've configured VPN solutions that let me access my home network from anywhere—whether I'm at school or travelling. This was one of my first "real" projects and taught me a lot about networking and encryption.
+## DNS is one part of the path
 
-### DNS Server
-Running my own DNS server (Pi-hole) gives me:
-- Network-wide ad blocking
-- Custom local DNS records for my services
-- Faster resolution for internal hostnames
-- Better privacy by avoiding third-party DNS providers
+Pi-hole answers local records and filters requests. Permitted public queries still go to an upstream resolver; in the configuration described in my DNS article, that is Cloudflare.
 
-### Reverse Proxy with SSL
-Using Nginx and Traefik, I've set up reverse proxies that route traffic to different services and handle SSL termination. This means all my internal services get proper HTTPS certificates.
+When looking at a connection problem, the questions are different at each step: did the name resolve, was the host reachable, and did the application return the expected response?
 
-### Cloud-Hosted VPS
-Not everything runs locally. I have cloud instances on Oracle Cloud's free tier for services that need to be publicly accessible or require more resources than my local hardware can provide.
+## What I’m documenting next
 
-## Lessons Learned
+The public repository currently contains a short README. More useful evidence would be selected configuration, a recovery procedure and a dated account of a specific failure. I’m keeping those separate from claims about what the lab already proves.
 
-Building this lab has taught me more than any course could:
-
-1. **Documentation matters** — I've learned to document everything. Future me will thank present me.
-2. **Backups are non-negotiable** — I learned this the hard way after a corrupted SD card took out my Pi.
-3. **Start simple, iterate** — My first setup was basic. Each iteration added complexity as I understood more.
-4. **Troubleshooting is a skill** — When something breaks at 2am, you learn to read logs properly.
-
-## What's Next?
-
-I'm constantly evolving the lab. Current projects on my list include:
-- Setting up a proper monitoring stack with Prometheus and Grafana
-- Experimenting with Kubernetes (k3s) for container orchestration
-- Building out more security tooling for practice
-
-If you're considering building your own home lab, my advice is simple: just start. You don't need expensive hardware—a Raspberry Pi or an old laptop is enough to begin. The learning comes from doing.
+[See the service overview](/projects/homelab) or [read the DNS notes](/blog/pihole-dns-filtering).
