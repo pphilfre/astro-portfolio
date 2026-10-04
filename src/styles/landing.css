@@ -521,8 +521,33 @@ html.landing-root {
   }
 }
 @media (max-width: 700px) {
+  .landing-page {
+    --scene-base: #dc401d;
+    --scene-orange: #ff681b;
+    --scene-pink: #f1267d;
+    --scene-violet: #7725da;
+    --scene-sun: #ff943d;
+  }
+  .dark .landing-page {
+    --scene-base: #b53419;
+    --scene-orange: #e65415;
+    --scene-pink: #d91d6c;
+    --scene-violet: #641ed1;
+    --scene-sun: #f88227;
+  }
   .experience {
     border-radius: 24px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 16px;
+    padding: 90px 7% 20px;
+  }
+  .scene-light {
+    inset: 0;
+  }
+  .scene-grain {
+    opacity: 0.055;
   }
   .scene-light::after {
     background: linear-gradient(
@@ -531,22 +556,21 @@ html.landing-root {
       var(--scene-sun) 59%,
       transparent 69%
     );
-    opacity: 0.5;
+    opacity: 0.25;
   }
   .experience::before {
     background: linear-gradient(180deg, #57132150, transparent 60%);
   }
   .landing-copy {
-    top: 100px;
-    left: 7%;
-    right: 7%;
+    position: relative;
+    inset: auto;
     width: auto;
     max-width: none;
     transform: none;
   }
   .landing-role {
     font-size: 11px;
-    margin-bottom: 13px;
+    margin-bottom: 9px;
   }
   .landing-copy h1 {
     font-size: clamp(36px, 9.8vw, 57px);
@@ -579,14 +603,21 @@ html.landing-root {
     width: 42px;
   }
   .project-deck {
-    inset: 42% 0 14%;
+    position: relative;
+    inset: auto;
+    min-height: 0;
+    height: 100%;
+    max-height: 380px;
+    align-self: center;
     perspective: 1400px;
+    container-type: size;
   }
   .project-card {
-    width: min(80vw, 49dvh, 500px);
+    width: min(100%, max(140px, calc((100cqh - 100px) / 0.86)));
     left: 50%;
     top: 51%;
     border-radius: 16px;
+    container-type: inline-size;
     transform: translate(-52%, -37%) rotateY(-9deg) rotateX(4deg) rotateZ(5deg);
   }
   .project-card[data-depth='1'] {
@@ -597,6 +628,13 @@ html.landing-root {
     transform: translate(-36%, -82%) rotateY(-9deg) rotateX(4deg) rotateZ(4deg)
       scale(0.78);
   }
+  .project-window {
+    display: block;
+    box-shadow: 0 12px 30px #46152255;
+  }
+  .experience[data-changing] .project-card[data-depth='0'] .project-window {
+    animation: none;
+  }
   .project-window-heading {
     padding: 12px 14px;
     gap: 9px;
@@ -606,11 +644,17 @@ html.landing-root {
     height: 30px;
   }
   .project-window-heading h2 {
-    font-size: 21px;
+    font-size: clamp(14px, 6cqw, 21px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .project-window-heading p {
     font-size: 9px;
     margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .project-open {
     width: 30px;
@@ -623,6 +667,7 @@ html.landing-root {
   .project-visual {
     margin-inline: 10px;
     border-radius: 6px;
+    aspect-ratio: 1.82;
   }
   .project-window-foot {
     padding: 9px 14px 11px;
@@ -633,9 +678,8 @@ html.landing-root {
     border-radius: 14px;
   }
   .landing-footer {
-    bottom: 20px;
-    left: 7%;
-    right: 7%;
+    position: relative;
+    inset: auto;
     display: block;
   }
   .project-browser {
@@ -652,17 +696,18 @@ html.landing-root {
     gap: 4px;
   }
   .deck-actions button {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
   }
   .experience[data-view='list'] .project-deck {
-    inset: 45% 7% 14%;
+    inset: auto;
+    container-type: normal;
   }
   .experience[data-view='list'] .deck-perspective {
     gap: 12px;
   }
   .experience[data-view='list'] .project-window-heading {
-    padding: 19px;
+    padding: 12px 16px;
   }
   .experience[data-view='list'] .project-window-heading h2 {
     font-size: 23px;
@@ -670,10 +715,28 @@ html.landing-root {
   .experience[data-view='list'] .project-window-heading p {
     font-size: 11px;
   }
+  .experience[data-view='list'] .project-card {
+    width: 100%;
+    height: auto;
+    flex: 1;
+    min-height: 0;
+  }
+}
+@media (max-width: 700px) and (min-height: 701px) and (max-height: 800px) {
+  .landing-role {
+    display: none;
+  }
+  .landing-links {
+    margin-top: 14px;
+  }
 }
 @media (max-width: 700px) and (max-height: 700px) {
+  .experience {
+    padding-block: 85px 13px;
+    gap: 14px;
+  }
   .landing-copy {
-    top: 85px;
+    top: auto;
   }
   .landing-role {
     margin-bottom: 9px;
@@ -687,12 +750,6 @@ html.landing-root {
   }
   .landing-links {
     margin-top: 12px;
-  }
-  .project-deck {
-    inset-block: 48% 12%;
-  }
-  .project-card {
-    width: min(77vw, 43dvh);
   }
   .project-window-heading {
     padding: 9px 12px;
@@ -715,14 +772,8 @@ html.landing-root {
     width: 26px;
     height: 26px;
   }
-  .landing-footer {
-    bottom: 13px;
-  }
   .project-tabs {
     gap: 12px;
-  }
-  .experience[data-view='list'] .project-deck {
-    inset-block: 51% 12%;
   }
   .experience[data-view='list'] .project-window-heading {
     padding: 12px 16px;
@@ -847,30 +898,18 @@ html.landing-root {
   .landing-role {
     display: none;
   }
-  .project-deck {
-    inset-block: 55% 20%;
-  }
-  .project-card {
-    width: min(70vw, 37dvh);
-  }
-  .project-card[data-depth='1'] {
-    transform: translate(-46%, -52%) rotateY(-9deg) rotateX(4deg) rotateZ(-3deg)
-      scale(0.89);
-  }
-  .project-card[data-depth='2'] {
-    transform: translate(-36%, -64%) rotateY(-9deg) rotateX(4deg) rotateZ(4deg)
-      scale(0.78);
-  }
 }
 @media (min-width: 500px) and (max-width: 700px) {
   .landing-copy h1 {
     font-size: 44px;
   }
-  .project-card {
-    width: min(72vw, 43dvh);
+}
+@media (max-width: 360px) {
+  .project-tabs {
+    gap: 8px;
   }
-  .project-deck {
-    inset-block: 52% 17%;
+  .project-tabs button {
+    font-size: 11px;
   }
 }
 

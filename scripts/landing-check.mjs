@@ -22,6 +22,8 @@ const sizes = [
   [375, 667],
   [390, 844],
   [430, 932],
+  [430, 780],
+  [430, 720],
   [600, 800],
   [768, 1024],
   [1024, 768],
@@ -42,7 +44,7 @@ const setView = async (value) => {
   if ((await page.locator('.experience').getAttribute('data-view')) !== value)
     await page.locator('[data-view-toggle]').click();
 };
-const geometry = async (width, height, view) => {
+const geometry = async (width, height, view, safeArea = false) => {
   await page.waitForFunction(() =>
     [...document.querySelectorAll('.project-card img')].every(
       (image) => image.complete && image.naturalWidth > 0,
@@ -84,6 +86,7 @@ const geometry = async (width, height, view) => {
           overlaps.push([elements[i].textContent, elements[j].textContent]);
       }
     const copy = rect(document.querySelector('.landing-copy'));
+    const footer = rect(document.querySelector('.landing-footer'));
     const cardRects = [...document.querySelectorAll('.project-card')].map(
       (e) => ({ name: e.dataset.projectName, ...rect(e) }),
     );
@@ -94,6 +97,26 @@ const geometry = async (width, height, view) => {
           Math.min(copy.bottom, r.bottom) - Math.max(copy.top, r.top) > 10,
       )
       .map((r) => r.name);
+    const footerCardOverlap =
+      innerWidth <= 700
+        ? cardRects.filter((r) => r.bottom > footer.top + 1).map((r) => r.name)
+        : [];
+    const mobileButtons =
+      innerWidth <= 700
+        ? [...document.querySelectorAll('.deck-actions button')]
+            .filter((e) => !e.inert)
+            .map((e) => ({
+              width: e.getBoundingClientRect().width,
+              height: e.getBoundingClientRect().height,
+            }))
+        : [];
+    const screenshotRatios =
+      innerWidth <= 700 &&
+      document.querySelector('.experience').dataset.view === 'stack'
+        ? [...document.querySelectorAll('.project-visual')].map(
+            (e) => e.clientWidth / e.clientHeight,
+          )
+        : [];
     const clipped = cardRects
       .filter(
         (r) =>
@@ -113,13 +136,16 @@ const geometry = async (width, height, view) => {
       outside,
       overlaps,
       copyCardOverlap,
+      footerCardOverlap,
+      mobileButtons,
+      screenshotRatios,
       clipped,
       brokenImages,
       cardRects,
       copy,
     };
   });
-  report.layouts.push({ width, height, view, ...result });
+  report.layouts.push({ width, height, view, safeArea, ...result });
   assert.ok(
     result.scrollWidth <= result.viewportWidth,
     `${width}x${height} ${view} horizontal scroll`,
@@ -133,10 +159,20 @@ const geometry = async (width, height, view) => {
     'outside',
     'overlaps',
     'copyCardOverlap',
+    'footerCardOverlap',
     'clipped',
     'brokenImages',
   ])
     assert.deepEqual(result[key], [], `${width}x${height} ${view} ${key}`);
+  for (const button of result.mobileButtons) {
+    assert.equal(button.width, 44);
+    assert.equal(button.height, 44);
+  }
+  for (const ratio of result.screenshotRatios)
+    assert.ok(
+      Math.abs(ratio - 1.82) < 0.04,
+      `${width}x${height} screenshot proportions`,
+    );
 };
 try {
   await page.goto(base);
@@ -173,7 +209,20 @@ try {
         );
       }
     }
-    console.log(`Verified ${value}: 22 layouts and four accessibility scans.`);
+    console.log(
+      `Verified ${value}: ${sizes.length * 2} layouts and four accessibility scans.`,
+    );
+  }
+  // Safari's visible viewport can be shorter while its toolbars are expanded.
+  // Reserve notch/home-indicator space as well as testing the viewport height.
+  await setView('stack');
+  for (const height of [780, 720]) {
+    await page.setViewportSize({ width: 430, height });
+    const safe = await page.addStyleTag({
+      content: 'body.landing-page{padding-top:47px;padding-bottom:34px}',
+    });
+    await geometry(430, height, 'stack', true);
+    await safe.evaluate((element) => element.remove());
   }
   await setView('stack');
   for (const [index, name] of ['Markup', 'Glyph', 'Arc'].entries()) {
