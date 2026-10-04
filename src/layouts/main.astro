@@ -6,22 +6,27 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  landing?: boolean;
 }
 const {
   title,
   description = 'Freddie Philpot. Year 12 student building web applications, running a Linux home lab and exploring cybersecurity.',
   noindex = false,
+  landing = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, 'https://freddiephilpot.dev');
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class:list={{ 'landing-root': landing }}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#244cdb" />
+    <meta name="theme-color" content="#101010" />
     <title>{title === 'Freddie Philpot' ? 'Freddie Philpot | Development & cybersecurity' : title + ' | Freddie Philpot'}</title>
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -51,30 +56,45 @@ const canonical = new URL(Astro.url.pathname, 'https://freddiephilpot.dev');
             (theme === 'system' &&
               matchMedia('(prefers-color-scheme: dark)').matches),
         );
+        try {
+          const arrival = JSON.parse(
+            sessionStorage.getItem('portfolio-project-arrival') || 'null',
+          );
+          sessionStorage.removeItem('portfolio-project-arrival');
+          if (
+            arrival?.path === location.pathname &&
+            Date.now() - arrival.time < 10000
+          )
+            document.documentElement.classList.add('project-arrival');
+        } catch {}
       })();
     </script>
   </head>
-  <body>
+  <body class:list={{ 'landing-page': landing }}>
     <a class="skip-link" href="#main">
       Skip to content
     </a>
-    <Header />
-    <main id="main" tabindex="-1">
-      <slot />
-    </main>
-    <footer class="site-footer wrap">
-      <a class="footer-name" href="/">
-        Freddie Philpot<span>Development & cybersecurity</span>
-      </a>
-      <div class="footer-links">
-        <a href="mailto:contact@freddiephilpot.dev">Email</a>
-        <a href="https://github.com/pphilfre">GitHub</a>
-        <a href="/cv.pdf">
-          CV <span class="sr-only">(PDF)</span>
-        </a>
-      </div>
-      <span class="footer-note">Built with Astro.</span>
-    </footer>
+    <div class="site-frame">
+      <Header compact={landing} />
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+      {!landing && (
+        <footer class="site-footer wrap">
+          <a class="footer-name" href="/">
+            Freddie Philpot<span>Development & cybersecurity</span>
+          </a>
+          <div class="footer-links">
+            <a href="mailto:contact@freddiephilpot.dev">Email</a>
+            <a href="https://github.com/pphilfre">GitHub</a>
+            <a href="/cv.pdf">
+              CV <span class="sr-only">(PDF)</span>
+            </a>
+          </div>
+          <span class="footer-note">Built with Astro.</span>
+        </footer>
+      )}
+    </div>
     <Analytics />
   </body>
 </html>

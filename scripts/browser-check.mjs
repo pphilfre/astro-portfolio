@@ -10,6 +10,7 @@ const routes = [
   '/',
   '/projects',
   '/projects/glyph',
+  '/projects/arc',
   '/projects/markup',
   '/projects/homelab',
   '/about',
@@ -69,7 +70,7 @@ try {
       route + ' should have one h1',
     );
     assert.equal(
-      await page.locator('body > main').count(),
+      await page.locator('body .site-frame > main').count(),
       1,
       route + ' should have one main',
     );
@@ -155,6 +156,235 @@ try {
     await setTheme('light');
     console.log('Checked ' + route + ' at 7 widths and both themes.');
   }
+  // The shared header retains the same links, dot, frame and theme control.
+  const headerStates = [];
+  for (const route of ['/', '/projects', '/about']) {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto(base + route);
+    assert.equal(await page.locator('.mobile-menu').isVisible(), false);
+    assert.ok(await page.locator('.brand-avatar').isVisible());
+    headerStates.push(
+      await page.evaluate(() => {
+        const active = document.querySelector('.desktop-nav a[aria-current]');
+        const dot = getComputedStyle(active, '::before');
+        const trigger = getComputedStyle(
+          document.querySelector('.theme-menu summary'),
+        );
+        return {
+          links: [...document.querySelectorAll('.desktop-nav a')].map(
+            (link) => [link.getAttribute('href'), link.textContent.trim()],
+          ),
+          dot: [dot.width, dot.height, dot.borderRadius],
+          theme: [trigger.width, trigger.height, trigger.borderRadius],
+          frame: getComputedStyle(document.body).backgroundColor,
+          navbar: document
+            .querySelector('.desktop-nav')
+            .getBoundingClientRect()
+            .toJSON(),
+          linkPositions: [...document.querySelectorAll('.desktop-nav a')].map(
+            (link) => link.getBoundingClientRect().toJSON(),
+          ),
+        };
+      }),
+    );
+    for (const width of [320, 390, 768, 844]) {
+      await page.setViewportSize({ width, height: 844 });
+      assert.equal(await page.locator('.desktop-nav').isVisible(), false);
+      assert.ok(await page.locator('.mobile-menu').isVisible());
+      const fits = await page.evaluate(() => {
+        const brand = document.querySelector('.brand').getBoundingClientRect();
+        const actions = document
+          .querySelector('.header-actions')
+          .getBoundingClientRect();
+        return (
+          brand.right <= actions.left &&
+          actions.right < innerWidth &&
+          brand.left > 0
+        );
+      });
+      assert.ok(fits, `${route} ${width} header fits`);
+    }
+  }
+  assert.deepEqual(headerStates[1], headerStates[0]);
+  assert.deepEqual(headerStates[2], headerStates[0]);
+  // Menu utilities remain available across navigation, with home-only warmth.
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const route of ['/', '/projects', '/about']) {
+    await page.goto(base + route);
+    await page.addStyleTag({
+      content: 'astro-dev-toolbar{display:none!important}',
+    });
+    for (const theme of ['light', 'dark']) {
+      await setTheme(theme);
+      await page.locator('.mobile-menu summary').click();
+      assert.ok(
+        await page
+          .locator('.menu-utilities a[href="https://github.com/pphilfre"]')
+          .isVisible(),
+      );
+      assert.ok(
+        await page
+          .locator('.menu-utilities a[href="/cv.pdf"]')
+          .getAttribute('download'),
+      );
+      assert.equal(
+        await page
+          .locator('.menu-icon')
+          .evaluate((el) => getComputedStyle(el).transform),
+        'none',
+      );
+      const highlight = await page
+        .locator('.menu-pages a[aria-current]')
+        .evaluate((el) => getComputedStyle(el).backgroundImage);
+      assert.equal(highlight.includes('linear-gradient'), route === '/');
+      const result = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze();
+      assert.deepEqual(
+        result.violations.map((v) => v.id),
+        [],
+        `${route} ${theme} open navigation`,
+      );
+      await page.keyboard.press('Escape');
+    }
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(base + '/projects');
+  const projectCards = await page.locator('.project-link').evaluateAll((els) =>
+    els.map((el) => ({
+      href: el.getAttribute('href'),
+      width: el.getBoundingClientRect().width,
+      artHeight: el.querySelector('.project-art').getBoundingClientRect()
+        .height,
+    })),
+  );
+  assert.ok(projectCards.some((card) => card.href === '/projects/arc'));
+  const lab = projectCards.find((card) => card.href === '/projects/homelab');
+  assert.equal(lab.width, projectCards[0].width);
+  assert.equal(lab.artHeight, projectCards[0].artHeight);
+  report.interactions.push(
+    'Consistent GitHub and CV utilities, level menu text, home-only warm highlights and equal Arc/homelab cards',
+  );
+  // Inspect the surface itself: it grows from the trigger, before text appears.
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(base + '/projects');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.locator('.mobile-menu summary').click();
+  const blob = await page.locator('.menu-surface path').evaluate((path) => {
+    const animation = path.getAnimations()[0];
+    animation.pause();
+    animation.currentTime = 0;
+    const start = path.getBBox();
+    const small = { width: start.width, height: start.height };
+    animation.currentTime = 220;
+    const middle = path.getBBox();
+    const growing = { width: middle.width, height: middle.height };
+    animation.finish();
+    return { small, growing };
+  });
+  assert.deepEqual(blob.small, { width: 44, height: 44 });
+  assert.ok(blob.growing.width > 44 && blob.growing.width < 280);
+  assert.ok(blob.growing.height > 44);
+  await page.waitForFunction(
+    () => document.querySelector('.mobile-menu').dataset.filled === 'true',
+  );
+  await page.keyboard.press('Escape');
+  assert.equal(
+    await page.locator('.mobile-menu').getAttribute('data-closing'),
+    'true',
+  );
+  const contraction = await page
+    .locator('.menu-surface path')
+    .evaluate((path) => {
+      const animation = path.getAnimations()[0];
+      animation.pause();
+      animation.currentTime = 0;
+      const start = path.getBBox();
+      const full = { width: start.width, height: start.height };
+      animation.currentTime = 250;
+      const middle = path.getBBox();
+      const shrinking = { width: middle.width, height: middle.height };
+      animation.finish();
+      return { full, shrinking };
+    });
+  assert.ok(contraction.shrinking.width < contraction.full.width);
+  assert.ok(contraction.shrinking.height < contraction.full.height);
+  await page.waitForFunction(
+    () => !document.querySelector('.mobile-menu').open,
+  );
+  // Repeated clicks must never reveal links ahead of the surface animation.
+  for (const route of ['/', '/projects']) {
+    await page.goto(base + route);
+    const rapid = await page.locator('.mobile-menu').evaluate(async (menu) => {
+      const trigger = menu.querySelector('summary');
+      const path = menu.querySelector('.menu-surface path');
+      const failures = [];
+      let samples = 0;
+      let watching = true;
+      const inspect = () => {
+        if (menu.open) {
+          samples++;
+          const filled = menu.hasAttribute('data-filled');
+          for (const content of menu.querySelectorAll(
+            '.menu-pages, .menu-utilities',
+          )) {
+            const style = getComputedStyle(content);
+            if (
+              !filled &&
+              style.visibility !== 'hidden' &&
+              Number(style.opacity) > 0
+            ) {
+              failures.push('Text visible before background settled');
+            }
+          }
+          if (
+            filled &&
+            getComputedStyle(menu.querySelector('nav')).backgroundColor ===
+              'rgba(0, 0, 0, 0)'
+          ) {
+            failures.push('Settled menu has no background');
+          }
+        }
+        if (watching) requestAnimationFrame(inspect);
+      };
+      requestAnimationFrame(inspect);
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      for (const delay of [35, 65, 110, 180, 70, 240, 40, 80, 20]) {
+        trigger.click();
+        await wait(delay);
+      }
+      await wait(800);
+      const finalVisible =
+        menu.hasAttribute('data-filled') &&
+        [...menu.querySelectorAll('.menu-pages, .menu-utilities')].every(
+          (content) =>
+            getComputedStyle(content).visibility === 'visible' &&
+            Number(getComputedStyle(content).opacity) === 1,
+        );
+      // Also reverse immediately, before the browser has rendered a frame.
+      trigger.click();
+      trigger.click();
+      trigger.click();
+      await wait(500);
+      watching = false;
+      return {
+        failures,
+        samples,
+        finalVisible,
+        closed: !menu.open,
+        animations: path.getAnimations().length,
+      };
+    });
+    assert.deepEqual(rapid.failures, [], `${route} rapid menu transitions`);
+    assert.ok(rapid.samples > 20);
+    assert.equal(rapid.finalVisible, true);
+    assert.equal(rapid.closed, true);
+    assert.equal(rapid.animations, 0);
+  }
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  report.interactions.push(
+    'Shared header alignment; blob opens/closes, with text hidden during rapid reversals',
+  );
   // Keyboard disclosure and focus restoration.
   await page.goto(base + '/');
   await page.setViewportSize({ width: 375, height: 844 });
@@ -193,11 +423,18 @@ try {
     );
     const colours = await page.locator('.theme-options').evaluate((el) => ({
       popup: getComputedStyle(el).backgroundColor,
-      page: getComputedStyle(document.body).backgroundColor,
+      page: getComputedStyle(document.body).getPropertyValue('--canvas').trim(),
     }));
     assert.equal(
       colours.popup,
-      colours.page,
+      await page.evaluate((colour) => {
+        const sample = document.createElement('span');
+        sample.style.color = colour;
+        document.body.append(sample);
+        const normalized = getComputedStyle(sample).color;
+        sample.remove();
+        return normalized;
+      }, colours.page),
       'Theme popup follows page background',
     );
     await page.keyboard.press('Escape');

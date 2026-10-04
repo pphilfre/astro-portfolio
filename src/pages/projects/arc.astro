@@ -1,0 +1,114 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/main.astro';
+import CaseHeader from '../../components/CaseHeader.astro';
+import { Image } from 'astro:assets';
+import map from '../../assets/projects/arc.png';
+import directions from '../../assets/projects/arc-directions.png';
+---
+
+<Layout
+  title="Arc"
+  description="A native iPhone navigation app built with SwiftUI and Mapbox, with a map-first interface and local saved places."
+>
+  <article class="wrap page">
+    <CaseHeader
+      title="Arc"
+      description="A native way to find your next destination."
+      stack="Swift / SwiftUI / Mapbox / SwiftData / ActivityKit"
+    >
+      <a class="text-link" href="https://github.com/pphilfre/arc">
+        View source ↗
+      </a>
+    </CaseHeader>
+    <div class="arc-preview">
+      <Image
+        src={map}
+        alt="Arc’s 3D map of Westminster with native search controls"
+        widths={[360, 600, 900]}
+        sizes="(max-width: 600px) 40vw, 320px"
+        format="webp"
+        loading="eager"
+      />
+      <Image
+        src={directions}
+        alt="Arc displaying a walking route and directions to Westminster"
+        widths={[360, 600, 900]}
+        sizes="(max-width: 600px) 40vw, 320px"
+        format="webp"
+        loading="eager"
+      />
+    </div>
+    <section class="case-section">
+      <h2>Map first</h2>
+      <div>
+        <p>
+          Arc brings Mapbox maps, search and navigation into a native SwiftUI
+          interface. Explore in 2D or 3D, search for a place, and plan driving
+          or walking routes with multiple stops.
+        </p>
+        <p>
+          Contextual controls keep the map in focus. The interface uses native
+          materials and Liquid Glass on iOS 26, with support for light and dark
+          appearance.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>On the move</h2>
+      <div>
+        <p>
+          Turn-by-turn navigation includes lane and roundabout guidance, traffic
+          information, speed displays and haptic feedback. Live Activities keep
+          navigation available beyond the app.
+        </p>
+        <p>
+          Saved places, recent searches and journey history live on the device
+          using SwiftData. Arc requires no account or backend and is currently
+          in development.
+        </p>
+        <a class="text-link" href="https://github.com/pphilfre/arc#features">
+          Explore the project on GitHub ↗
+        </a>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/markup">
+      <span>Next project</span>
+      <strong>
+        Markup <span aria-hidden="true">↗</span>
+      </strong>
+    </a>
+  </article>
+</Layout>
+<style>
+  .arc-preview {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: clamp(16px, 5vw, 65px);
+    background: linear-gradient(140deg, #e0ece8, #b8d7e5);
+    padding: clamp(24px, 5vw, 64px);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .arc-preview img {
+    width: min(38%, 290px);
+    height: auto;
+    border-radius: 26px;
+    border: 5px solid #283a3b;
+    box-shadow: 0 20px 45px #193a3b25;
+  }
+  .arc-preview img:first-child {
+    transform: rotate(-4deg);
+  }
+  .arc-preview img:last-child {
+    transform: translateY(28px) rotate(4deg);
+  }
+  @media (max-width: 600px) {
+    .arc-preview img {
+      width: 44%;
+      border-width: 3px;
+      border-radius: 16px;
+    }
+  }
+</style>

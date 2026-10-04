@@ -7,6 +7,7 @@ export const GET: APIRoute = async () => {
     'about',
     'projects',
     'projects/glyph',
+    'projects/arc',
     'projects/markup',
     'projects/homelab',
     'projects/ctf',

@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import markup from '../assets/markup-1.png';
+import arc from '../assets/projects/arc.png';
+import arcDirections from '../assets/projects/arc-directions.png';
 ---
 
 <div class="project-collection">
@@ -43,6 +45,35 @@ import markup from '../assets/markup-1.png';
       <div>
         <h3>Markup</h3>
         <p>A Markdown workspace for web & desktop</p>
+      </div>
+      <span class="project-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </div>
+  </a>
+  <a class="project-link arc-project" href="/projects/arc">
+    <div class="project-art arc-art">
+      <Image
+        src={arc}
+        alt="Arc’s 3D map of Westminster"
+        widths={[360, 600, 900]}
+        sizes="(max-width: 700px) 38vw, 230px"
+        loading="lazy"
+        format="webp"
+      />
+      <Image
+        src={arcDirections}
+        alt="Arc’s native walking directions"
+        widths={[360, 600, 900]}
+        sizes="(max-width: 700px) 38vw, 230px"
+        loading="lazy"
+        format="webp"
+      />
+    </div>
+    <div class="project-caption">
+      <div>
+        <h3>Arc</h3>
+        <p>Native iPhone maps, search & navigation</p>
       </div>
       <span class="project-arrow" aria-hidden="true">
         ↗

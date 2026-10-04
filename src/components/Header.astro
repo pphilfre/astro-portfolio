@@ -1,16 +1,22 @@
 ---
 const path = Astro.url.pathname;
+import '../styles/navigation.css';
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
 const links = [
+  ['/', 'Home'],
   ['/projects', 'Projects'],
-  ['/about', 'About'],
   ['/certifications', 'Experience'],
+  ['/about', 'About'],
   ['/blog', 'Writing'],
   ['/contact', 'Contact'],
 ];
 const active = (href: string) => path === href || path.startsWith(href + '/');
 ---
 
-<header class="site-header wrap">
+<header class:list={['site-header', 'wrap', { 'experience-header': compact }]}>
   <a class="brand" href="/" aria-label="Freddie Philpot, home">
     <img
       class="brand-avatar"
@@ -86,16 +92,37 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
       </div>
     </details>
     <details class="mobile-menu">
-      <summary>
-        Menu <span aria-hidden="true">+</span>
+      <summary aria-label="Open navigation">
+        <span class="menu-icon" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
       </summary>
       <nav aria-label="Mobile navigation">
-        {links.map(([href, label]) => (
-          <a href={href} aria-current={active(href) ? 'page' : undefined}>
-            {label}
+        <svg
+          class="menu-surface"
+          viewBox="0 0 280 480"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M248 0C260 0 280 0 280 22C280 34 280 44 258 44C236 44 216 44 216 22C216 0 236 0 248 0Z" />
+        </svg>
+        <div class="menu-pages">
+          {links.map(([href, label]) => (
+            <a href={href} aria-current={active(href) ? 'page' : undefined}>
+              {label}
+            </a>
+          ))}
+        </div>
+        <div class="menu-utilities">
+          <a href="/cv.pdf" download="Freddie-Philpot-CV.pdf">
+            Download CV (PDF) <span aria-hidden="true">↓</span>
           </a>
-        ))}
-        <a href="/cv.pdf">Download CV (PDF)</a>
+          <a href="https://github.com/pphilfre">
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </nav>
     </details>
   </div>
@@ -142,19 +169,17 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
   );
   apply();
   media.addEventListener('change', apply);
-  const menu = document.querySelector<HTMLDetailsElement>('.mobile-menu');
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape')
-      [menu, themeMenu].forEach((item) => {
-        if (item?.open) {
-          item.open = false;
-          item.querySelector('summary')?.focus();
-        }
-      });
+    if (event.key === 'Escape' && themeMenu?.open) {
+      themeMenu.open = false;
+      themeMenu.querySelector('summary')?.focus();
+    }
   });
   document.addEventListener('click', (event) => {
-    if (menu?.open && !menu.contains(event.target as Node)) menu.open = false;
     if (themeMenu?.open && !themeMenu.contains(event.target as Node))
       themeMenu.open = false;
   });
+</script>
+<script>
+  import '../scripts/menu';
 </script>
