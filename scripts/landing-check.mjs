@@ -224,6 +224,24 @@ try {
     await geometry(430, height, 'stack', true);
     await safe.evaluate((element) => element.remove());
   }
+  for (const [width, height] of [
+    [430, 780],
+    [1440, 900],
+  ]) {
+    await page.setViewportSize({ width, height });
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('.landing-copy .cv-link').click(),
+    ]);
+    assert.equal(download.suggestedFilename(), 'Freddie-Philpot-CV.pdf');
+    assert.equal(await download.failure(), null);
+    const pdf = await fs.readFile(await download.path());
+    assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
+    await page.screenshot({ path: `${output}/home-cv-${width}.png` });
+  }
+  report.interactions.push(
+    'Home-page CV button downloads the PDF on mobile and desktop',
+  );
   await setView('stack');
   for (const [index, name] of ['Markup', 'Glyph', 'Arc'].entries()) {
     await page.getByRole('button', { name, exact: true }).click();

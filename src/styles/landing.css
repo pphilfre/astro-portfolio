@@ -135,9 +135,25 @@ html.landing-root {
 }
 .landing-links {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
   margin-top: 28px;
+}
+.landing-primary-links,
+.landing-social-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cv-link {
+  padding-inline: 20px;
+  border: 1px solid #fffaf580;
+  background: #49121750;
+  white-space: nowrap;
+}
+.cv-link:hover {
+  background: #49121775;
 }
 .landing-links a {
   display: inline-flex;
@@ -160,7 +176,8 @@ html.landing-root {
   background: #fff;
   transform: translateY(-2px);
 }
-.work-link svg {
+.work-link svg,
+.cv-link svg {
   width: 18px;
   height: 18px;
   stroke: currentColor;
@@ -592,6 +609,19 @@ html.landing-root {
     margin-top: 17px;
     gap: 8px;
   }
+  .landing-primary-links {
+    width: 100%;
+    gap: 8px;
+  }
+  .landing-primary-links a {
+    flex: 1;
+    padding-inline: 8px;
+    font-size: 11px;
+    gap: 6px;
+  }
+  .landing-social-links {
+    gap: 8px;
+  }
   .landing-links a {
     height: 42px;
   }
@@ -753,6 +783,18 @@ html.landing-root {
   }
   .project-window-heading {
     padding: 9px 12px;
+  }
+  .project-card {
+    width: min(100%, max(120px, calc((100cqh - 70px) / 0.85)));
+    transform: translate(-52%, -45%) rotateY(-9deg) rotateX(4deg) rotateZ(5deg);
+  }
+  .project-card[data-depth='1'] {
+    transform: translate(-46%, -52%) rotateY(-9deg) rotateX(4deg) rotateZ(-3deg)
+      scale(0.89);
+  }
+  .project-card[data-depth='2'] {
+    transform: translate(-36%, -64%) rotateY(-9deg) rotateX(4deg) rotateZ(4deg)
+      scale(0.78);
   }
   .project-icon {
     width: 25px;
