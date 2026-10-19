@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <title>Home Lab service overview</title>
+  <desc>At home: Proxmox virtual machines and Pi-hole DNS on Raspberry Pi. In the cloud: Oracle Cloud Linux with Docker Compose and Traefik. Tailscale provides remote access. Wazuh, Prometheus and Grafana support monitoring.</desc>
+  <rect width="1280" height="720" rx="12" fill="#f7f8f6"/>
+  <g font-family="Arial, sans-serif" fill="#344744">
+    <text x="60" y="80" font-size="32">Linux services, at home and in the cloud</text>
+    <path d="M60 112H1220" stroke="#d4dbd8" stroke-width="2"/>
+    <rect x="60" y="152" width="560" height="246" rx="10" fill="#e9eeeb"/>
+    <rect x="660" y="152" width="560" height="246" rx="10" fill="#e8ecee"/>
+    <g font-size="34" font-weight="600">
+      <text x="92" y="213">At home</text>
+      <text x="692" y="213">In the cloud</text>
+    </g>
+    <g font-size="29">
+      <text x="92" y="278">Proxmox · virtual machines</text>
+      <text x="92" y="337">Raspberry Pi · Pi-hole DNS</text>
+      <text x="692" y="278">Oracle Cloud · Linux</text>
+      <text x="692" y="337">Docker Compose · Traefik</text>
+    </g>
+    <g font-size="28">
+      <text x="60" y="476" font-weight="600">Remote access</text>
+      <text x="390" y="476">Tailscale</text>
+      <path d="M60 513H1220" stroke="#d4dbd8" stroke-width="2"/>
+      <text x="60" y="568" font-weight="600">Monitoring</text>
+      <text x="390" y="568">Wazuh logs · Prometheus metrics</text>
+      <text x="390" y="617">Grafana dashboards</text>
+    </g>
+  </g>
+</svg>

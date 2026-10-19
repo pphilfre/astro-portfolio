@@ -1,0 +1,160 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/main.astro';
+import CaseHeader from '../../components/CaseHeader.astro';
+import { Image } from 'astro:assets';
+import workspace from '../../assets/projects/waypoint-detail.jpg';
+---
+
+<Layout
+  title="Waypoint"
+  description="A personal careers tracker for organising employers, opportunities and applications, built with React, TanStack Start, Convex and WorkOS."
+>
+  <article class="wrap page">
+    <CaseHeader
+      title="Waypoint"
+      description="Keeping career opportunities and applications together."
+      stack="React / TanStack Start / Convex / WorkOS"
+    >
+      <a class="text-link" href="https://waypoint.freddiephilpot.dev">
+        Open app ↗
+      </a>
+      <a class="text-link" href="https://github.com/pphilfre/waypoint">
+        Source ↗
+      </a>
+      <a class="text-link" href="https://github.com/pphilfre/waypoint/releases">
+        Releases ↗
+      </a>
+    </CaseHeader>
+    <figure class="case-image">
+      <a
+        class="case-image-link"
+        href={workspace.src}
+        target="_blank"
+        rel="noopener"
+        aria-label="Open Waypoint screenshot at full size (new tab)"
+      >
+        <Image
+          src={workspace}
+          alt="Waypoint’s application list and record editor, rendered with illustrative example records"
+          widths={[640, 1000, 1600]}
+          sizes="90vw"
+          format="webp"
+          quality={95}
+        />
+      </a>
+      <figcaption>
+        The existing application components, captured locally with illustrative
+        records. No private career data is shown. Select the image to enlarge.
+      </figcaption>
+    </figure>
+    <section class="case-section">
+      <h2>Something I needed</h2>
+      <div>
+        <p>
+          I started Waypoint to organise my own career research: employers to
+          look into, opportunities worth following and applications already in
+          progress. I wanted the links, notes and deadlines to stay connected,
+          with a clear next action when I returned to them.
+        </p>
+        <p>
+          The result is a private careers workspace. It separates researching an
+          opportunity from applying for it, while keeping both attached to the
+          relevant employer.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Following an application</h2>
+      <div>
+        <p>
+          Applications have stages, deadlines, notes, links and a next action.
+          Board and list views provide different ways to review progress, while
+          checklists and stage history retain the detail behind each
+          application.
+        </p>
+        <p>
+          Company and opportunity records hold research separately, including
+          locations and relevant links. Search and filters help narrow the
+          workspace. I have focused on making the next step easy to find without
+          needing to open every record.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Data & authentication</h2>
+      <div>
+        <p>
+          The web app uses React and TanStack Start, with Convex for data and
+          WorkOS AuthKit for sign-in. Companies, opportunities and applications
+          are separate tables linked by IDs. An application can refer to a
+          specific opportunity or directly to an employer.
+        </p>
+        <p>
+          Convex functions verify the authenticated user and check ownership of
+          related records. They also check that a selected opportunity belongs
+          to the chosen company. Keeping these rules on the server matters even
+          when the interface already filters the available choices.
+        </p>
+        <a
+          class="text-link"
+          href="https://github.com/pphilfre/waypoint/blob/main/convex/applications.ts"
+        >
+          Application data functions ↗
+        </a>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Restoring a session</h2>
+      <div>
+        <p>
+          A real issue was a login that could succeed initially but fail to
+          restore reliably on the public hostname. The authentication
+          investigation found a mismatch between the browser session approach
+          and the deployment, as well as a separate token-refresh problem.
+        </p>
+        <p>
+          The web implementation moved to WorkOS’s TanStack Start SDK with an
+          encrypted, HTTP-only session cookie. Refresh tokens stay with the
+          server session, and the Convex bridge forwards forced-refresh
+          requests. Local production-build checks covered reloads, direct
+          navigation, another tab and sign-out.
+        </p>
+        <p>
+          Those local checks do not establish that the public deployment has the
+          matching configuration. The public sign-in page is available, but a
+          full authenticated production session still needs separate
+          verification.
+        </p>
+        <a
+          class="text-link"
+          href="https://github.com/pphilfre/waypoint/blob/main/docs/web-authentication.md"
+        >
+          Authentication investigation ↗
+        </a>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>What I’m learning</h2>
+      <div>
+        <p>
+          Working on Waypoint has helped me connect database relationships with
+          everyday usability. Separating an employer, an opportunity and an
+          application makes the data clearer, but the interface still needs to
+          make moving between them straightforward.
+        </p>
+        <p>
+          It has also shown me why a visible signed-in interface is only part of
+          authentication: the backend needs to accept the session, restore it
+          consistently and enforce ownership on every operation.
+        </p>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/glyph">
+      <span>Next project</span>
+      <strong>
+        Glyph <span aria-hidden="true">↗</span>
+      </strong>
+    </a>
+  </article>
+</Layout>

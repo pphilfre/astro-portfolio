@@ -2,43 +2,9 @@
 export const prerender = true;
 import Layout from '../layouts/main.astro';
 import { Image } from 'astro:assets';
-import markup from '../assets/markup-4.jpg';
-import glyph from '../assets/projects/glyph.png';
-import arc from '../assets/projects/arc.png';
-import arcDirections from '../assets/projects/arc-directions.png';
+import { projects as collection } from '../data/projects';
 import '../styles/landing.css';
-const projects = [
-  {
-    id: 'markup',
-    name: 'Markup',
-    description: 'A workspace for connected thoughts.',
-    type: 'Web & desktop',
-    href: '/projects/markup',
-    icon: '/projects/icons/markup.svg',
-    image: markup,
-    alt: 'Markup’s mind map workspace with connected notes and drawing tools',
-  },
-  {
-    id: 'glyph',
-    name: 'Glyph',
-    description: 'Markdown, maths & a link to share.',
-    type: 'Web application',
-    href: '/projects/glyph',
-    icon: '/projects/icons/glyph.svg',
-    image: glyph,
-    alt: 'Glyph’s public reader displaying a mechanics note and mathematical equations',
-  },
-  {
-    id: 'arc',
-    name: 'Arc',
-    description: 'A native way to navigate.',
-    type: 'Native iOS',
-    href: '/projects/arc',
-    icon: '/projects/icons/arc.png',
-    image: arc,
-    alt: 'Arc README screenshot showing a 3D map of Westminster and native search controls',
-  },
-];
+const projects = collection.slice(0, 3);
 ---
 
 <Layout title="Freddie Philpot" landing>
@@ -124,13 +90,15 @@ const projects = [
           >
             <div class="project-window">
               <div class="project-window-heading">
-                <img
-                  class="project-icon"
-                  src={project.icon}
-                  alt=""
-                  width="44"
-                  height="44"
-                />
+                {project.icon && (
+                  <img
+                    class="project-icon"
+                    src={project.icon}
+                    alt=""
+                    width="44"
+                    height="44"
+                  />
+                )}
                 <div>
                   <h2>{project.name}</h2>
                   <p>{project.description}</p>
@@ -144,29 +112,24 @@ const projects = [
               <div
                 class:list={[
                   'project-visual',
-                  { 'arc-visual': project.id === 'arc' },
+                  { 'phone-visual': project.id === 'dispatch' },
                 ]}
               >
                 <Image
                   src={project.image}
                   alt={project.alt}
-                  widths={project.id === 'arc' ? [360, 600] : [640, 1000, 1400]}
-                  sizes={
-                    project.id === 'arc'
-                      ? '(max-width: 700px) 28vw, 260px'
-                      : '(max-width: 700px) 80vw, 46vw'
-                  }
-                  format="webp"
+                  widths={[640, 1000, 1400]}
+                  sizes="(max-width: 700px) 80vw, 46vw"
+                  format={project.image.format === 'svg' ? 'svg' : 'webp'}
                   loading="eager"
                   fetchpriority={index === 0 ? 'high' : 'auto'}
                 />
-                {project.id === 'arc' && (
+                {'secondaryImage' in project && project.secondaryImage && (
                   <Image
-                    class="arc-directions"
-                    src={arcDirections}
-                    alt="Arc README screenshot with walking directions to Westminster"
+                    src={project.secondaryImage}
+                    alt="Dispatch’s native conversation reader"
                     widths={[360, 600]}
-                    sizes="(max-width: 700px) 28vw, 260px"
+                    sizes="(max-width: 700px) 30vw, 220px"
                     format="webp"
                     loading="eager"
                   />

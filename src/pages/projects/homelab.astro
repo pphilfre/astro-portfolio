@@ -2,6 +2,8 @@
 export const prerender = true;
 import Layout from '../../layouts/main.astro';
 import CaseHeader from '../../components/CaseHeader.astro';
+import { Image } from 'astro:assets';
+import overview from '../../assets/projects/homelab.svg';
 ---
 
 <Layout title="Home lab">
@@ -18,34 +20,23 @@ import CaseHeader from '../../components/CaseHeader.astro';
         Lab notes
       </a>
     </CaseHeader>
-    <figure class="topology">
+    <figure class="case-image">
+      <a
+        class="case-image-link"
+        href={overview.src}
+        target="_blank"
+        rel="noopener"
+        aria-label="Open Home Lab service overview at full size (new tab)"
+      >
+        <Image
+          src={overview}
+          alt="Home and cloud services, remote access and monitoring in my Home Lab"
+          format="svg"
+        />
+      </a>
       <figcaption>
-        Home lab <span>Service overview · October 2026</span>
+        Home Lab service overview · October 2026. Select the image to enlarge.
       </figcaption>
-      <div class="topology-tree">
-        <div class="topology-access">
-          <strong>My devices</strong>
-          <span>Tailscale remote access</span>
-        </div>
-        <div class="topology-hosts">
-          <div>
-            <h2>At home</h2>
-            <p>Proxmox virtual machines</p>
-            <p>Raspberry Pi / Pi-hole DNS</p>
-          </div>
-          <div>
-            <h2>In the cloud</h2>
-            <p>Oracle Cloud / Linux</p>
-            <p>Docker Compose / Traefik</p>
-          </div>
-        </div>
-        <div class="topology-observe">
-          <strong>Monitoring</strong>
-          <span>Wazuh log analysis</span>
-          <span>Prometheus metrics</span>
-          <span>Grafana dashboards</span>
-        </div>
-      </div>
     </figure>
     <section class="case-section">
       <h2>Services</h2>

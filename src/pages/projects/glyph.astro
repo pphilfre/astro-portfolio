@@ -2,6 +2,8 @@
 export const prerender = true;
 import Layout from '../../layouts/main.astro';
 import CaseHeader from '../../components/CaseHeader.astro';
+import { Image } from 'astro:assets';
+import reader from '../../assets/projects/glyph.png';
 ---
 
 <Layout
@@ -14,10 +16,50 @@ import CaseHeader from '../../components/CaseHeader.astro';
       description="Edit and publish Markdown & mathematical notes."
       stack="Next.js / TypeScript / Clerk / Convex"
     >
+      <a class="text-link" href="https://glyph-gules.vercel.app/p/test">
+        Example reader ↗
+      </a>
       <a class="text-link" href="https://github.com/pphilfre/glyph">
         View source ↗
       </a>
     </CaseHeader>
+    <figure class="case-image">
+      <a
+        class="case-image-link"
+        href={reader.src}
+        target="_blank"
+        rel="noopener"
+        aria-label="Open Glyph screenshot at full size (new tab)"
+      >
+        <Image
+          src={reader}
+          alt="Glyph’s public reader showing a mechanics note with mathematical equations"
+          widths={[480, 800, 1440]}
+          sizes="90vw"
+          format="webp"
+          quality={95}
+        />
+      </a>
+      <figcaption>
+        The public example reader, captured from the application. Select the
+        image to enlarge.
+      </figcaption>
+    </figure>
+    <section class="case-section">
+      <h2>Private work, public notes</h2>
+      <div>
+        <p>
+          I wanted a way to prepare Markdown and mathematical notes privately,
+          then share a readable version when it was ready. Glyph keeps editing
+          and publishing connected without making every saved draft public.
+        </p>
+        <p>
+          The project has involved reviewing the editing workflow, configuring
+          authentication and testing who can retrieve a note, as well as working
+          on the implementation.
+        </p>
+      </div>
+    </section>
     <div class="glyph-feature">
       <div>
         <span class="glyph-word">Glyph</span>
@@ -76,12 +118,41 @@ return note?.ownerId === ownerId ? note : null;</code></pre>
       </div>
     </section>
     <section class="case-section">
+      <h2>Handling content safely</h2>
+      <div>
+        <p>
+          A sign-in screen alone does not protect a draft. Convex checks the
+          verified user against the note’s owner when reading or changing
+          private content. Public metadata and source reads separately require
+          the note to be published.
+        </p>
+        <p>
+          Uploads are checked for supported text formats, valid UTF-8 and size
+          before storage. Rendering discards raw HTML and sanitises the Markdown
+          tree before KaTeX adds maths markup, with trusted commands disabled
+          and expansion limits applied.
+        </p>
+        <p>
+          LaTeX conversion is deliberately limited: it converts supported
+          content without executing a TeX engine, loading packages or fetching
+          external files. Preserving unsupported source with a notice is more
+          useful than silently losing it.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
       <h2>Publishing</h2>
       <div>
         <p>
           Choose a custom URL when publishing a note. Published notes must be
           unpublished before editing, so saving a draft does not change the live
           document. Unpublishing also removes public access to the note.
+        </p>
+        <p>
+          The source is read through access-checked actions rather than a
+          permanent public storage URL. Unpublishing blocks subsequent public
+          requests, although it cannot recall content someone has already
+          downloaded.
         </p>
         <p>
           The test suite covers note access, file uploads, rendering and
@@ -95,10 +166,27 @@ return note?.ownerId === ownerId ? note : null;</code></pre>
         </a>
       </div>
     </section>
-    <a class="next-project" href="/projects/markup">
+    <section class="case-section">
+      <h2>Challenges & learning</h2>
+      <div>
+        <p>
+          The main design problem is keeping publication separate from ordinary
+          saving, including when another tab has an older copy open. Draft saves
+          check the note’s revision and reject conflicting updates; published
+          notes must be unpublished before editing.
+        </p>
+        <p>
+          Working on those boundaries has helped me distinguish authentication,
+          ownership and public access. Tests for another user’s note,
+          unpublished content and malicious markup make those rules more
+          concrete than simply describing a page as private.
+        </p>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/portfolio">
       <span>Next project</span>
       <strong>
-        Markup <span aria-hidden="true">↗</span>
+        Personal Portfolio <span aria-hidden="true">↗</span>
       </strong>
     </a>
   </article>

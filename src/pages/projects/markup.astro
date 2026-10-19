@@ -90,6 +90,23 @@ const descriptions = [
       </div>
     </div>
     <section class="case-section">
+      <h2>Why a workspace</h2>
+      <div>
+        <p>
+          I wanted somewhere to keep written notes, diagrams and document
+          organisation together. Markdown is useful for the text, but a folder
+          of files alone does not give me the same freedom to move between an
+          explanation, a mind map and a whiteboard.
+        </p>
+        <p>
+          Markup is my exploration of that flexible workspace across the web and
+          desktop. My involvement includes shaping the workflow, configuring
+          storage and authentication, testing behaviour and improving the
+          application alongside implementation.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
       <h2>Features</h2>
       <div>
         <p>
@@ -98,9 +115,10 @@ const descriptions = [
           available through the Tauri desktop app.
         </p>
         <p>
+          Split editing and preview, folders, tabs and search keep documents
+          manageable. Graph views connect linked notes, while mind maps and
+          whiteboards provide space for ideas that do not fit a text document.
           Windows and macOS packages are available in the repository’s releases.
-          The screenshots show the existing application, including its folders,
-          tabs and preview.
         </p>
       </div>
     </section>
@@ -128,7 +146,9 @@ const descriptions = [
           <p>
             The source contains PostgreSQL through Prisma and a Convex sync
             path. Provider selection defaults to Convex; PostgreSQL is an
-            alternative implementation.
+            alternative implementation. Zustand holds the workspace state, with
+            local persistence for offline edits. WorkOS AuthKit handles sign-in
+            for the authenticated workspace.
           </p>
           <a
             class="text-link"
@@ -140,17 +160,55 @@ const descriptions = [
       </div>
     </section>
     <section class="case-section">
-      <h2>Synchronisation</h2>
-      <p>
-        The workspace code handles local edits and cloud synchronisation. The
-        web app and Tauri desktop app share the same editing interface, with
-        local file access provided by Tauri.
-      </p>
+      <h2>Local & remote data</h2>
+      <div>
+        <p>
+          The difficult part is coordinating data that can come from the local
+          store, cloud queries and a desktop folder. Loading remote state must
+          preserve local documents and open tabs, while applying incoming
+          changes must not immediately trigger another save of the same data.
+        </p>
+        <p>
+          The Convex sync path distinguishes hydration from edits, defers pushes
+          while offline and flushes pending changes when connectivity returns.
+          The desktop integration separately maps local documents to files such
+          as <code>.md</code>, <code>.canvas</code> and <code>.mindmap</code>,
+          then periodically reads external changes back into the workspace.
+        </p>
+        <p>
+          This is a practical sync implementation, with several sources of state
+          to coordinate. I would not describe it as a guarantee that every
+          simultaneous edit can be merged without conflict.
+        </p>
+        <a
+          class="text-link"
+          href="https://github.com/pphilfre/markup/blob/main/src/lib/convex-sync.tsx"
+        >
+          Read the sync implementation ↗
+        </a>
+      </div>
     </section>
-    <a class="next-project" href="/projects/homelab">
+    <section class="case-section">
+      <h2>What I’m learning</h2>
+      <div>
+        <p>
+          Markup has helped me understand why storage is more than saving the
+          current editor text. Document identity, workspace settings,
+          authentication and the order in which data loads all affect whether
+          the app behaves as expected.
+        </p>
+        <p>
+          Using an established editor and rendering libraries lets me focus on
+          how those parts work together. Testing the transitions between local,
+          remote and desktop state has been as important as adding another
+          editing feature.
+        </p>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/dispatch">
       <span>Next project</span>
       <strong>
-        Home lab <span aria-hidden="true">↗</span>
+        Dispatch <span aria-hidden="true">↗</span>
       </strong>
     </a>
   </article>

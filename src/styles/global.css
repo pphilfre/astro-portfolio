@@ -426,6 +426,87 @@ main:focus {
   grid-template-columns: 1fr 1fr;
   gap: 48px 28px;
 }
+.screenshot-art {
+  padding: 26px 30px;
+  background: #dce1ea;
+}
+.screenshot-art img {
+  position: absolute;
+  left: 7%;
+  top: 96px;
+  width: 86%;
+  height: calc(100% - 118px);
+  object-fit: contain;
+  border-radius: 5px;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 14px 16px #183e3326);
+}
+.dispatch-art {
+  background: #ccd7e4;
+  --art-ink: #34465c;
+}
+.dispatch-art img {
+  width: 37%;
+  left: 11%;
+  top: 96px;
+  height: calc(100% - 118px);
+}
+.dispatch-art img:last-child {
+  left: 52%;
+  transform: rotate(4deg);
+}
+.waypoint-art {
+  background: #e4d7bd;
+  --art-ink: #564b35;
+}
+.glyph-project .screenshot-art {
+  background: #d9cedf;
+  --art-ink: #4f405c;
+}
+.portfolio-art {
+  background: #e3ccc7;
+  --art-ink: #5d4540;
+}
+.homelab-art {
+  background: #cfd3d2;
+  --art-ink: #3c4c4c;
+}
+.case-phone-gallery {
+  display: flex;
+  justify-content: center;
+  gap: clamp(16px, 4vw, 56px);
+  padding: 32px;
+  border-radius: var(--radius);
+  background: #ccd7e4;
+}
+.case-phone-gallery > a {
+  width: min(40%, 280px);
+  min-width: 0;
+}
+.case-phone-gallery img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+}
+.case-image {
+  margin: 0;
+}
+.case-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+.case-image figcaption {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 12px;
+}
+.case-image-link {
+  display: block;
+  cursor: zoom-in;
+}
 .project-link {
   min-width: 0;
   display: block;
@@ -509,12 +590,13 @@ main:focus {
   font-size: 12px;
 }
 .markup-art {
-  background: #c2d9d1;
+  background: #c5d7cd;
+  --art-ink: #2e473d;
   padding: 26px 30px;
 }
 .art-word {
   font-size: 50px;
-  color: #254c45;
+  color: var(--art-ink, #254c45);
   letter-spacing: -3px;
 }
 .markup-art img {
@@ -526,60 +608,6 @@ main:focus {
   border-radius: 5px;
   transform: rotate(-5deg);
   box-shadow: 0 20px 40px #183e3330;
-}
-.lab-project {
-  display: block;
-}
-.lab-project .project-caption {
-  padding: 18px 0 0;
-}
-.lab-art {
-  background: #222d43;
-  color: #e7edfc;
-  display: grid;
-  place-items: center;
-  background-image:
-    linear-gradient(#ffffff06 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff06 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-.lab-dot {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #a9d0bb;
-}
-.lab-mini {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  font-size: 14px;
-}
-.lab-mini > span:first-child {
-  border: 1px solid #667597;
-  padding: 8px 40px;
-  border-radius: 4px;
-}
-.lab-mini i {
-  height: 24px;
-  width: 1px;
-  background: #8592af;
-}
-.lab-mini > div {
-  display: flex;
-  gap: 50px;
-}
-.lab-mini > div span {
-  padding: 7px 20px;
-  background: #35425e;
-  border-radius: 3px;
-}
-.lab-mini > span:last-child {
-  font-size: 12px;
-  color: #b9c5df;
 }
 .home-notes {
   display: grid;
@@ -805,85 +833,6 @@ main:focus {
 }
 .gallery-controls button:hover {
   background: #ffffff80;
-}
-.topology {
-  background: #222d43;
-  color: #e7edfc;
-  padding: 36px 48px;
-  border-radius: 10px;
-  background-image:
-    linear-gradient(#ffffff05 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff05 1px, transparent 1px);
-  background-size: 26px 26px;
-}
-.topology figcaption {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 20px;
-  letter-spacing: -0.02em;
-}
-.topology figcaption span {
-  font-size: 12px;
-  color: #bdc8de;
-}
-.topology-access {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 36px auto 0;
-  max-width: 300px;
-  border: 1px solid #687793;
-  border-radius: 5px;
-  padding: 12px;
-}
-.topology-access span {
-  font-size: 13px;
-  color: #bdc8de;
-}
-.topology-hosts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  max-width: 720px;
-  margin: auto;
-}
-.topology-hosts > div {
-  position: relative;
-  background: #34435f;
-  padding: 24px;
-  border-radius: 5px;
-  margin-top: 36px;
-}
-.topology-hosts > div:before {
-  content: '';
-  position: absolute;
-  height: 36px;
-  width: 1px;
-  background: #8b9bb9;
-  left: 50%;
-  top: -36px;
-}
-.topology-hosts h2 {
-  font-size: 25px;
-  margin-bottom: 16px;
-}
-.topology-hosts p {
-  font-size: 14px;
-  color: #d3dbed;
-}
-.topology-observe {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px 26px;
-  margin-top: 32px;
-  font-size: 12px;
-}
-.topology-observe strong {
-  font-weight: 500;
-  color: #bbd3fb;
 }
 .about-heading {
   align-items: start;
@@ -1672,13 +1621,6 @@ main:focus {
   .markup-art img {
     top: 90px;
   }
-  .lab-project {
-    display: block;
-    grid-column: auto;
-  }
-  .lab-project .project-caption {
-    padding: 16px 0 0;
-  }
   .home-notes {
     gap: 28px;
   }
@@ -1805,38 +1747,6 @@ main:focus {
   }
   .gallery-controls > div {
     gap: 0;
-  }
-  .topology {
-    padding: 24px;
-  }
-  .topology figcaption {
-    flex-direction: column;
-    gap: 6px;
-  }
-  .topology-access {
-    margin-top: 28px;
-  }
-  .topology-hosts {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-  .topology-hosts > div {
-    margin-top: 24px;
-    padding: 20px;
-  }
-  .topology-hosts > div:before {
-    height: 24px;
-    top: -24px;
-  }
-  .topology-hosts h2 {
-    font-size: 24px;
-  }
-  .topology-observe {
-    justify-content: start;
-    gap: 8px 16px;
-  }
-  .topology-observe strong {
-    width: 100%;
   }
   .about-heading > div p {
     font-size: 18px;
@@ -2108,72 +2018,6 @@ option {
   margin-top: 12px;
   font-size: 14px;
 }
-
-/* Continuous branches connect access, host groups and monitoring. */
-.topology-tree {
-  max-width: 720px;
-  margin: 36px auto 0;
-}
-.topology-access {
-  position: relative;
-  margin-top: 0;
-}
-.topology-access::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 1px;
-  height: 18px;
-  background: #8b9bb9;
-}
-.topology-hosts {
-  position: relative;
-}
-.topology-hosts::before,
-.topology-hosts::after {
-  content: '';
-  position: absolute;
-  left: calc(25% - 10px);
-  right: calc(25% - 10px);
-  height: 1px;
-  background: #8b9bb9;
-}
-.topology-hosts::before {
-  top: 18px;
-}
-.topology-hosts::after {
-  bottom: -18px;
-}
-.topology-hosts > div::before {
-  height: 18px;
-  top: -18px;
-}
-.topology-hosts > div::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 1px;
-  height: 18px;
-  background: #8b9bb9;
-}
-.topology-observe {
-  position: relative;
-  margin: 36px auto 0;
-  border: 1px solid #687793;
-  border-radius: 5px;
-  padding: 16px;
-}
-.topology-observe::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: -18px;
-  width: 1px;
-  height: 18px;
-  background: #8b9bb9;
-}
 @media (max-width: 700px) {
   .brand-avatar {
     width: 28px;
@@ -2193,44 +2037,6 @@ option {
   .credential-date {
     grid-column: 2;
     text-align: left;
-  }
-  .topology-tree {
-    position: relative;
-    padding-left: 20px;
-    margin-top: 28px;
-  }
-  .topology-tree::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 32px;
-    bottom: 60px;
-    width: 1px;
-    background: #8b9bb9;
-  }
-  .topology-access {
-    max-width: none;
-    align-items: start;
-  }
-  .topology-hosts::before,
-  .topology-hosts::after,
-  .topology-hosts > div::after {
-    display: none;
-  }
-  .topology-access::after,
-  .topology-hosts > div::before,
-  .topology-observe::before {
-    top: 32px;
-    left: -20px;
-    width: 20px;
-    height: 1px;
-  }
-  .topology-observe {
-    margin-top: 24px;
-  }
-  .topology-observe::before {
-    top: auto;
-    bottom: 60px;
   }
 }
 @keyframes project-arrive {

@@ -12,6 +12,9 @@ const routes = [
   '/projects/glyph',
   '/projects/arc',
   '/projects/markup',
+  '/projects/dispatch',
+  '/projects/waypoint',
+  '/projects/portfolio',
   '/projects/homelab',
   '/about',
   '/certifications',
@@ -26,7 +29,10 @@ const routes = [
   '/blog/setting-up-tailscale-vpn',
   '/blog/zero-trust-with-twingate',
 ];
-const widths = [375, 390, 430, 768, 1024, 1440, 1920];
+const widths = [
+  320, 375, 390, 430, 600, 700, 701, 768, 900, 1000, 1024, 1100, 1280, 1440,
+  1920,
+];
 const browser = await chromium.launch({
   headless: true,
   channel:
@@ -57,6 +63,12 @@ try {
     });
     assert.equal(response.status(), route === '/404' ? 404 : 200, route);
     await page.evaluate(() => document.fonts.ready);
+    // Full-page screenshots must include cards that start below the viewport.
+    await page.locator('img[loading="lazy"]').evaluateAll((images) =>
+      images.forEach((image) => {
+        image.loading = 'eager';
+      }),
+    );
     for (const href of await page
       .locator('a[href^="/"]')
       .evaluateAll((items) => items.map((a) => a.getAttribute('href'))))
@@ -76,6 +88,11 @@ try {
     );
     for (const width of widths) {
       await page.setViewportSize({ width, height: width < 700 ? 844 : 1000 });
+      await page.waitForFunction(() =>
+        [...document.images]
+          .filter((image) => image.getBoundingClientRect().height > 0)
+          .every((image) => image.complete),
+      );
       const geometry = await page.evaluate(() => ({
         viewport: document.documentElement.clientWidth,
         content: document.documentElement.scrollWidth,
@@ -101,7 +118,7 @@ try {
         route + ' overflows at ' + width,
       );
       assert.deepEqual(geometry.brokenImages, [], route + ' broken images');
-      if ([375, 1440].includes(width)) {
+      if ([375, 1000, 1440].includes(width)) {
         await page.screenshot({
           path:
             output +
@@ -154,7 +171,9 @@ try {
         });
     }
     await setTheme('light');
-    console.log('Checked ' + route + ' at 7 widths and both themes.');
+    console.log(
+      'Checked ' + route + ' at ' + widths.length + ' widths and both themes.',
+    );
   }
   // The shared header retains the same links, dot, frame and theme control.
   const headerStates = [];
@@ -258,12 +277,57 @@ try {
         .height,
     })),
   );
-  assert.ok(projectCards.some((card) => card.href === '/projects/arc'));
+  assert.deepEqual(
+    projectCards.map((card) => card.href),
+    [
+      '/projects/markup',
+      '/projects/dispatch',
+      '/projects/waypoint',
+      '/projects/glyph',
+      '/projects/portfolio',
+      '/projects/homelab',
+    ],
+  );
+  assert.equal(await page.locator('.project-collection').count(), 1);
+  assert.equal(await page.locator('.homelab-project').count(), 1);
+  assert.equal(await page.locator('.lab-dot').count(), 0);
+  const cardColours = await page
+    .locator('.project-art')
+    .evaluateAll((cards) =>
+      cards.map((card) => getComputedStyle(card).backgroundColor),
+    );
+  assert.equal(
+    new Set(cardColours).size,
+    6,
+    'Each card has its own background',
+  );
   const lab = projectCards.find((card) => card.href === '/projects/homelab');
   assert.equal(lab.width, projectCards[0].width);
   assert.equal(lab.artHeight, projectCards[0].artHeight);
   report.interactions.push(
-    'Consistent GitHub and CV utilities, level menu text, home-only warm highlights and equal Arc/homelab cards',
+    'Requested project order, Home Lab in the shared grid, six distinct backgrounds, no status dot and equal card dimensions',
+  );
+  for (const project of [
+    'dispatch',
+    'waypoint',
+    'glyph',
+    'portfolio',
+    'homelab',
+  ]) {
+    await page.goto(base + '/projects/' + project);
+    const imageLinks = page.locator('.case-image-link');
+    assert.ok(await imageLinks.count(), project + ' full-size images');
+    for (const href of await imageLinks.evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href')),
+    )) {
+      assert.ok(
+        (await context.request.get(base + href)).ok(),
+        href + ' full-size source',
+      );
+    }
+  }
+  report.interactions.push(
+    'Case-study images link to their full-size source assets',
   );
   // Inspect the surface itself: it grows from the trigger, before text appears.
   await page.setViewportSize({ width: 390, height: 844 });
@@ -494,6 +558,9 @@ try {
     await context.request.get(base + '/sitemap.xml')
   ).text();
   assert.ok(sitemap.includes('/projects/glyph'));
+  for (const project of ['dispatch', 'waypoint', 'portfolio']) {
+    assert.ok(sitemap.includes('/projects/' + project));
+  }
   assert.ok(!sitemap.includes('example-challenge'));
   report.interactions.push(
     'Legacy 301 redirects, unpublished CTF 404 and generated sitemap',

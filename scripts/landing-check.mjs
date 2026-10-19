@@ -27,6 +27,12 @@ const sizes = [
   [600, 800],
   [768, 1024],
   [1024, 768],
+  [900, 800],
+  [1000, 800],
+  [1000, 650],
+  [1100, 800],
+  [1050, 800],
+  [1150, 800],
   [1280, 720],
   [1440, 900],
   [1920, 1080],
@@ -243,7 +249,7 @@ try {
     'Home-page CV button downloads the PDF on mobile and desktop',
   );
   await setView('stack');
-  for (const [index, name] of ['Markup', 'Glyph', 'Arc'].entries()) {
+  for (const [index, name] of ['Markup', 'Dispatch', 'Waypoint'].entries()) {
     await page.getByRole('button', { name, exact: true }).click();
     assert.equal(
       await page
@@ -279,7 +285,7 @@ try {
   await page.keyboard.press('ArrowRight');
   assert.equal(
     await page
-      .locator('[data-project-card="glyph"]')
+      .locator('[data-project-card="dispatch"]')
       .getAttribute('data-depth'),
     '0',
   );
@@ -320,7 +326,7 @@ try {
   await page.waitForTimeout(950);
   assert.equal(
     await page
-      .locator('[data-project-card="glyph"]')
+      .locator('[data-project-card="dispatch"]')
       .getAttribute('data-depth'),
     '0',
   );
@@ -328,7 +334,7 @@ try {
   await page.waitForTimeout(200);
   assert.equal(
     await page
-      .locator('[data-project-card="glyph"]')
+      .locator('[data-project-card="dispatch"]')
       .getAttribute('data-depth'),
     '0',
   );
@@ -346,12 +352,12 @@ try {
   assert.equal(await page.locator('.project-tabs').isVisible(), false);
   assert.ok(await page.locator('[data-view-toggle]').isVisible());
   await setView('stack');
-  await page.getByRole('button', { name: 'Arc', exact: true }).click();
+  await page.getByRole('button', { name: 'Waypoint', exact: true }).click();
   await page.waitForTimeout(950);
-  await page.locator('[data-project-card="arc"]').click();
+  await page.locator('[data-project-card="waypoint"]').click();
   assert.ok(await page.locator('.project-departure').count());
-  await page.waitForURL('**/projects/arc');
-  assert.equal(await page.locator('#main h1').textContent(), 'Arc');
+  await page.waitForURL('**/projects/waypoint');
+  assert.equal(await page.locator('#main h1').textContent(), 'Waypoint');
   assert.ok(
     await page
       .locator('html')
@@ -361,7 +367,7 @@ try {
   await hideToolbar(page);
   assert.equal(await page.locator('.project-departure').count(), 0);
   report.interactions.push(
-    'Static hover, simplified list controls, animated Arc navigation, arrival and browser back',
+    'Static hover, simplified list controls, animated Waypoint navigation, arrival and browser back',
   );
   const touch = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -421,7 +427,9 @@ try {
   );
   await swipe([270, 530], [130, 530]);
   assert.equal(
-    await tp.locator('[data-project-card="glyph"]').getAttribute('data-depth'),
+    await tp
+      .locator('[data-project-card="dispatch"]')
+      .getAttribute('data-depth'),
     '0',
   );
   await swipe([130, 530], [270, 530]);
@@ -431,12 +439,14 @@ try {
   );
   await swipe([270, 530], [130, 530]);
   assert.equal(
-    await tp.locator('[data-project-card="glyph"]').getAttribute('data-depth'),
+    await tp
+      .locator('[data-project-card="dispatch"]')
+      .getAttribute('data-depth'),
     '0',
   );
   assert.equal(new URL(tp.url()).pathname, '/');
-  await tp.locator('[data-project-card="glyph"]').tap();
-  await tp.waitForURL('**/projects/glyph');
+  await tp.locator('[data-project-card="dispatch"]').tap();
+  await tp.waitForURL('**/projects/dispatch');
   await touch.close();
   report.interactions.push(
     'Left/right touch swipes browse, vertical gestures stay native, and the next tap opens the project',

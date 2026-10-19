@@ -1,107 +1,64 @@
 ---
 import { Image } from 'astro:assets';
-import markup from '../assets/markup-1.png';
-import arc from '../assets/projects/arc.png';
-import arcDirections from '../assets/projects/arc-directions.png';
+import { projects } from '../data/projects';
+function imageWidths(sourceWidth: number) {
+  return [
+    ...new Set(
+      [480, 800, 1200, 1600, 1920].map((width) => Math.min(width, sourceWidth)),
+    ),
+  ];
+}
 ---
 
 <div class="project-collection">
-  <a class="project-link glyph-project" href="/projects/glyph">
-    <div class="project-art glyph-art" aria-hidden="true">
-      <span class="glyph-word">Glyph</span>
-      <div class="glyph-paper">
-        <span>Mathematical notes</span>
-        <span class="paper-equation">f(x) = x² + 2x + 1</span>
-        <span>Markdown & LaTeX.</span>
-        <div class="paper-lines"></div>
+  {projects.map((project) => (
+    <a class={`project-link ${project.id}-project`} href={project.href}>
+      <div
+        class:list={[
+          'project-art',
+          project.id === 'markup' ? 'markup-art' : 'screenshot-art',
+          `${project.id}-art`,
+        ]}
+      >
+        {
+          <span class="art-word" aria-hidden="true">
+            {project.id === 'portfolio' ? 'Portfolio' : project.name}
+          </span>
+        }
+        <Image
+          src={project.image}
+          alt={project.alt}
+          widths={imageWidths(project.image.width)}
+          sizes={
+            project.id === 'dispatch'
+              ? '(max-width: 700px) 32vw, 220px'
+              : '(max-width: 700px) 90vw, (max-width: 1600px) 45vw, 700px'
+          }
+          loading="lazy"
+          format={project.image.format === 'svg' ? 'svg' : 'webp'}
+          quality={95}
+        />
+        {'secondaryImage' in project && project.secondaryImage && (
+          <Image
+            src={project.secondaryImage}
+            alt="Dispatch’s conversation reader with test messages"
+            widths={[360, 600, 900]}
+            sizes="(max-width: 700px) 35vw, 220px"
+            loading="lazy"
+            format="webp"
+            quality={95}
+          />
+        )}
       </div>
-      <span class="art-caption">Write. Edit. Publish.</span>
-    </div>
-    <div class="project-caption">
-      <div>
-        <h3>Glyph</h3>
-        <p>Markdown & mathematical note publishing</p>
-      </div>
-      <span class="project-arrow" aria-hidden="true">
-        ↗
-      </span>
-    </div>
-  </a>
-  <a class="project-link markup-project" href="/projects/markup">
-    <div class="project-art markup-art">
-      <span class="art-word" aria-hidden="true">
-        Markup
-      </span>
-      <Image
-        src={markup}
-        alt="Markup workspace with folders, note tabs and a rendered Markdown document"
-        widths={[480, 800, 1200]}
-        sizes="(max-width: 700px) 90vw, 50vw"
-        loading="lazy"
-        format="webp"
-      />
-    </div>
-    <div class="project-caption">
-      <div>
-        <h3>Markup</h3>
-        <p>A Markdown workspace for web & desktop</p>
-      </div>
-      <span class="project-arrow" aria-hidden="true">
-        ↗
-      </span>
-    </div>
-  </a>
-  <a class="project-link arc-project" href="/projects/arc">
-    <div class="project-art arc-art">
-      <Image
-        src={arc}
-        alt="Arc’s 3D map of Westminster"
-        widths={[360, 600, 900]}
-        sizes="(max-width: 700px) 38vw, 230px"
-        loading="lazy"
-        format="webp"
-      />
-      <Image
-        src={arcDirections}
-        alt="Arc’s native walking directions"
-        widths={[360, 600, 900]}
-        sizes="(max-width: 700px) 38vw, 230px"
-        loading="lazy"
-        format="webp"
-      />
-    </div>
-    <div class="project-caption">
-      <div>
-        <h3>Arc</h3>
-        <p>Native iPhone maps, search & navigation</p>
-      </div>
-      <span class="project-arrow" aria-hidden="true">
-        ↗
-      </span>
-    </div>
-  </a>
-  <a class="project-link lab-project" href="/projects/homelab">
-    <div class="project-art lab-art" aria-hidden="true">
-      <span class="lab-dot"></span>
-      <div class="lab-mini">
-        <span>Linux</span>
-        <i></i>
+      <div class="project-caption">
         <div>
-          <span>Home</span>
-          <span>Cloud</span>
+          <h3>{project.name}</h3>
+          <p>{project.description}</p>
         </div>
-        <i></i>
-        <span>Build / observe / learn</span>
+        <span class="project-arrow" aria-hidden="true">
+          ↗
+        </span>
       </div>
-    </div>
-    <div class="project-caption">
-      <div>
-        <h3>Home lab</h3>
-        <p>Linux services, networking & monitoring</p>
-      </div>
-      <span class="project-arrow" aria-hidden="true">
-        ↗
-      </span>
-    </div>
-  </a>
+    </a>
+  ))}
 </div>

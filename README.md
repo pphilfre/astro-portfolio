@@ -21,7 +21,9 @@ Astro/TypeScript source; the build validates generated pages and assets.
 - Shared metadata, theme initialisation, navigation and footer live in src/layouts/main.astro.
 - The global CSS defines the palette, type scale, responsive layouts and reduced-motion behaviour.
 - Satoshi is self-hosted as one variable WOFF2; its licence is included in public/fonts.
-- src/components/ProjectCollection.astro presents Glyph, Markup and the home lab.
+- src/data/projects.ts defines the featured order: Markup, Dispatch, Waypoint, Glyph, Personal Portfolio and Home Lab.
+- src/components/ProjectCollection.astro renders all six projects in the same grid, each with a distinct muted background.
+- The home-page deck selects the first three projects from the same data; its existing interactions are retained.
 - Astro Image produces responsive WebP versions of the existing Markup screenshots.
 - Blog and CTF Markdown live in src/content. Drafts are excluded from routes, indexes and the generated sitemap.
 - React hydrates only the contact form, when visible. Navigation, filters and the gallery use small native scripts.
@@ -67,6 +69,9 @@ study is /projects/homelab. The placeholder CTF is a draft and has no published 
 public/cv.pdf matches the supplied current CV. Education, placement descriptions,
 course dates and article corrections follow PORTFOLIO_AUDIT.md and the supplied CV.
 Do not promote plans into completed achievements or add undocumented lab topology.
+
+Project research, source revisions, imagery and verification limits for the October
+2026 case-study update are recorded in PROJECT_CASE_STUDIES.md.
 
 The pre-existing edited HomelabBento.tsx and its Radix sheet foundation are retained
 but are not imported by any public page. Both package manifests and locks are updated by npm for the redesigned dependency set;

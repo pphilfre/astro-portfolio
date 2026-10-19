@@ -1,0 +1,134 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/main.astro';
+import CaseHeader from '../../components/CaseHeader.astro';
+import { Image } from 'astro:assets';
+import portfolio from '../../assets/projects/portfolio.jpg';
+---
+
+<Layout
+  title="Personal Portfolio"
+  description="The decisions behind this Astro portfolio: static content, small client-side scripts, responsive layouts and automated accessibility and interaction checks."
+>
+  <article class="wrap page">
+    <CaseHeader
+      title="Personal Portfolio"
+      description="A place to explain what I work on and what I learn."
+      stack="Astro / TypeScript / CSS / Playwright / Vercel"
+    >
+      <a class="text-link" href="https://freddiephilpot.dev">
+        Visit website ↗
+      </a>
+      <a class="text-link" href="https://github.com/pphilfre/astro-portfolio">
+        Source ↗
+      </a>
+    </CaseHeader>
+    <figure class="case-image">
+      <a
+        class="case-image-link"
+        href={portfolio.src}
+        target="_blank"
+        rel="noopener"
+        aria-label="Open portfolio screenshot at full size (new tab)"
+      >
+        <Image
+          src={portfolio}
+          alt="The portfolio home page with selected projects and links to my work"
+          widths={[480, 800, 1440, 1920]}
+          sizes="90vw"
+          format="webp"
+          quality={95}
+        />
+      </a>
+      <figcaption>
+        The existing home-page layout, captured from the local site. Select the
+        image to enlarge.
+      </figcaption>
+    </figure>
+    <section class="case-section">
+      <h2>Why Astro</h2>
+      <div>
+        <p>
+          I wanted one place to bring together my applications, home lab and
+          technical writing, with enough explanation to show what I have
+          actually worked on. Most of that content is text and images, so
+          Astro’s static rendering is a useful fit.
+        </p>
+        <p>
+          Public content pages are prerendered into HTML. The contact endpoint
+          runs on the server through the Vercel adapter, so the site can serve
+          static case studies while still handling form submissions.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Keeping it small</h2>
+      <div>
+        <p>
+          Shared layouts and components keep project cards, headings, navigation
+          and metadata consistent. Blog and CTF content use Astro collections,
+          with drafts excluded from public routes and the sitemap.
+        </p>
+        <p>
+          Client-side JavaScript is limited to interactions that use it:
+          navigation, theme selection, project browsing, filters and the
+          screenshot gallery. React hydrates the contact form when it becomes
+          visible. Astro produces responsive WebP screenshots, and the variable
+          font is hosted locally.
+        </p>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Checking the details</h2>
+      <div>
+        <p>
+          The project deck and mobile navigation need to work across narrow
+          screens, short viewports and keyboard input. The gallery also needs to
+          announce which screenshot is selected. Those behaviours are easy to
+          miss when only reviewing a desktop screenshot.
+        </p>
+        <p>
+          The browser checks exercise responsive layouts, overflow, image
+          loading, keyboard controls, reduced motion and light/dark
+          accessibility using Playwright and axe. Contact validation has
+          separate unit tests; browser tests mock successful submission so they
+          do not send real email.
+        </p>
+        <p>
+          Astro check and the production build provide additional checks on the
+          source and generated pages. Deployment uses the existing Vercel
+          configuration, with cache policies for static assets and uncached
+          contact responses.
+        </p>
+        <a
+          class="text-link"
+          href="https://github.com/pphilfre/astro-portfolio/blob/main/scripts/browser-check.mjs"
+        >
+          Browser checks ↗
+        </a>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>What it has taught me</h2>
+      <div>
+        <p>
+          The challenge is keeping a small site understandable while adding more
+          work to it. Reusing the existing components helps me improve the
+          content without making each page behave differently.
+        </p>
+        <p>
+          I am learning to treat accessibility, responsive behaviour and
+          accurate writing as part of the implementation. A case study is more
+          useful when it explains a real decision and its limits than when it
+          simply lists technologies.
+        </p>
+      </div>
+    </section>
+    <a class="next-project" href="/projects/homelab">
+      <span>Infrastructure case study</span>
+      <strong>
+        Home Lab <span aria-hidden="true">↗</span>
+      </strong>
+    </a>
+  </article>
+</Layout>

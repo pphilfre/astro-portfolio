@@ -301,6 +301,25 @@ html.landing-root {
   object-fit: cover;
   object-position: top;
 }
+.phone-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8%;
+  padding: 12px;
+  background: #ccd7e4;
+}
+.phone-visual > img {
+  width: auto;
+  max-width: 43%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 7px;
+  transform: rotate(-4deg);
+}
+.phone-visual > img:last-child {
+  transform: rotate(4deg);
+}
 .arc-visual {
   position: relative;
   background: #b6cac0;
@@ -484,7 +503,7 @@ html.landing-root {
     width: 42%;
   }
 }
-@media (max-width: 1050px) {
+@media (max-width: 1150px) {
   .landing-copy {
     left: 5%;
     width: 39%;
@@ -948,10 +967,11 @@ html.landing-root {
 }
 @media (max-width: 360px) {
   .project-tabs {
-    gap: 8px;
+    gap: 4px;
   }
   .project-tabs button {
     font-size: 11px;
+    padding-inline: 0;
   }
 }
 
