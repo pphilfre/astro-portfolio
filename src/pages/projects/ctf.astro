@@ -5,7 +5,11 @@ import Layout from '../../layouts/main.astro';
 const entries = await getCollection('ctf', ({ data }) => !data.draft);
 ---
 
-<Layout title="CTF write-ups">
+<Layout
+  title="CTF write-ups"
+  description="Freddie Philpot's published capture-the-flag write-ups and notes on practising cybersecurity skills."
+  noindex={entries.length === 0}
+>
   <div class="wrap page">
     <a href="/projects" class="back-link">
       ← Projects

@@ -13,7 +13,8 @@
     "test:landing": "node scripts/landing-check.mjs",
     "test:menu": "node scripts/menu-check.mjs",
     "test:analytics": "node scripts/analytics-check.mjs",
-    "test:back": "node scripts/back-navigation-check.mjs"
+    "test:back": "node scripts/back-navigation-check.mjs",
+    "test:seo": "node scripts/seo-check.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.0.0",

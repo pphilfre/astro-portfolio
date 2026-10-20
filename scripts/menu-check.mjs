@@ -210,7 +210,10 @@ if (process.argv[1].replaceAll('\\', '/').endsWith('/menu-check.mjs')) {
     const browser = await engine.launch({ headless: true, ...options });
     try {
       const context = await browser.newContext();
-      await context.route(/posthog\.com/, (route) => route.abort());
+      await context.route(
+        /posthog\.com|googletagmanager\.com|google-analytics\.com/,
+        (route) => route.abort(),
+      );
       const page = await context.newPage();
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));

@@ -63,9 +63,11 @@ WebKit with `npx playwright install webkit` when needed. It uses the same
 `PREVIEW_URL` override as the other browser checks.
 
 `npm run test:analytics` targets a production build at `PREVIEW_URL` (default
-`http://127.0.0.1:4327`). It intercepts all PostHog event submissions locally and
-checks pageviews, the pageleave handler, visitor/session continuity and the absence
-of third-party script downloads. Analytics is disabled by the development build.
+`http://127.0.0.1:4327`). It intercepts PostHog submissions and stubs Google's tag
+locally. It checks pageviews, the pageleave handler, visitor/session continuity,
+the GA measurement ID and loading after the page load event. Both trackers are
+disabled in development. Visual checks block external analytics, and history QA
+uses Google's opt-out flag so the back-forward cache can remain enabled.
 
 `npm run test:back` checks history returns from a project and About in Chromium
 and WebKit. Chromium's back-forward cache is explicitly enabled for this check.
@@ -79,15 +81,33 @@ The existing Vercel adapter remains. vercel.json adds cache policies for generat
 credentials and the CV. Astro fingerprints generated assets for long-lived caching.
 The CV uses revalidation so an updated download does not stay stale.
 
-The font and responsive WebP avatar now use fingerprinted asset URLs with an
+`npm run test:seo` checks the production HTML for unique titles/descriptions,
+canonical and social metadata, valid person/website/article JSON-LD and agreement
+between the sitemap and indexable pages. The empty CTF index stays accessible but
+is excluded from search until write-ups are published.
+
+The font and responsive WebP avatar use fingerprinted asset URLs with an
 immutable one-year cache. Styles are inlined to remove render-blocking stylesheet
 requests. Home-page screenshot candidates include small phone previews; full-size
 case-study images remain available. PostHog retains pageview analytics but disables
 unused replay, surveys, heatmaps and automatic interaction tracking. Its pinned
-npm slim bundle is imported after load during idle time and served as a fingerprinted,
-cacheable first-party asset. No PostHog CDN script is downloaded. The Markup hero
+npm slim ESM asset is imported directly by an inline scheduler after load during
+idle time, removing the separate loader request. It is fingerprinted and cacheable;
+no PostHog CDN script is downloaded. Google Analytics (`G-WYYGVPXGPG`) is also enabled
+at the owner's request, with its direct tag configured in the shared head and its
+script loaded asynchronously after page load. Connection hints cover both providers.
+Running both trackers necessarily adds Google's script and collection requests.
+The pinned PostHog SDK's native-feature compatibility fallbacks remain upstream
+code; this project does not rewrite vendor code to suppress a Lighthouse estimate.
+The Markup hero
 preview also uses a denser set of widths, viewport-height-aware size hints and
 WebP quality 70; the full-size case-study originals are unchanged.
+
+SEO metadata identifies Freddie Philpot consistently, links the existing GitHub
+and LinkedIn profiles, and attributes published writing with real publication and
+update dates. Search Console ownership is already configured by the owner. Submit
+`https://freddiephilpot.dev/sitemap.xml` and request indexing of `/` and `/about`
+there after deployment. GA is optional tracking and does not enable search indexing.
 
 Legacy /projects/tools and /projects/markupproject redirect permanently to
 /projects/markup. /projects is now the project collection; the infrastructure case

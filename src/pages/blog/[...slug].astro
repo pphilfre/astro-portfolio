@@ -13,7 +13,14 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<Layout title={entry.data.title} description={entry.data.description}>
+<Layout
+  title={entry.data.title}
+  description={entry.data.description}
+  article={{
+    published: entry.data.pubDate.toISOString(),
+    modified: entry.data.updatedDate?.toISOString(),
+  }}
+>
   <article class="wrap page reading">
     <header class="article-heading">
       <a href="/blog" class="back-link">
@@ -21,6 +28,9 @@ const { Content } = await render(entry);
       </a>
       <h1>{entry.data.title}</h1>
       <div class="article-meta">
+        <a href="/about" rel="author">
+          Freddie Philpot
+        </a>
         <time datetime={entry.data.pubDate.toISOString()}>
           {entry.data.pubDate.toLocaleDateString('en-GB', {
             day: 'numeric',

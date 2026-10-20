@@ -12,7 +12,10 @@ const browser = await chromium.launch({
     (process.platform === 'win32' ? 'msedge' : undefined),
 });
 const context = await browser.newContext({ reducedMotion: 'reduce' });
-await context.route(/posthog\.com/, (route) => route.abort());
+await context.route(
+  /posthog\.com|googletagmanager\.com|google-analytics\.com/,
+  (route) => route.abort(),
+);
 const page = await context.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));

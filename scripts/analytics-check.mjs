@@ -18,6 +18,17 @@ try {
   );
   const events = [];
   const externalScripts = [];
+  const scriptAfterLoad = [];
+  let loaded = false;
+  await context.route('https://www.googletagmanager.com/gtag/js*', (route) =>
+    route.fulfill({
+      contentType: 'text/javascript',
+      body: 'window.gaTestLoaded = true;',
+    }),
+  );
+  await context.route(/google-analytics\.com/, (route) =>
+    route.fulfill({ status: 204 }),
+  );
   await context.route('https://us.i.posthog.com/**', async (route) => {
     const request = route.request();
     const data = request.postDataBuffer();
@@ -44,7 +55,15 @@ try {
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
+  page.on('load', () => {
+    loaded = true;
+  });
   page.on('request', (r) => {
+    if (
+      r.resourceType() === 'script' &&
+      /module\.slim|googletagmanager/.test(r.url())
+    )
+      scriptAfterLoad.push(loaded);
     if (
       r.resourceType() === 'script' &&
       new URL(r.url()).origin !== new URL(base).origin
@@ -53,10 +72,25 @@ try {
   });
   await page.goto(base);
   await page.waitForFunction(() => window.posthog?.__loaded);
+  await page.waitForFunction(() => window.gaTestLoaded);
   await page.waitForTimeout(100);
   const first = events.filter((e) => e.event === '$pageview');
   assert.equal(first.length, 1, 'Exactly one initial pageview is captured');
   assert.equal(first[0].properties.$pathname, '/');
+  const commands = await page.evaluate(() =>
+    window.dataLayer.map((command) => Array.from(command)),
+  );
+  assert.equal(
+    commands.filter(
+      (command) => command[0] === 'config' && command[1] === 'G-WYYGVPXGPG',
+    ).length,
+    1,
+  );
+  assert.equal(
+    await page.locator('script[data-analytics-loader][src]').count(),
+    0,
+    'The analytics scheduler must be inline',
+  );
   const identity = await page.evaluate(() => ({
     visitor: window.posthog.get_distinct_id(),
     session: window.posthog.get_session_id(),
@@ -69,6 +103,7 @@ try {
     window.dispatchEvent(new PageTransitionEvent('pagehide')),
   );
   await page.waitForTimeout(100);
+  loaded = false;
   await page.goto(base + '/about');
   await page.waitForFunction(() => window.posthog?.__loaded);
   await page.waitForTimeout(100);
@@ -87,10 +122,18 @@ try {
     events.some((e) => e.event === '$pageleave'),
     'Pageleave still records visit duration',
   );
-  assert.deepEqual(
-    externalScripts,
-    [],
-    'Analytics must not download any third-party scripts',
+  assert.ok(externalScripts.length > 0);
+  assert.ok(
+    externalScripts.every((url) =>
+      url.startsWith(
+        'https://www.googletagmanager.com/gtag/js?id=G-WYYGVPXGPG',
+      ),
+    ),
+    'Only the requested Google tag may load an external script',
+  );
+  assert.ok(
+    scriptAfterLoad.every(Boolean),
+    'Analytics scripts must load after the page load event',
   );
   assert.deepEqual(errors, []);
   console.log(

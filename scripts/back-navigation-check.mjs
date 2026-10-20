@@ -19,7 +19,10 @@ for (const [name, engine, options] of [
       reducedMotion: 'no-preference',
     });
     // Do not intercept requests: routing disables the normal history/cache path.
-    // The SDK filters the automated browser, so it sends no analytics events.
+    // PostHog filters automation; opt out of GA in QA without disabling caching.
+    await page.addInitScript(() => {
+      window['ga-disable-G-WYYGVPXGPG'] = true;
+    });
     await page.addInitScript(() =>
       window.addEventListener(
         'pageshow',

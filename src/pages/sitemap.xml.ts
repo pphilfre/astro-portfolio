@@ -13,7 +13,6 @@ export const GET: APIRoute = async () => {
     'projects/waypoint',
     'projects/portfolio',
     'projects/homelab',
-    'projects/ctf',
     'certifications',
     'blog',
     'contact',
@@ -22,6 +21,7 @@ export const GET: APIRoute = async () => {
   const ctf = await getCollection('ctf', ({ data }) => !data.draft);
   const routes = [
     ...pages,
+    ...(ctf.length ? ['projects/ctf'] : []),
     ...blog.map((entry) => 'blog/' + entry.id),
     ...ctf.map((entry) => 'ctf/' + entry.id),
   ];

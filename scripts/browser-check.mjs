@@ -42,8 +42,9 @@ const browser = await chromium.launch({
 });
 const context = await browser.newContext({ reducedMotion: 'reduce' });
 // External services are not part of the local visual regression run.
-await context.route(/challenges\.cloudflare\.com|posthog\.com/, (route) =>
-  route.abort(),
+await context.route(
+  /challenges\.cloudflare\.com|posthog\.com|googletagmanager\.com|google-analytics\.com/,
+  (route) => route.abort(),
 );
 const page = await context.newPage();
 const setTheme = async (theme) => {
