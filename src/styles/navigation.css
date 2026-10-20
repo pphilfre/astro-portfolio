@@ -193,8 +193,7 @@ body {
   background: var(--menu-background);
   color: var(--menu-foreground);
   max-height: calc(100dvh - 96px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   box-shadow: 0 20px 45px #0002;
 }
 .site-header .menu-surface {
@@ -213,12 +212,18 @@ body {
   height: 100%;
   z-index: -1;
   pointer-events: none;
-  fill: var(--menu-background);
+  background: var(--menu-background);
+  border-radius: inherit;
+  transform-origin: top right;
 }
 .site-header .menu-pages,
 .site-header .menu-utilities {
   display: flex;
   flex-direction: column;
+}
+.site-header .menu-scroll {
+  min-height: 0;
+  overflow-y: auto;
 }
 .site-frame .site-header .menu-pages a {
   position: relative;
@@ -259,7 +264,6 @@ body {
 .site-frame .site-header .mobile-menu[data-animated] .menu-pages,
 .site-frame .site-header .mobile-menu[data-animated] .menu-utilities {
   opacity: 0;
-  visibility: hidden;
 }
 .site-frame .site-header .mobile-menu[data-animated][data-filled] .menu-pages,
 .site-frame
@@ -267,16 +271,6 @@ body {
   .mobile-menu[data-animated][data-filled]
   .menu-utilities {
   opacity: 1;
-  visibility: visible;
-  animation: menu-content 180ms ease both;
-}
-@keyframes menu-content {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 /* Warm text remains specific to home, with the same active-dot geometry. */
 .site-frame .experience-header .mobile-menu nav a[aria-current='page'],
@@ -346,15 +340,6 @@ body {
     height: 28px;
   }
 }
-.site-frame .site-header .mobile-menu[data-animated][open] summary {
-  background: transparent;
-}
-.site-frame .site-header .mobile-menu[data-animated][data-filled] nav {
-  background: var(--menu-background);
-}
-.site-frame .site-header .mobile-menu[data-filled] .menu-surface {
-  display: none;
-}
 .site-frame .site-header .mobile-menu summary .menu-icon {
   display: block;
   position: relative;
@@ -394,9 +379,8 @@ body {
   pointer-events: none;
   overflow: hidden;
 }
-.site-frame .site-header .mobile-menu[data-closing] .menu-pages,
-.site-frame .site-header .mobile-menu[data-closing] .menu-utilities {
-  animation: none;
-  opacity: 0;
-  visibility: hidden;
+@media (prefers-reduced-motion: reduce) {
+  .menu-icon > span {
+    transition: none;
+  }
 }

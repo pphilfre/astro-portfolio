@@ -1,6 +1,8 @@
 ---
 const path = Astro.url.pathname;
 import '../styles/navigation.css';
+import { Image } from 'astro:assets';
+import avatar from '../assets/github-avatar.png';
 interface Props {
   compact?: boolean;
 }
@@ -18,12 +20,15 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
 
 <header class:list={['site-header', 'wrap', { 'experience-header': compact }]}>
   <a class="brand" href="/" aria-label="Freddie Philpot, home">
-    <img
+    <Image
       class="brand-avatar"
-      src="/github-avatar.png"
+      src={avatar}
       alt=""
       width="32"
       height="32"
+      widths={[32, 64, 96]}
+      sizes="32px"
+      format="webp"
     />
     <span>Freddie Philpot</span>
   </a>
@@ -100,28 +105,23 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
         </span>
       </summary>
       <nav aria-label="Mobile navigation">
-        <svg
-          class="menu-surface"
-          viewBox="0 0 280 480"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path d="M248 0C260 0 280 0 280 22C280 34 280 44 258 44C236 44 216 44 216 22C216 0 236 0 248 0Z" />
-        </svg>
-        <div class="menu-pages">
-          {links.map(([href, label]) => (
-            <a href={href} aria-current={active(href) ? 'page' : undefined}>
-              {label}
+        <span class="menu-surface" aria-hidden="true"></span>
+        <div class="menu-scroll">
+          <div class="menu-pages">
+            {links.map(([href, label]) => (
+              <a href={href} aria-current={active(href) ? 'page' : undefined}>
+                {label}
+              </a>
+            ))}
+          </div>
+          <div class="menu-utilities">
+            <a href="/cv.pdf" download="Freddie-Philpot-CV.pdf">
+              Download CV (PDF) <span aria-hidden="true">↓</span>
             </a>
-          ))}
-        </div>
-        <div class="menu-utilities">
-          <a href="/cv.pdf" download="Freddie-Philpot-CV.pdf">
-            Download CV (PDF) <span aria-hidden="true">↓</span>
-          </a>
-          <a href="https://github.com/pphilfre">
-            GitHub <span aria-hidden="true">↗</span>
-          </a>
+            <a href="https://github.com/pphilfre">
+              GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </nav>
     </details>

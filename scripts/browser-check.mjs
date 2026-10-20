@@ -1,3 +1,4 @@
+import { checkMenu } from './menu-check.mjs';
 import { chromium } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
@@ -329,125 +330,10 @@ try {
   report.interactions.push(
     'Case-study images link to their full-size source assets',
   );
-  // Inspect the surface itself: it grows from the trigger, before text appears.
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(base + '/projects');
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.locator('.mobile-menu summary').click();
-  const blob = await page.locator('.menu-surface path').evaluate((path) => {
-    const animation = path.getAnimations()[0];
-    animation.pause();
-    animation.currentTime = 0;
-    const start = path.getBBox();
-    const small = { width: start.width, height: start.height };
-    animation.currentTime = 220;
-    const middle = path.getBBox();
-    const growing = { width: middle.width, height: middle.height };
-    animation.finish();
-    return { small, growing };
-  });
-  assert.deepEqual(blob.small, { width: 44, height: 44 });
-  assert.ok(blob.growing.width > 44 && blob.growing.width < 280);
-  assert.ok(blob.growing.height > 44);
-  await page.waitForFunction(
-    () => document.querySelector('.mobile-menu').dataset.filled === 'true',
-  );
-  await page.keyboard.press('Escape');
-  assert.equal(
-    await page.locator('.mobile-menu').getAttribute('data-closing'),
-    'true',
-  );
-  const contraction = await page
-    .locator('.menu-surface path')
-    .evaluate((path) => {
-      const animation = path.getAnimations()[0];
-      animation.pause();
-      animation.currentTime = 0;
-      const start = path.getBBox();
-      const full = { width: start.width, height: start.height };
-      animation.currentTime = 250;
-      const middle = path.getBBox();
-      const shrinking = { width: middle.width, height: middle.height };
-      animation.finish();
-      return { full, shrinking };
-    });
-  assert.ok(contraction.shrinking.width < contraction.full.width);
-  assert.ok(contraction.shrinking.height < contraction.full.height);
-  await page.waitForFunction(
-    () => !document.querySelector('.mobile-menu').open,
-  );
-  // Repeated clicks must never reveal links ahead of the surface animation.
-  for (const route of ['/', '/projects']) {
-    await page.goto(base + route);
-    const rapid = await page.locator('.mobile-menu').evaluate(async (menu) => {
-      const trigger = menu.querySelector('summary');
-      const path = menu.querySelector('.menu-surface path');
-      const failures = [];
-      let samples = 0;
-      let watching = true;
-      const inspect = () => {
-        if (menu.open) {
-          samples++;
-          const filled = menu.hasAttribute('data-filled');
-          for (const content of menu.querySelectorAll(
-            '.menu-pages, .menu-utilities',
-          )) {
-            const style = getComputedStyle(content);
-            if (
-              !filled &&
-              style.visibility !== 'hidden' &&
-              Number(style.opacity) > 0
-            ) {
-              failures.push('Text visible before background settled');
-            }
-          }
-          if (
-            filled &&
-            getComputedStyle(menu.querySelector('nav')).backgroundColor ===
-              'rgba(0, 0, 0, 0)'
-          ) {
-            failures.push('Settled menu has no background');
-          }
-        }
-        if (watching) requestAnimationFrame(inspect);
-      };
-      requestAnimationFrame(inspect);
-      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-      for (const delay of [35, 65, 110, 180, 70, 240, 40, 80, 20]) {
-        trigger.click();
-        await wait(delay);
-      }
-      await wait(800);
-      const finalVisible =
-        menu.hasAttribute('data-filled') &&
-        [...menu.querySelectorAll('.menu-pages, .menu-utilities')].every(
-          (content) =>
-            getComputedStyle(content).visibility === 'visible' &&
-            Number(getComputedStyle(content).opacity) === 1,
-        );
-      // Also reverse immediately, before the browser has rendered a frame.
-      trigger.click();
-      trigger.click();
-      trigger.click();
-      await wait(500);
-      watching = false;
-      return {
-        failures,
-        samples,
-        finalVisible,
-        closed: !menu.open,
-        animations: path.getAnimations().length,
-      };
-    });
-    assert.deepEqual(rapid.failures, [], `${route} rapid menu transitions`);
-    assert.ok(rapid.samples > 20);
-    assert.equal(rapid.finalVisible, true);
-    assert.equal(rapid.closed, true);
-    assert.equal(rapid.animations, 0);
-  }
+  await checkMenu(page, base);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   report.interactions.push(
-    'Shared header alignment; blob opens/closes, with text hidden during rapid reversals',
+    'Smooth menu growth, frame-continuous reversals, rapid taps and landscape scrolling',
   );
   // Keyboard disclosure and focus restoration.
   await page.goto(base + '/');

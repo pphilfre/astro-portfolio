@@ -56,11 +56,23 @@ mocked CAPTCHA and email responses; the test never sends a real message.
 Screenshots and the JSON report are written to ignored tmp/qa. Browser checks require
 a local preview, not the live site. npm test covers the pure contact validation rules.
 
+`npm run test:menu` checks the menu in Edge/Chromium and WebKit, including 4× CPU
+throttling in Chromium, interrupted transitions, rapid taps, keyboard access,
+reduced motion, landscape scrolling and the no-JavaScript fallback. Install
+WebKit with `npx playwright install webkit` when needed. It uses the same
+`PREVIEW_URL` override as the other browser checks.
+
 ## Deployment and content
 
-The existing Vercel adapter remains. vercel.json adds cache policies for fonts,
+The existing Vercel adapter remains. vercel.json adds cache policies for generated assets,
 credentials and the CV. Astro fingerprints generated assets for long-lived caching.
 The CV uses revalidation so an updated download does not stay stale.
+
+The font and responsive WebP avatar now use fingerprinted asset URLs with an
+immutable one-year cache. Styles are inlined to remove render-blocking stylesheet
+requests. Home-page screenshot candidates include small phone previews; full-size
+case-study images remain available. PostHog retains pageview analytics but disables
+unused replay, surveys, heatmaps and automatic interaction tracking.
 
 Legacy /projects/tools and /projects/markupproject redirect permanently to
 /projects/markup. /projects is now the project collection; the infrastructure case

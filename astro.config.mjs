@@ -7,6 +7,8 @@ export default defineConfig({
   site: 'https://freddiephilpot.dev',
   output: 'server',
   compressHTML: true,
+  // Avoid stylesheet round trips before the first paint on this small site.
+  build: { inlineStylesheets: 'always' },
   adapter: vercel(),
   vite: { plugins: [tailwindcss()] },
   integrations: [react()],

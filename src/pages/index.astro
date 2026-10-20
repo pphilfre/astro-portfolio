@@ -118,8 +118,16 @@ const projects = collection.slice(0, 3);
                 <Image
                   src={project.image}
                   alt={project.alt}
-                  widths={[640, 1000, 1400]}
-                  sizes="(max-width: 700px) 80vw, 46vw"
+                  widths={
+                    project.id === 'dispatch'
+                      ? [64, 96, 128, 192, 256, 384]
+                      : [240, 320, 480, 640, 1000, 1400]
+                  }
+                  sizes={
+                    project.id === 'dispatch'
+                      ? '(max-width: 700px) 18vw, (max-width: 1150px) 10vw, 180px'
+                      : '(max-width: 700px) 72vw, (max-width: 1150px) 40vw, (max-width: 1800px) 43vw, 780px'
+                  }
                   format={project.image.format === 'svg' ? 'svg' : 'webp'}
                   loading="eager"
                   fetchpriority={index === 0 ? 'high' : 'auto'}
@@ -128,8 +136,8 @@ const projects = collection.slice(0, 3);
                   <Image
                     src={project.secondaryImage}
                     alt="Dispatch’s native conversation reader"
-                    widths={[360, 600]}
-                    sizes="(max-width: 700px) 30vw, 220px"
+                    widths={[64, 96, 128, 192, 256, 384]}
+                    sizes="(max-width: 700px) 18vw, (max-width: 1150px) 10vw, 180px"
                     format="webp"
                     loading="eager"
                   />
