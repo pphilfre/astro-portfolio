@@ -5,6 +5,8 @@ import Header from '../components/Header.astro';
 import fontUrl from '../assets/fonts/Satoshi-Variable.woff2?url';
 import { siteUrl, structuredData, type ArticleMetadata } from '../data/seo';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import InlineScript from '../components/InlineScript.astro';
+import initialTheme from '../scripts/initial-theme.js?raw';
 interface Props {
   title: string;
   description?: string;
@@ -80,9 +82,7 @@ const jsonLd = JSON.stringify(
       property="og:image:alt"
       content="Freddie Philpot — development and cybersecurity portfolio"
     />
-    {!noindex && (
-      <script type="application/ld+json" is:inline set:html={jsonLd} />
-    )}
+    {!noindex && <InlineScript type="application/ld+json" content={jsonLd} />}
     {article && (
       <>
         <meta property="article:published_time" content={article.published} />
@@ -94,31 +94,7 @@ const jsonLd = JSON.stringify(
     )}
     <GoogleAnalytics />
     {noindex && <meta name="robots" content="noindex" />}
-    <script is:inline>
-      (() => {
-        let theme = 'system';
-        try {
-          theme = localStorage.getItem('theme') || 'system';
-        } catch {}
-        document.documentElement.classList.toggle(
-          'dark',
-          theme === 'dark' ||
-            (theme === 'system' &&
-              matchMedia('(prefers-color-scheme: dark)').matches),
-        );
-        try {
-          const arrival = JSON.parse(
-            sessionStorage.getItem('portfolio-project-arrival') || 'null',
-          );
-          sessionStorage.removeItem('portfolio-project-arrival');
-          if (
-            arrival?.path === location.pathname &&
-            Date.now() - arrival.time < 10000
-          )
-            document.documentElement.classList.add('project-arrival');
-        } catch {}
-      })();
-    </script>
+    <InlineScript content={initialTheme} />
   </head>
   <body class:list={{ 'landing-page': landing }}>
     <a class="skip-link" href="#main">

@@ -5,7 +5,9 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    "tmp",
+    ".vercel"
   ],
   "compilerOptions": {
     "baseUrl": ".",

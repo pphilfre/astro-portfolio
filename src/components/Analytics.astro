@@ -1,35 +1,12 @@
 ---
-// The published slim ESM file is self-contained. Import its asset URL so the
-// small scheduler can be inline rather than requiring another loader request.
 import posthogUrl from 'posthog-js/dist/module.slim.js?url';
 import { analyticsConfig } from '../data/analytics';
-const enabled = import.meta.env.PROD;
+import InlineScript from './InlineScript.astro';
+import loader from '../scripts/analytics-loader.js?raw';
+// Keep the scheduler inline to avoid a critical loader request.
+const content = `(() => {const posthogUrl = ${JSON.stringify(posthogUrl)}; const analyticsConfig = ${JSON.stringify(analyticsConfig)};${loader}})();`;
 ---
 
-{enabled && <script
-  is:inline
-  define:vars={{ posthogUrl, analyticsConfig }}
-  data-analytics-loader
->
-  (() => {
-    const schedule = () => {
-      const load = () => {
-        if (window.posthog?.__loaded) return;
-        void import(posthogUrl)
-          .then(({ default: posthog }) => {
-            window.posthog = posthog;
-            posthog.init(
-              'phc_kHZWuiUzdGkjQ7OvXfER2jygjMyTK9oyFfjVeg5vuAg',
-              analyticsConfig,
-            );
-          })
-          .catch(() => {});
-      };
-      if (typeof window.requestIdleCallback === 'function')
-        window.requestIdleCallback(load, { timeout: 3000 });
-      else window.setTimeout(load, 1000);
-    };
-    if (document.readyState === 'complete') schedule();
-    else window.addEventListener('load', schedule, { once: true });
-  })();
-</script>}
+{import.meta.env.PROD && (
+  <InlineScript content={content} data-analytics-loader />
+)}

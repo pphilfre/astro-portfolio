@@ -1,0 +1,19 @@
+---
+import { createHash } from 'node:crypto';
+
+interface Props {
+  content: string;
+  type?: string;
+  'data-google-analytics'?: boolean;
+  'data-analytics-loader'?: boolean;
+}
+const { content, ...attributes } = Astro.props;
+// is:inline and dynamically generated scripts need their exact rendered bytes
+// registered explicitly. The hash stays in sync when script/config data changes.
+if (Astro.csp) {
+  const hash = createHash('sha256').update(content).digest('base64');
+  Astro.csp.insertScriptHash(`sha256-${hash}`);
+}
+---
+
+<script is:inline {...attributes} set:html={content} />
