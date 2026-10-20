@@ -62,6 +62,17 @@ reduced motion, landscape scrolling and the no-JavaScript fallback. Install
 WebKit with `npx playwright install webkit` when needed. It uses the same
 `PREVIEW_URL` override as the other browser checks.
 
+`npm run test:analytics` targets a production build at `PREVIEW_URL` (default
+`http://127.0.0.1:4327`). It intercepts all PostHog event submissions locally and
+checks pageviews, the pageleave handler, visitor/session continuity and the absence
+of third-party script downloads. Analytics is disabled by the development build.
+
+`npm run test:back` checks history returns from a project and About in Chromium
+and WebKit. Chromium's back-forward cache is explicitly enabled for this check.
+The departure overlay and faded copy are cleared on `pagehide` before caching,
+so returning home does not briefly restore the outgoing animation. Like the
+analytics check, it defaults to the production preview on port 4327.
+
 ## Deployment and content
 
 The existing Vercel adapter remains. vercel.json adds cache policies for generated assets,
@@ -72,7 +83,11 @@ The font and responsive WebP avatar now use fingerprinted asset URLs with an
 immutable one-year cache. Styles are inlined to remove render-blocking stylesheet
 requests. Home-page screenshot candidates include small phone previews; full-size
 case-study images remain available. PostHog retains pageview analytics but disables
-unused replay, surveys, heatmaps and automatic interaction tracking.
+unused replay, surveys, heatmaps and automatic interaction tracking. Its pinned
+npm slim bundle is imported after load during idle time and served as a fingerprinted,
+cacheable first-party asset. No PostHog CDN script is downloaded. The Markup hero
+preview also uses a denser set of widths, viewport-height-aware size hints and
+WebP quality 70; the full-size case-study originals are unchanged.
 
 Legacy /projects/tools and /projects/markupproject redirect permanently to
 /projects/markup. /projects is now the project collection; the infrastructure case

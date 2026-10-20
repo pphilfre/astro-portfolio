@@ -5,6 +5,13 @@ import { Image } from 'astro:assets';
 import { projects as collection } from '../data/projects';
 import '../styles/landing.css';
 const projects = collection.slice(0, 3);
+// The deck is limited by viewport height as well as width, especially on phones.
+const previewSizes = [
+  '(max-width: 700px) and (max-height: 700px) min(70vw, max(100px, calc(118dvh - 610px)))',
+  '(max-width: 700px) min(70vw, max(140px, calc(116dvh - 650px)))',
+  '(max-width: 1150px) min(calc(44vw - 26px), calc(65dvh - 26px))',
+  'min(calc(46vw - 42px), calc(75dvh - 42px), 778px)',
+].join(', ');
 ---
 
 <Layout title="Freddie Philpot" landing>
@@ -121,14 +128,15 @@ const projects = collection.slice(0, 3);
                   widths={
                     project.id === 'dispatch'
                       ? [64, 96, 128, 192, 256, 384]
-                      : [240, 320, 480, 640, 1000, 1400]
+                      : [240, 320, 400, 480, 560, 640, 800, 1000, 1400]
                   }
                   sizes={
                     project.id === 'dispatch'
                       ? '(max-width: 700px) 18vw, (max-width: 1150px) 10vw, 180px'
-                      : '(max-width: 700px) 72vw, (max-width: 1150px) 40vw, (max-width: 1800px) 43vw, 780px'
+                      : previewSizes
                   }
                   format={project.image.format === 'svg' ? 'svg' : 'webp'}
+                  quality={project.id === 'markup' ? 70 : undefined}
                   loading="eager"
                   fetchpriority={index === 0 ? 'high' : 'auto'}
                 />

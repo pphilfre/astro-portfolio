@@ -11,7 +11,9 @@
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node scripts/browser-check.mjs",
     "test:landing": "node scripts/landing-check.mjs",
-    "test:menu": "node scripts/menu-check.mjs"
+    "test:menu": "node scripts/menu-check.mjs",
+    "test:analytics": "node scripts/analytics-check.mjs",
+    "test:back": "node scripts/back-navigation-check.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.0.0",
@@ -23,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
+    "posthog-js": "1.438.13",
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

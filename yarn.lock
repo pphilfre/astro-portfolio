@@ -880,6 +880,26 @@
   dependencies:
     playwright "1.63.0"
 
+"@posthog/browser-common@^0.9.5":
+  version "0.9.5"
+  resolved "https://registry.npmjs.org/@posthog/browser-common/-/browser-common-0.9.5.tgz"
+  integrity sha512-oXnBgZvM8UQ84IcBLfGP0WSGd9rA0PCGR37H8Pw0NszJRwxwbJnFXIUih0pvI/ze2eGmzkIEC9i3SwC+bMAgjQ==
+  dependencies:
+    "@posthog/core" "^1.59.1"
+    "@posthog/types" "^1.416.0"
+
+"@posthog/core@^1.59.1":
+  version "1.59.1"
+  resolved "https://registry.npmjs.org/@posthog/core/-/core-1.59.1.tgz"
+  integrity sha512-P39YgzQVDh6oz6wAzQXEnoHgTYpM7gifonmVKq1scAJco79h31XmmNVurRq9tTmmyIrr1uX8FHT0riCsyfV9AQ==
+  dependencies:
+    "@posthog/types" "^1.416.0"
+
+"@posthog/types@^1.416.0":
+  version "1.416.0"
+  resolved "https://registry.npmjs.org/@posthog/types/-/types-1.416.0.tgz"
+  integrity sha512-0/9+02s/0uDyrH4G/qUg1yyl6gXUg8Uuxw/PlDad3KLzo9FFS9zS/kAQaEshx/saVGupj1aAy/4EUBxWisBogw==
+
 "@prettier/parse-srcset@^3.1.0":
   version "3.1.0"
   resolved "https://registry.npmjs.org/@prettier/parse-srcset/-/parse-srcset-3.1.0.tgz"
@@ -1990,12 +2010,17 @@
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-19.2.3.tgz"
   integrity sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==
 
-"@types/react@*", "@types/react@^17.0.50 || ^18.0.21 || ^19.0.0", "@types/react@^19.2.0", "@types/react@^19.2.10":
+"@types/react@*", "@types/react@^17.0.50 || ^18.0.21 || ^19.0.0", "@types/react@^19.2.0", "@types/react@^19.2.10", "@types/react@>=16.8.0":
   version "19.2.10"
   resolved "https://registry.npmjs.org/@types/react/-/react-19.2.10.tgz"
   integrity sha512-WPigyYuGhgZ/cTPRXB2EwUw+XvsRA3GqHlsP4qteqrnnjDrApbS7MxcGr/hke5iUoeB7E/gQtrs9I37zAJ0Vjw==
   dependencies:
     csstype "^3.2.2"
+
+"@types/trusted-types@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-2.0.7.tgz"
+  integrity sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==
 
 "@types/unist@*", "@types/unist@^3.0.0", "@types/unist@^3.0.3":
   version "3.0.3"
@@ -2438,6 +2463,11 @@ cookie@^2.0.1:
   resolved "https://registry.npmjs.org/cookie/-/cookie-2.0.1.tgz"
   integrity sha512-yuToqVvRrj6pfDXREyQAAv8SkAEk/8GS3jQRTiUMm66TVtBYmqQeoEjL2Lmq8Rpo6271vH76InTChTitEAm65w==
 
+core-js@^3.49.0:
+  version "3.51.0"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.51.0.tgz"
+  integrity sha512-7bDKx/5jm5MxzsXxc93g6Z2+4ZsuT/MddrfRmTDJNAkWsYWHU8EVNEsBiIEWnMAMCHMmRfUEjkuo3jeNBOIHRw==
+
 cross-spawn@^7.0.3:
   version "7.0.6"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.6.tgz"
@@ -2567,6 +2597,13 @@ domhandler@^5.0.2, domhandler@^5.0.3:
   integrity sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==
   dependencies:
     domelementtype "^2.3.0"
+
+dompurify@^3.4.13:
+  version "3.4.17"
+  resolved "https://registry.npmjs.org/dompurify/-/dompurify-3.4.17.tgz"
+  integrity sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==
+  optionalDependencies:
+    "@types/trusted-types" "^2.0.7"
 
 domutils@^3.2.2:
   version "3.2.2"
@@ -2723,6 +2760,11 @@ fdir@^6.5.0:
   version "6.5.0"
   resolved "https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz"
   integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
+
+fflate@^0.4.8:
+  version "0.4.9"
+  resolved "https://registry.npmjs.org/fflate/-/fflate-0.4.9.tgz"
+  integrity sha512-zdxgIEddhfsyCaWpJ2SdXEP8ZMrKJ6+5jl4OupODcywU0IhRk6gdXuVGcPICyfx2H97hVK7xmJtRLPjkxAX8Vw==
 
 file-uri-to-path@1.0.0:
   version "1.0.0"
@@ -3429,6 +3471,27 @@ postcss@^8.5.28, postcss@^8.5.6:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
+posthog-js@1.438.13:
+  version "1.438.13"
+  resolved "https://registry.npmjs.org/posthog-js/-/posthog-js-1.438.13.tgz"
+  integrity sha512-fcRhMZ/TKvpDjmDGTlf4KCBqqTnpLWLplZ76NfeLNEE1P6N6qCGGZzqZ6gEzJoOfYLNLgjd0sRM5fC8F/Ky9fA==
+  dependencies:
+    "@posthog/browser-common" "^0.9.5"
+    "@posthog/core" "^1.59.1"
+    "@posthog/types" "^1.416.0"
+    core-js "^3.49.0"
+    dompurify "^3.4.13"
+    fflate "^0.4.8"
+    preact "^10.29.3"
+    query-selector-shadow-dom "^1.0.1"
+    web-vitals "^6.2.1"
+    web-vitals-soft-navs "npm:web-vitals@6.2.1"
+
+preact@^10.29.3:
+  version "10.29.8"
+  resolved "https://registry.npmjs.org/preact/-/preact-10.29.8.tgz"
+  integrity sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==
+
 prettier-plugin-astro@^1.1.0, prettier-plugin-astro@>=0.11.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/prettier-plugin-astro/-/prettier-plugin-astro-1.1.0.tgz"
@@ -3462,6 +3525,11 @@ punycode@^2.1.0:
   version "2.3.1"
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.3.1.tgz"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
+
+query-selector-shadow-dom@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/query-selector-shadow-dom/-/query-selector-shadow-dom-1.0.1.tgz"
+  integrity sha512-lT5yCqEBgfoMYpf3F2xQRK7zEr1rhIIZuceDK6+xRkJQ4NMbHTwXqk4NkwDwQMNqXgG9r9fyHnzwNVs6zV5KRw==
 
 radix-ui@^1.4.3:
   version "1.4.3"
@@ -4339,6 +4407,16 @@ vscode-uri@^3.0.2, vscode-uri@^3.0.8, vscode-uri@^3.1.0, vscode-uri@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.2.0.tgz"
   integrity sha512-m2gXo3bn0G1kT9InzMf07fTbqMbGtyckj3bH5ktLO+1Ssv+yiATZ4dhwaQv9UZWxJh6E9IFGnQyjgWVDWVBDrg==
+
+"web-vitals-soft-navs@npm:web-vitals@6.2.1":
+  version "6.2.1"
+  resolved "https://registry.npmjs.org/web-vitals/-/web-vitals-6.2.1.tgz"
+  integrity sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw==
+
+web-vitals@^6.2.1:
+  version "6.2.3"
+  resolved "https://registry.npmjs.org/web-vitals/-/web-vitals-6.2.3.tgz"
+  integrity sha512-Dmy+vdO1UPMqXiAtZSNayhl4f794Bxfd94W4HIj2HlYtczEQfEOon969memlcpcHrTuOKLa5baFjX7WbgmOq+A==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

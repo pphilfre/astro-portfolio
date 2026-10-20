@@ -215,10 +215,16 @@ if (scene) {
     },
     { passive: true },
   );
-  window.addEventListener('pageshow', () => {
+  const restore = () => {
     leaving = false;
+    clearTimeout(changing);
+    delete scene.dataset.changing;
     delete scene.dataset.leaving;
     document.querySelector('.project-departure')?.remove();
-  });
+  };
+  // Store a clean home page in the back-forward cache, rather than restoring
+  // the opaque departure overlay for a frame before pageshow can remove it.
+  window.addEventListener('pagehide', restore);
+  window.addEventListener('pageshow', restore);
   select(0, false);
 }

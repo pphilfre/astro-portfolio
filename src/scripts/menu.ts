@@ -119,6 +119,7 @@ if (menu) {
       expand();
     }
   });
+  window.addEventListener('pagehide', () => collapse(false, true));
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) collapse(false, true);
   });
