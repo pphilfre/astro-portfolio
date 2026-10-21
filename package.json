@@ -14,6 +14,7 @@
     "test:menu": "node scripts/menu-check.mjs",
     "test:analytics": "node scripts/analytics-check.mjs",
     "test:back": "node scripts/back-navigation-check.mjs",
+    "test:home": "node scripts/home-navigation-check.mjs",
     "test:seo": "node scripts/seo-check.mjs",
     "test:security": "node scripts/security-check.mjs"
   },

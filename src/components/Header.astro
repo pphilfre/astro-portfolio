@@ -29,6 +29,8 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
       widths={[32, 64, 96]}
       sizes="32px"
       format="webp"
+      loading="eager"
+      decoding="sync"
     />
     <span>Freddie Philpot</span>
   </a>
@@ -182,4 +184,34 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
 </script>
 <script>
   import '../scripts/menu';
+
+  document.querySelector('.site-header')?.addEventListener('click', (event) => {
+    if (
+      !(event instanceof MouseEvent) ||
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      !(event.target instanceof Element)
+    )
+      return;
+    const link = event.target.closest<HTMLAnchorElement>('a[href="/"]');
+    if (
+      !link ||
+      link.hasAttribute('download') ||
+      (link.target && link.target !== '_self') ||
+      link.href !== location.href
+    )
+      return;
+
+    // Reopening the current home page discards the deck and repaints every image.
+    event.preventDefault();
+    const menu = link.closest<HTMLDetailsElement>('.mobile-menu');
+    if (menu) {
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    }
+  });
 </script>

@@ -190,7 +190,11 @@ try {
   console.log(
     `${policies.length} page policies verified; menu, contact hydration/submission, Google tag and Sentry error capture passed; injected scripts and event handlers blocked.`,
   );
-  for (const script of ['analytics-check.mjs', 'back-navigation-check.mjs']) {
+  for (const script of [
+    'analytics-check.mjs',
+    'back-navigation-check.mjs',
+    'home-navigation-check.mjs',
+  ]) {
     await new Promise((resolve, reject) => {
       const child = spawn(process.execPath, [path.join('scripts', script)], {
         env: { ...process.env, PREVIEW_URL: base },

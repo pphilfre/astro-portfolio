@@ -142,6 +142,7 @@ const previewSizes = [
                   format={project.image.format === 'svg' ? 'svg' : 'webp'}
                   quality={project.id === 'markup' ? 70 : undefined}
                   loading="eager"
+                  decoding="sync"
                   fetchpriority={index === 0 ? 'high' : 'auto'}
                 />
                 {'secondaryImage' in project && project.secondaryImage && (
@@ -152,6 +153,7 @@ const previewSizes = [
                     sizes="(max-width: 700px) 18vw, (max-width: 1150px) 10vw, 180px"
                     format="webp"
                     loading="eager"
+                    decoding="sync"
                   />
                 )}
               </div>

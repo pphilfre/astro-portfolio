@@ -93,6 +93,13 @@ The departure overlay and faded copy are cleared on `pagehide` before caching,
 so returning home does not briefly restore the outgoing animation. Like the
 analytics check, it defaults to the production preview on port 4327.
 
+`npm run test:home` checks Home and brand links with desktop clicks and mobile
+taps in Chromium and WebKit. Repeated activation while already home must preserve
+the document, images and deck state without navigation or image requests, and
+close the mobile menu. Both links still navigate home from another page. The
+header avatar loads eagerly and the visible home previews decode synchronously
+to avoid images popping in separately during navigation.
+
 ## Deployment and content
 
 The existing Vercel adapter remains. vercel.json adds cache policies for generated assets,
