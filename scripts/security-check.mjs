@@ -34,6 +34,7 @@ for (const { src, headers } of policies) {
   const csp = headers['content-security-policy'];
   assert.match(csp, /frame-ancestors 'none'/);
   assert.match(csp, /script-src-attr 'none'/);
+  assert.ok(csp.includes('https://o4512295457062912.ingest.de.sentry.io'));
   const scripts = csp
     .split(';')
     .find((d) => d.trim().startsWith('script-src '));
@@ -116,6 +117,10 @@ try {
   await context.route(/google-analytics\.com|us\.i\.posthog\.com/, (route) =>
     route.fulfill({ status: 204 }),
   );
+  await context.route(
+    'https://o4512295457062912.ingest.de.sentry.io/**',
+    (route) => route.fulfill({ status: 200, json: {} }),
+  );
   await context.route(/challenges\.cloudflare\.com/, (route) =>
     route.fulfill({
       contentType: 'text/javascript',
@@ -147,6 +152,23 @@ try {
   await page.waitForFunction(() => window.googleTagAllowed === true);
   assert.deepEqual(await page.evaluate(() => window.cspViolations), []);
   assert.deepEqual(errors, []);
+  const sentryRequest = page.waitForRequest(
+    (request) =>
+      request
+        .url()
+        .startsWith(
+          'https://o4512295457062912.ingest.de.sentry.io/api/4512295476199504/envelope/',
+        ) && request.postData()?.includes('Sentry browser verification error'),
+  );
+  await page.evaluate(() => {
+    setTimeout(() => {
+      throw new Error('Sentry browser verification error');
+    }, 0);
+  });
+  const envelope = (await sentryRequest).postData();
+  assert.ok(envelope.includes('"type":"event"'));
+  assert.ok(envelope.includes('"handled":false'));
+  assert.deepEqual(await page.evaluate(() => window.cspViolations), []);
   await page.evaluate(() => {
     const script = document.createElement('script');
     script.textContent = 'window.untrustedScriptExecuted=true';
@@ -166,7 +188,7 @@ try {
   );
   assert.ok((await page.evaluate(() => window.cspViolations)).length >= 2);
   console.log(
-    `${policies.length} page policies verified; menu, contact hydration/submission and Google tag passed; injected scripts and event handlers blocked.`,
+    `${policies.length} page policies verified; menu, contact hydration/submission, Google tag and Sentry error capture passed; injected scripts and event handlers blocked.`,
   );
   for (const script of ['analytics-check.mjs', 'back-navigation-check.mjs']) {
     await new Promise((resolve, reject) => {

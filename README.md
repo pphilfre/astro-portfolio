@@ -39,6 +39,24 @@ Incoming JSON is validated for types, email shape and length limits. Messages ar
 sent as plain text after server-side Turnstile verification. Responses are never cached.
 The direct email address remains available when JavaScript or verification is unavailable.
 
+## Error monitoring
+
+Sentry captures browser and server errors in production and samples all traces.
+The SDK configuration lives in sentry.client.config.js and sentry.server.config.js.
+The public DSN targets the pphilfre/astro-portfolio project; the CSP allows only
+that project's Sentry ingestion host.
+
+Set SENTRY_AUTH_TOKEN in the Vercel build environment to enable source-map uploads.
+Generate a token with access to this Sentry project; keep it out of Git and browser
+configuration. Error reporting works without the upload token, but readable stack
+traces require source maps. Local development reporting is disabled.
+
+After building, npm run test:security verifies browser error capture with an
+intercepted Sentry envelope under the production CSP. It sends no test event to
+Sentry. To verify delivery after deployment, throw an error in the browser console
+with setTimeout(() => { throw new Error('Sentry deployment test'); }, 0), then
+confirm the issue appears in the Sentry project.
+
 ## Browser checks
 
     npm run dev -- --host 127.0.0.1 --port 4323

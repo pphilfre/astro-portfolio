@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
+import sentry from '@sentry/astro';
 
 export default defineConfig({
   site: 'https://freddiephilpot.dev',
@@ -17,7 +18,7 @@ export default defineConfig({
         "form-action 'self'",
         "font-src 'self' data:",
         "img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com",
-        "connect-src 'self' https://us.i.posthog.com https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com https://challenges.cloudflare.com",
+        "connect-src 'self' https://us.i.posthog.com https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com https://challenges.cloudflare.com https://o4512295457062912.ingest.de.sentry.io",
         'frame-src https://challenges.cloudflare.com https://www.googletagmanager.com',
         "worker-src 'self' blob:",
         'upgrade-insecure-requests',
@@ -39,7 +40,14 @@ export default defineConfig({
   build: { inlineStylesheets: 'always' },
   adapter: vercel({ staticHeaders: true }),
   vite: { plugins: [tailwindcss()] },
-  integrations: [react()],
+  integrations: [
+    react(),
+    sentry({
+      project: 'astro-portfolio',
+      org: 'pphilfre',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
+  ],
   markdown: {
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark-default' },
