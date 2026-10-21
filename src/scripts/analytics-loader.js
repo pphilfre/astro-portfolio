@@ -9,6 +9,7 @@
             'phc_kHZWuiUzdGkjQ7OvXfER2jygjMyTK9oyFfjVeg5vuAg',
             analyticsConfig,
           );
+          posthog.capture('$pageview');
         })
         .catch(() => {});
     };
