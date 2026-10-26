@@ -12,11 +12,13 @@ export function structuredData({
   title,
   description,
   article,
+  modified,
 }: {
   canonical: URL;
   title: string;
   description: string;
   article?: ArticleMetadata;
+  modified?: string;
 }) {
   const url = canonical.href;
   const isProfile = canonical.pathname === '/about';
@@ -25,6 +27,7 @@ export function structuredData({
       '@type': 'Person',
       '@id': personId,
       name: 'Freddie Philpot',
+      image: `${siteUrl}/apple-touch-icon.png`,
       url: `${siteUrl}/about`,
       description:
         'Year 12 student building applications and exploring Linux, networking and cybersecurity.',
@@ -40,6 +43,7 @@ export function structuredData({
       url: `${siteUrl}/`,
       inLanguage: 'en-GB',
       publisher: { '@id': personId },
+      image: `${siteUrl}/apple-touch-icon.png`,
     },
     {
       '@type': isProfile ? 'ProfilePage' : 'WebPage',
@@ -53,6 +57,8 @@ export function structuredData({
         ? { mainEntity: { '@id': personId } }
         : {}),
       author: { '@id': personId },
+      publisher: { '@id': personId },
+      ...(modified ? { dateModified: modified } : {}),
     },
   ];
   if (article)

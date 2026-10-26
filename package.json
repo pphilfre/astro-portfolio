@@ -13,6 +13,7 @@
     "test:landing": "node scripts/landing-check.mjs",
     "test:menu": "node scripts/menu-check.mjs",
     "test:interactions": "node scripts/interaction-check.mjs",
+    "test:focus-border": "node scripts/focus-border-check.mjs",
     "test:analytics": "node scripts/analytics-check.mjs",
     "test:back": "node scripts/back-navigation-check.mjs",
     "test:home": "node scripts/home-navigation-check.mjs",

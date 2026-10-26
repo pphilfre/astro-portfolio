@@ -8,12 +8,13 @@ interface Props {
   'data-analytics-loader'?: boolean;
 }
 const { content, ...attributes } = Astro.props;
-// is:inline and dynamically generated scripts need their exact rendered bytes
-// registered explicitly. The hash stays in sync when script/config data changes.
+// HTML parsing normalises CRLF/CR to LF before CSP hashes are checked.
+// Hash and render the same normalised source on Windows and Unix checkouts.
+const source = content.replace(/\r\n?/g, '\n');
 if (Astro.csp) {
-  const hash = createHash('sha256').update(content).digest('base64');
+  const hash = createHash('sha256').update(source).digest('base64');
   Astro.csp.insertScriptHash(`sha256-${hash}`);
 }
 ---
 
-<script is:inline {...attributes} set:html={content} />
+<script is:inline {...attributes} set:html={source} />

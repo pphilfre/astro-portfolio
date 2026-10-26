@@ -11,9 +11,49 @@ import ProjectCollection from '../../components/ProjectCollection.astro';
   <div class="wrap page">
     <header class="page-heading">
       <h1>Projects</h1>
+      <p>
+        Applications and infrastructure projects, with source links,
+        implementation decisions and validation notes.
+      </p>
     </header>
     <section aria-label="Selected projects">
       <ProjectCollection />
+    </section>
+    <section class="case-section">
+      <h2>Reading the case studies</h2>
+      <div class="skill-rows">
+        <div>
+          <h3>What did I work on?</h3>
+          <p>
+            Each page describes the problem I wanted to solve and my work on the
+            interface, configuration, implementation or testing. The source
+            links provide more detail than the project cards. Dispatch’s build
+            workflow, Glyph’s access checks and Waypoint’s session investigation
+            are useful starting points for the technical decisions behind the
+            interface.
+          </p>
+        </div>
+        <div>
+          <h3>Does a screenshot mean the app is production-ready?</h3>
+          <p>
+            A screenshot shows a particular interface state. It does not
+            establish that authentication, delivery or recovery works in every
+            environment. The case studies separate implemented features, local
+            or simulator tests, production checks and remaining work. Sample
+            records are identified in the captions.
+          </p>
+        </div>
+        <div>
+          <h3>Where are the lessons and troubleshooting notes?</h3>
+          <p>
+            The <a href="/blog">writing section</a> covers individual questions,
+            including DNS resolution and remote-access paths. The
+            <a href="/projects/homelab">home-lab page</a> connects those notes
+            to the services I run. Publication and update dates identify when
+            the corresponding text was written or revised.
+          </p>
+        </div>
+      </div>
     </section>
     <div class="quiet-link">
       <a class="text-link" href="/projects/ctf">

@@ -3,29 +3,26 @@
   position: relative;
   min-width: 0;
   border-radius: 8px;
+  isolation: isolate;
 }
 .focus-surface > input,
 .focus-surface > textarea {
   display: block;
   width: 100%;
   border-radius: inherit;
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
 }
 .field-aura {
   position: absolute;
   inset: -2px;
-  padding: 2px;
+  z-index: 0;
+  overflow: hidden;
   border-radius: 10px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 180ms ease;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
 }
 .field-aura > span {
   position: absolute;

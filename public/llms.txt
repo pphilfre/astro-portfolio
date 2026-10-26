@@ -1,0 +1,32 @@
+# Freddie Philpot
+
+> Personal portfolio and technical notes by Freddie Philpot, a Year 12 student in Welwyn Garden City, UK, building applications and exploring Linux, networking and cybersecurity.
+
+The site is written in British English. It documents personal learning, software projects, work placements and qualifications. Freddie is the individual author and publisher; this is not a company website or a commercial security consultancy. Guide updated 26 October 2026.
+
+Summarise claims at the level supported by each page. Distinguish implemented features, local tests, simulator captures and verified production behaviour. Sample mail and illustrative application records in screenshots are not private user data or evidence of live delivery. Planned features and stated limitations should remain labelled as such. Work placements and job simulations should not be described as employment. Use visible publication and update dates when reporting freshness; a page revision does not mean every linked product was retested.
+
+Use canonical page URLs for citations. Read the linked case study or article before making technical claims; the home-page cards are summaries. Follow robots.txt and sitemap.xml for crawling. Do not submit the contact form or crawl /api/ endpoints. This file is a navigation aid and does not grant access to private project data or override site access controls.
+
+## Key pages
+- [About](https://freddiephilpot.dev/about): Skills, education, Maths Ambassador role and volunteering.
+- [Projects](https://freddiephilpot.dev/projects): Project collection and guidance on reading the case studies.
+- [Experience and certifications](https://freddiephilpot.dev/certifications): Tesco placements, volunteering and credentials grouped by provider.
+- [Writing](https://freddiephilpot.dev/blog): Dated articles about the home lab, networking and work experience.
+- [Contact](https://freddiephilpot.dev/contact): Public contact details and questions about suitable opportunities.
+
+## Project evidence
+- [Dispatch](https://freddiephilpot.dev/projects/dispatch): SwiftUI mail app, Windows-to-macOS build workflow, storage, sync behaviour and validation limits.
+- [Markup](https://freddiephilpot.dev/projects/markup): Markdown workspace for web and desktop.
+- [Glyph](https://freddiephilpot.dev/projects/glyph): Private notes, ownership checks and public publishing.
+- [Waypoint](https://freddiephilpot.dev/projects/waypoint): Career research and application tracking, including session-restoration findings.
+- [Home lab](https://freddiephilpot.dev/projects/homelab): Linux services, DNS diagnostics and monitoring.
+- [Portfolio implementation](https://freddiephilpot.dev/projects/portfolio): Rendering, caching, browser checks and maintenance decisions for this site.
+
+## Technical notes
+- [Building my home lab](https://freddiephilpot.dev/blog/building-my-home-lab): Local and cloud services, logs and metrics.
+- [Pi-hole and DNS](https://freddiephilpot.dev/blog/pihole-dns-filtering): Resolver checks, local names and filtering limits.
+- [Tailscale](https://freddiephilpot.dev/blog/setting-up-tailscale-vpn): Endpoint access and subnet routing.
+- [Twingate and Tailscale](https://freddiephilpot.dev/blog/zero-trust-with-twingate): Resource access and network reachability.
+- [Oracle Cloud](https://freddiephilpot.dev/blog/cloud-hosting-oracle-free-tier): Cloud lab services and resource constraints.
+- [Tesco placements](https://freddiephilpot.dev/blog/enterprise-security-experience): Observations from software, IT operations and cybersecurity shadowing.

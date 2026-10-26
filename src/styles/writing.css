@@ -26,6 +26,7 @@
   color: var(--foreground);
 }
 .search-symbol {
+  z-index: 2;
   position: absolute;
   left: 15px;
   top: 17px;
@@ -87,6 +88,15 @@
 }
 .writing-readtime {
   text-align: right;
+}
+.writing-updated {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.writing-updated time {
+  font-size: inherit;
 }
 .writing-category {
   display: block;

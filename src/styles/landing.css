@@ -381,6 +381,16 @@ html.landing-root {
   align-items: center;
   gap: 20px;
 }
+.landing-update {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--canvas-text);
+}
+@media (max-width: 700px) {
+  .landing-update {
+    display: none;
+  }
+}
 .project-tabs {
   display: flex;
   gap: 22px;

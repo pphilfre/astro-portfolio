@@ -5,6 +5,7 @@ import Analytics from '../components/Analytics.astro';
 import Header from '../components/Header.astro';
 import fontUrl from '../assets/fonts/Satoshi-Variable.woff2?url';
 import { siteUrl, structuredData, type ArticleMetadata } from '../data/seo';
+import { pageUpdates } from '../data/updates';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import InlineScript from '../components/InlineScript.astro';
 import initialTheme from '../scripts/initial-theme.js?raw';
@@ -28,17 +29,39 @@ const canonical = new URL(
 );
 const pageTitle =
   title === 'Freddie Philpot'
-    ? 'Freddie Philpot'
+    ? 'Freddie Philpot | Software Projects & Technical Notes'
     : title.includes('Freddie Philpot')
       ? title
       : `${title} | Freddie Philpot`;
+const descriptiveTitles: Record<string, string> = {
+  '/about': 'About Freddie Philpot | Skills, Education & Experience',
+  '/contact': 'Contact Freddie Philpot | Projects & Work Experience',
+  '/projects': 'Software Projects & Home Lab | Freddie Philpot',
+  '/blog': 'Technical Writing & Lab Notes | Freddie Philpot',
+  '/certifications': 'Experience & Certifications | Freddie Philpot',
+  '/projects/dispatch': 'Dispatch: Native iOS Email | Freddie Philpot',
+  '/projects/glyph': 'Glyph: Private Notes & Publishing | Freddie Philpot',
+  '/projects/markup': 'Markup: Markdown Workspace | Freddie Philpot',
+  '/projects/waypoint':
+    'Waypoint: Career Application Tracker | Freddie Philpot',
+  '/projects/homelab': 'Home Lab: Linux, DNS & Monitoring | Freddie Philpot',
+  '/projects/arc': 'Arc: iOS Maps & Directions | Freddie Philpot',
+};
+const finalTitle = descriptiveTitles[canonical.pathname] || pageTitle;
+const modified = article?.modified || pageUpdates[canonical.pathname];
 const jsonLd = JSON.stringify(
-  structuredData({ canonical, title: pageTitle, description, article }),
+  structuredData({
+    canonical,
+    title: finalTitle,
+    description,
+    article,
+    modified,
+  }),
 ).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
-<html lang="en" class:list={{ 'landing-root': landing }}>
+<html lang="en-GB" class:list={{ 'landing-root': landing }}>
   <head>
     <meta charset="utf-8" />
     <meta
@@ -47,10 +70,17 @@ const jsonLd = JSON.stringify(
     />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#101010" />
-    <title>{pageTitle}</title>
+    <!-- Opt in before external stylesheets load to keep document transitions stable. -->
+    <style is:inline media="(prefers-reduced-motion: no-preference)">
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
+    <title>{finalTitle}</title>
     <meta name="author" content="Freddie Philpot" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link
       rel="preload"
       href={fontUrl}
@@ -70,13 +100,13 @@ const jsonLd = JSON.stringify(
     )}
     <meta property="og:site_name" content="Freddie Philpot" />
     <meta property="og:locale" content="en_GB" />
-    <meta property="og:title" content={pageTitle} />
+    <meta property="og:title" content={finalTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:image" content="https://freddiephilpot.dev/social.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:title" content={finalTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${siteUrl}/social.png`} />
     <meta
@@ -118,6 +148,21 @@ const jsonLd = JSON.stringify(
               CV <span class="sr-only">(PDF)</span>
             </a>
           </div>
+          {modified && (
+            <p class="content-updated">
+              Content updated{' '}
+              <time datetime={modified}>
+                {new Date(
+                  modified + (modified.includes('T') ? '' : 'T12:00:00Z'),
+                ).toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                  timeZone: 'Europe/London',
+                })}
+              </time>
+            </p>
+          )}
         </footer>
       )}
     </div>

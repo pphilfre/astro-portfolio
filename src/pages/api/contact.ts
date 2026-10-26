@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import { validateContact } from '../../lib/contact-validation';
+import { siteUrl } from '../../data/seo';
 
 export const prerender = false;
 const respond = (body: object, status: number) =>
@@ -9,10 +10,20 @@ const respond = (body: object, status: number) =>
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store',
+      'Content-Language': 'en-GB',
     },
   });
 
 export const POST: APIRoute = async ({ request }) => {
+  const origin = request.headers.get('origin');
+  const allowedOrigins = new Set([siteUrl, new URL(request.url).origin]);
+  if (origin && !allowedOrigins.has(origin))
+    return respond(
+      { error: 'Please send your message from this website.' },
+      403,
+    );
+  // Same-origin form requests need no CORS allow-origin header. Cross-origin
+  // browser clients receive no permission to read or submit through this API.
   if (!request.headers.get('content-type')?.includes('application/json'))
     return respond({ error: 'Please send a JSON request.' }, 415);
   let input: unknown;

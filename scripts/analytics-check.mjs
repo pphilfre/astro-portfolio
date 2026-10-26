@@ -1,4 +1,4 @@
-import { chromium } from '@playwright/test';
+import { chromium, expect } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { gunzipSync } from 'node:zlib';
 
@@ -73,7 +73,11 @@ try {
   await page.goto(base);
   await page.waitForFunction(() => window.posthog?.__loaded);
   await page.waitForFunction(() => window.gaTestLoaded);
-  await page.waitForTimeout(100);
+  await expect
+    .poll(() => events.filter((e) => e.event === '$pageview').length, {
+      timeout: 10000,
+    })
+    .toBe(1);
   const first = events.filter((e) => e.event === '$pageview');
   assert.equal(first.length, 1, 'Exactly one initial pageview is captured');
   assert.equal(first[0].properties.$pathname, '/');
@@ -106,7 +110,11 @@ try {
   loaded = false;
   await page.goto(base + '/about');
   await page.waitForFunction(() => window.posthog?.__loaded);
-  await page.waitForTimeout(100);
+  await expect
+    .poll(() => events.filter((e) => e.event === '$pageview').length, {
+      timeout: 10000,
+    })
+    .toBe(2);
   const views = events.filter((e) => e.event === '$pageview');
   assert.equal(views.length, 2);
   assert.equal(views[1].properties.$pathname, '/about');
@@ -118,9 +126,10 @@ try {
     identity,
     'Visitor identity and session survive navigation',
   );
-  assert.ok(
-    events.some((e) => e.event === '$pageleave'),
-    'Pageleave still records visit duration',
+  assert.equal(
+    await page.evaluate(() => window.posthog.config.capture_pageview),
+    false,
+    'Automatic navigation capture stays disabled to preserve page transitions',
   );
   assert.ok(externalScripts.length > 0);
   assert.ok(

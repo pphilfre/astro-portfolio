@@ -31,6 +31,15 @@ for (const file of htmlFiles) {
   assert.ok(!canonical.includes('?'));
   assert.equal(get(/<meta property="og:title" content="([^"]*)"/), title);
   if (/<meta name="robots" content="noindex"/.test(html)) continue;
+  assert.ok(title.length >= 30, file + ' descriptive title');
+  assert.match(html, /<html[^>]*lang="en-GB"/);
+  assert.match(
+    html,
+    /rel="apple-touch-icon"[^>]*href="\/apple-touch-icon.png"/,
+  );
+  assert.match(html, /rel="stylesheet"[^>]*href="\/_astro\//);
+  for (const [, css] of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g))
+    assert.ok(css.length < 5000, file + ' no large inline stylesheet');
   assert.ok(!titles.has(title), file + ' duplicate title');
   titles.add(title);
   assert.ok(!descriptions.has(description), file + ' duplicate description');
@@ -45,6 +54,15 @@ for (const file of htmlFiles) {
   assert.equal(
     graph.find((n) => n['@type'] === 'WebSite').name,
     'Freddie Philpot',
+  );
+  assert.equal(
+    graph.find((n) => n['@type'] === 'WebSite').publisher['@id'],
+    'https://freddiephilpot.dev/#person',
+  );
+  assert.ok(
+    graph
+      .find((n) => n['@type'] === 'Person')
+      .image.endsWith('/apple-touch-icon.png'),
   );
   if (canonical.endsWith('/about'))
     assert.ok(graph.find((n) => n['@type'] === 'ProfilePage'));
@@ -66,6 +84,25 @@ const robots = await fs.readFile(path.join(root, 'robots.txt'), 'utf8');
 assert.match(robots, /Allow: \//);
 assert.match(robots, /Sitemap: https:\/\/freddiephilpot.dev\/sitemap.xml/);
 const home = await fs.readFile(path.join(root, 'index.html'), 'utf8');
+assert.match(home, /26 October 2026/);
+assert.match(sitemap, /<lastmod>2026-10-26/);
+const llms = await fs.readFile(path.join(root, 'llms.txt'), 'utf8');
+assert.match(llms, /^# Freddie Philpot/);
+assert.match(llms, /https:\/\/freddiephilpot.dev\/projects\/dispatch/);
+await fs.access(path.join(root, 'apple-touch-icon.png'));
+const headers = JSON.parse(await fs.readFile('vercel.json', 'utf8')).headers[0]
+  .headers;
+assert.equal(headers.find((h) => h.key === 'Content-Language').value, 'en-GB');
+assert.match(
+  headers.find((h) => h.key === 'Permissions-Policy').value,
+  /camera=\(\), microphone=\(\)/,
+);
+assert.ok(
+  !headers.some(
+    (h) =>
+      h.key.toLowerCase() === 'access-control-allow-origin' && h.value === '*',
+  ),
+);
 assert.match(home, /I’m Freddie Philpot/);
 assert.match(home, /<link rel="preconnect" href="https:\/\/us.i.posthog.com"/);
 console.log(

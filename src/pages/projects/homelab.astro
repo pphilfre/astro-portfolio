@@ -32,6 +32,7 @@ import overview from '../../assets/projects/homelab.svg';
         aria-label="Open Home Lab service overview at full size (new tab)"
       >
         <Image
+          loading="lazy"
           src={overview}
           alt="Home and cloud services, remote access and monitoring in my Home Lab"
           format="svg"
@@ -80,6 +81,45 @@ nslookup example.com 192.168.1.100</code></pre>
         <a class="text-link" href="/blog/pihole-dns-filtering">
           Read my DNS notes
         </a>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Separating a name problem from a service problem</h2>
+      <div>
+        <p>
+          A useful troubleshooting sequence changes one part of the request at a
+          time. These are diagnostic examples; the addresses and hostname need
+          replacing with those for the service being investigated.
+        </p>
+        <ol class="practical-steps">
+          <li>
+            Query the intended resolver explicitly with
+            <code>nslookup pi.home.arpa 192.168.1.100</code>. A timeout points
+            to resolver reachability or a missing response. A name-not-found
+            answer means the resolver answered but did not return that record.
+            Neither result tells you whether the application itself is running.
+          </li>
+          <li>
+            Compare a public lookup using the same resolver and inspect the
+            Pi-hole query log for the client and time. A working local record
+            alongside a failing public lookup narrows the investigation towards
+            filtering or the upstream resolution path.
+          </li>
+          <li>
+            Once the name resolves, request the application, for example with
+            <code>curl -I --connect-timeout 5 https://service.example.com</code>
+            . An HTTP response means the request reached an HTTP service. A 401
+            or 403 response calls for checking access; a 502 or 503 calls for
+            checking the proxy and backend. For an application that does not
+            support HEAD, repeat with a normal GET before drawing a conclusion.
+          </li>
+        </ol>
+        <p>
+          I keep logs and metrics as separate sources of evidence: a reachable
+          host or a healthy CPU graph does not prove that a particular
+          application request succeeds. The next useful record is the request or
+          service log at the time of the failure.
+        </p>
       </div>
     </section>
     <a class="next-project" href="/projects/glyph">

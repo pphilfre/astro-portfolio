@@ -32,6 +32,7 @@ import portfolio from '../../assets/projects/portfolio.jpg';
         aria-label="Open portfolio screenshot at full size (new tab)"
       >
         <Image
+          loading="lazy"
           src={portfolio}
           alt="The portfolio home page with selected projects and links to my work"
           widths={[480, 800, 1440, 1920]}
@@ -106,6 +107,29 @@ import portfolio from '../../assets/projects/portfolio.jpg';
         >
           Browser checks ↗
         </a>
+      </div>
+    </section>
+    <section class="case-section">
+      <h2>Keeping motion outside the content</h2>
+      <div>
+        <p>
+          The focus gradient belongs to the field edge. The coloured layer sits
+          behind an opaque input, inside an isolated stacking context, so it
+          cannot cover the text or caret. This also avoids depending on mask
+          compositing to cut out the centre of the gradient.
+        </p>
+        <p>
+          A short reveal starts at the pointer position. After that, a CSS
+          transform rotates the colour layer while the field has focus. Moving
+          focus away removes that animation. Reduced-motion settings use a
+          static border, and forced-colour mode uses the system focus outline.
+        </p>
+        <p>
+          Stylesheets are emitted as fingerprinted files with a long-lived cache
+          policy. Content update dates are stored explicitly rather than
+          changing on every build. A fresh deployment therefore does not make an
+          unchanged article appear recently reviewed.
+        </p>
       </div>
     </section>
     <section class="case-section">

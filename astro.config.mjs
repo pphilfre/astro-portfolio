@@ -36,8 +36,8 @@ export default defineConfig({
       styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
     },
   },
-  // Avoid stylesheet round trips before the first paint on this small site.
-  build: { inlineStylesheets: 'always' },
+  // Fingerprinted stylesheets share the long-lived /_astro cache policy.
+  build: { inlineStylesheets: 'never' },
   adapter: vercel({ staticHeaders: true }),
   vite: { plugins: [tailwindcss()] },
   integrations: [

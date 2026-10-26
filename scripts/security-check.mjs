@@ -48,7 +48,9 @@ for (const { src, headers } of policies) {
     /<script\b([^>]*)>([\s\S]*?)<\/script>/g,
   )) {
     if (/\bsrc=/.test(attributes) || !body.trim()) continue;
-    const hash = createHash('sha256').update(body).digest('base64');
+    const hash = createHash('sha256')
+      .update(body.replace(/\r\n?/g, '\n'))
+      .digest('base64');
     assert.ok(
       csp.includes(`'sha256-${hash}'`),
       `Inline script authorized on ${src}`,

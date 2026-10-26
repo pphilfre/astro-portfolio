@@ -95,13 +95,27 @@ const category = (tags: string[]) =>
               .toLowerCase()}
           >
             <a href={'/blog/' + post.id}>
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                })}
-              </time>
+              <div class="writing-dates">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </time>
+                {post.data.updatedDate && (
+                  <span class="writing-updated">
+                    Updated{' '}
+                    <time datetime={post.data.updatedDate.toISOString()}>
+                      {post.data.updatedDate.toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </time>
+                  </span>
+                )}
+              </div>
               <div class="writing-entry-copy">
                 <span class="writing-category">
                   {topics.find((topic) => topic.id === group)?.label}
