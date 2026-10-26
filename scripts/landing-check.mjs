@@ -360,7 +360,10 @@ try {
   await page.locator('[data-project-card="waypoint"]').click();
   assert.ok(await page.locator('.project-departure').count());
   await page.waitForURL('**/projects/waypoint');
-  assert.equal(await page.locator('#main h1').textContent(), 'Waypoint');
+  assert.equal(
+    (await page.locator('#main h1').textContent()).trim(),
+    'Waypoint',
+  );
   assert.ok(
     await page
       .locator('html')

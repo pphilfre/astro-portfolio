@@ -1,17 +1,21 @@
 ---
+import { projects } from '../data/projects';
 interface Props {
   title: string;
   description: string;
   stack: string;
 }
 const { title, description, stack } = Astro.props;
+const icon = projects.find((project) => project.name === title)?.icon;
 ---
 
 <header class="case-heading">
   <a class="back-link" href="/projects">
     ← Projects
   </a>
-  <h1>{title}</h1>
+  <h1 class="case-title">
+    {icon && <img src={icon} alt="" width="64" height="64" />} {title}
+  </h1>
   <p class="case-description">{description}</p>
   <div class="case-meta">
     <span>{stack}</span>

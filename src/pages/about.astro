@@ -1,6 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/main.astro';
+import Volunteering from '../components/Volunteering.astro';
 ---
 
 <Layout
@@ -67,7 +68,8 @@ import Layout from '../layouts/main.astro';
           <div>
             <h3>A-levels</h3>
             <p>
-              Year 12: Mathematics, Further Mathematics, Physics and Economics.
+              Year 12: Mathematics, Further Mathematics and Physics, alongside
+              an Extended Project Qualification (EPQ).
             </p>
           </div>
         </li>
@@ -110,6 +112,7 @@ import Layout from '../layouts/main.astro';
         </li>
       </ol>
     </section>
+    <Volunteering />
     <section class="case-section">
       <h2>Achievements</h2>
       <div>
@@ -123,7 +126,7 @@ import Layout from '../layouts/main.astro';
           Monk’s Walk School.
         </p>
         <a class="text-link" href="/certifications">
-          Experience, courses & achievements
+          Experience & certifications
         </a>
       </div>
     </section>

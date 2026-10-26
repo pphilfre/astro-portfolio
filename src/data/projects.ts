@@ -24,9 +24,9 @@ export const projects = [
     description: 'Native iOS email, developed from Windows',
     type: 'Native iOS',
     href: '/projects/dispatch',
-    icon: null,
+    icon: '/projects/icons/dispatch.svg',
     image: dispatch,
-    alt: 'Dispatch’s native iOS inbox displaying the app’s sample messages',
+    alt: 'Dispatch’s native iOS inbox displaying sample messages',
     secondaryImage: dispatchReader,
   },
   {

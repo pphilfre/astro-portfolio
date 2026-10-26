@@ -1,6 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/main.astro';
+import Volunteering from '../components/Volunteering.astro';
 const credentials = [
   {
     name: 'Claude 101',
@@ -59,11 +60,21 @@ const credentials = [
     href: 'https://www.credly.com/badges/298659f6-54ff-4143-9a7d-62d555f88271/public_url',
   },
 ];
+const providers = ['Cisco', 'Forage', 'Anthropic'].map((name) => ({
+  name,
+  description:
+    name === 'Cisco'
+      ? 'Cybersecurity & networking'
+      : name === 'Forage'
+        ? 'Virtual job simulations'
+        : 'AI fundamentals',
+  items: credentials.filter((item) => item.provider === name),
+}));
 ---
 
 <Layout
   title="Experience"
-  description="Freddie Philpot's software development, cybersecurity and IT operations work experience, alongside education, certifications and achievements."
+  description="Freddie Philpot's software development, cybersecurity and IT operations work experience, with licences and certifications grouped by provider."
 >
   <div class="wrap page">
     <header class="page-heading">
@@ -89,7 +100,9 @@ const credentials = [
         </p>
         <p>
           I shadowed security staff to learn how SOC teams investigate alerts
-          and coordinate incident response.
+          and coordinate incident response. Working alongside a staff member, I
+          used Splunk search filters to investigate an unusual authentication
+          request, which was confirmed as legitimate.
         </p>
         <p class="muted">
           In 2024, I also shadowed IT operations, observed infrastructure
@@ -100,46 +113,60 @@ const credentials = [
         </a>
       </div>
     </section>
+    <Volunteering />
     <section class="section">
       <div class="section-heading">
         <h2>Licences & certifications</h2>
       </div>
-      <div class="credential-list">
-        {credentials.map((item) => (
-          <div class="credential-row">
-            <img
-              class="credential-logo"
-              src={`/brands/${item.provider.toLowerCase()}.svg`}
-              alt=""
-              width="48"
-              height="48"
-              loading="lazy"
-            />
-            <div class="credential-details">
-              <span class="credential-provider">{item.provider}</span>
-              <h3>
-                <a href={item.href}>{item.name}</a>
-              </h3>
-              <p class="credential-id">Credential ID: {item.id}</p>
-              <a class="text-link credential-link" href={item.href}>
-                Show credential <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-            <span class="credential-date">Issued {item.date}</span>
-          </div>
+      <div class="credential-groups">
+        {providers.map((provider) => (
+          <section
+            class="credential-group"
+            aria-label={`${provider.name} credentials`}
+          >
+            <header class="credential-group-heading">
+              <img
+                class="credential-logo"
+                src={`/brands/${provider.name.toLowerCase()}.svg`}
+                alt=""
+                width="48"
+                height="48"
+                loading="lazy"
+              />
+              <div>
+                <h3>{provider.name}</h3>
+                <p>{provider.description}</p>
+              </div>
+              <span class="credential-count">
+                {provider.items.length}{' '}
+                {provider.items.length === 1 ? 'credential' : 'credentials'}
+              </span>
+            </header>
+            <ul class="credential-items">
+              {provider.items.map((item) => (
+                <li>
+                  <div>
+                    <h4>
+                      <a href={item.href}>{item.name}</a>
+                    </h4>
+                    <p>Issued {item.date}</p>
+                    <details class="credential-verification">
+                      <summary>Credential details</summary>
+                      <p>Credential ID: {item.id}</p>
+                    </details>
+                  </div>
+                  <a
+                    class="text-link credential-link"
+                    href={item.href}
+                    aria-label={`View ${item.name} credential`}
+                  >
+                    View credential <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
-      </div>
-    </section>
-    <section class="case-section">
-      <h2>Achievements</h2>
-      <div>
-        <h3>KS4 Computer Science Student of the Year</h3>
-        <p>Monk’s Walk School.</p>
-        <h3>Duke of Edinburgh Bronze Award</h3>
-        <p>
-          Completed in 2025, with library volunteering supporting visitors and
-          reading programmes.
-        </p>
       </div>
     </section>
   </div>

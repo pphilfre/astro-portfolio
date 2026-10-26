@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
+import { FocusSurface } from './FocusSurface';
 
 declare global {
   interface Window {
@@ -182,38 +183,44 @@ export function ContactForm({
         <div className="form-pair">
           <div className="form-field">
             <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              name="name"
-              autoComplete="name"
-              required
-              maxLength={100}
-              disabled={pending}
-            />
+            <FocusSurface>
+              <input
+                id="name"
+                name="name"
+                autoComplete="name"
+                required
+                maxLength={100}
+                disabled={pending}
+              />
+            </FocusSurface>
           </div>
           <div className="form-field">
             <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              maxLength={254}
-              disabled={pending}
-            />
+            <FocusSurface>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                maxLength={254}
+                disabled={pending}
+              />
+            </FocusSurface>
           </div>
         </div>
         <div className="form-field">
           <label htmlFor="message">Message</label>
-          <textarea
-            id="message"
-            name="message"
-            required
-            minLength={10}
-            maxLength={5000}
-            disabled={pending}
-          />
+          <FocusSurface>
+            <textarea
+              id="message"
+              name="message"
+              required
+              minLength={10}
+              maxLength={5000}
+              disabled={pending}
+            />
+          </FocusSurface>
         </div>
         <div className="captcha-slot" ref={slot} />
         <div className="captcha-status" aria-live="polite">

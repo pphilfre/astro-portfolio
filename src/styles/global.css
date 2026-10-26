@@ -2018,6 +2018,121 @@ option {
   margin-top: 12px;
   font-size: 14px;
 }
+.credential-groups {
+  display: grid;
+  gap: 28px;
+}
+.project-caption-title,
+.case-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.project-caption-title img,
+.case-title img,
+.next-project strong > img {
+  flex-shrink: 0;
+  border-radius: 22%;
+}
+.case-title img {
+  width: clamp(40px, 5vw, 64px);
+  height: auto;
+}
+.next-project strong > img {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.credential-group {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: clip;
+}
+.credential-group-heading {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 28px;
+  background: var(--surface);
+}
+.credential-group-heading h3 {
+  font-size: 24px;
+}
+.credential-group-heading p,
+.credential-count {
+  color: var(--muted);
+  font-size: 14px;
+}
+.credential-group-heading p {
+  margin-top: 4px;
+}
+.credential-items {
+  list-style: none;
+  margin: 0;
+  padding: 0 28px;
+}
+.credential-items li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px 28px;
+  padding: 24px 0;
+}
+.credential-items li + li {
+  border-top: 1px solid var(--line);
+}
+.credential-items h4 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+}
+.credential-items h4 a:hover {
+  color: var(--accent);
+}
+.credential-items p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.credential-items .credential-link {
+  align-self: start;
+  white-space: nowrap;
+  margin-top: 0;
+}
+.credential-verification {
+  margin-top: 12px;
+  font-size: 13px;
+}
+.credential-verification summary {
+  color: var(--muted);
+  width: fit-content;
+}
+.credential-verification p {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .credential-group-heading {
+    padding: 20px;
+    gap: 14px;
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+  .credential-count {
+    grid-column: 2;
+  }
+  .credential-items {
+    padding-inline: 20px;
+  }
+  .credential-items li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .credential-items .credential-link {
+    justify-self: start;
+  }
+}
 @media (max-width: 700px) {
   .brand-avatar {
     width: 28px;

@@ -1,5 +1,5 @@
 ---
-const path = Astro.url.pathname;
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 import '../styles/navigation.css';
 import { Image } from 'astro:assets';
 import avatar from '../assets/github-avatar.png';
@@ -37,7 +37,8 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
   <nav class="desktop-nav" aria-label="Main navigation">
     {links.map(([href, label]) => (
       <a href={href} aria-current={active(href) ? 'page' : undefined}>
-        {label}
+        <span class="nav-label">{label}</span>
+        {active(href) && <span class="nav-blob" aria-hidden="true"></span>}
       </a>
     ))}
   </nav>
@@ -112,7 +113,7 @@ const active = (href: string) => path === href || path.startsWith(href + '/');
           <div class="menu-pages">
             {links.map(([href, label]) => (
               <a href={href} aria-current={active(href) ? 'page' : undefined}>
-                {label}
+                <span class="nav-label">{label}</span>
               </a>
             ))}
           </div>

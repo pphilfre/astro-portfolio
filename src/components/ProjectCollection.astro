@@ -41,7 +41,7 @@ function imageWidths(sourceWidth: number) {
         {'secondaryImage' in project && project.secondaryImage && (
           <Image
             src={project.secondaryImage}
-            alt="Dispatch’s conversation reader with test messages"
+            alt="Dispatch’s conversation reader displaying sample messages"
             widths={[360, 600, 900]}
             sizes="(max-width: 700px) 35vw, 220px"
             loading="lazy"
@@ -52,7 +52,18 @@ function imageWidths(sourceWidth: number) {
       </div>
       <div class="project-caption">
         <div>
-          <h3>{project.name}</h3>
+          <h3 class="project-caption-title">
+            {project.icon && (
+              <img
+                src={project.icon}
+                alt=""
+                width="28"
+                height="28"
+                loading="lazy"
+              />
+            )}
+            {project.name}
+          </h3>
           <p>{project.description}</p>
         </div>
         <span class="project-arrow" aria-hidden="true">

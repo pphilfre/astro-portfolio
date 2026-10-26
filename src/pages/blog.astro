@@ -2,10 +2,22 @@
 export const prerender = true;
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/main.astro';
+import '../styles/writing.css';
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
+const topics = [
+  { id: '', label: 'All articles' },
+  { id: 'lab', label: 'Lab & cloud' },
+  { id: 'networking', label: 'Networking' },
+  { id: 'experience', label: 'Experience' },
+];
+const category = (tags: string[]) =>
+  tags.includes('career')
+    ? 'experience'
+    : tags.some((tag) => ['home-lab', 'linux', 'cloud', 'docker'].includes(tag))
+      ? 'lab'
+      : 'networking';
 ---
 
 <Layout
@@ -13,87 +25,158 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
   description="Notes from Freddie Philpot on Linux, networking, software and cybersecurity."
 >
   <div class="wrap page writing-index">
-    <header class="page-heading">
+    <header class="page-heading writing-heading">
       <h1>Writing</h1>
+      <p>Experiments, lessons and notes from the things I build.</p>
     </header>
-    <div class="filter-bar">
-      <label>
-        Find an article
-        <input
-          type="search"
-          id="post-search"
-          placeholder="Search titles and topics"
-        />
+    <div class="writing-tools">
+      <label class="writing-search" for="post-search">
+        <span class="sr-only">Find an article</span>
+        <div class="focus-surface">
+          <svg
+            class="search-symbol"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="10.5" cy="10.5" r="6.5" />
+            <path d="m16 16 4 4" />
+          </svg>
+          <input
+            type="search"
+            id="post-search"
+            placeholder="Search titles and topics"
+            aria-controls="post-results"
+          />
+          <span class="field-aura" aria-hidden="true">
+            <span></span>
+          </span>
+        </div>
       </label>
-      <label>
-        Topic
-        <select id="post-topic">
-          <option value="">All topics</option>
-          {tags.map((tag) => (
-            <option value={tag}>{tag}</option>
-          ))}
-        </select>
-      </label>
+      <p
+        id="post-count"
+        class="writing-count"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {posts.length} articles
+      </p>
     </div>
-    <div class="article-list">
-      {posts.map((post) => (
-        <a
-          class="article-row"
-          href={'/blog/' + post.id}
-          data-post
-          data-search={[
-            post.data.title,
-            post.data.description,
-            ...(post.data.tags || []),
-          ]
-            .join(' ')
-            .toLowerCase()}
-          data-tags={JSON.stringify(post.data.tags || [])}
+    <div
+      class="topic-filters"
+      role="group"
+      aria-label="Filter articles by topic"
+    >
+      {topics.map((topic) => (
+        <button
+          type="button"
+          data-topic={topic.id}
+          aria-pressed={topic.id === '' ? 'true' : 'false'}
+          aria-controls="post-results"
         >
-          <time datetime={post.data.pubDate.toISOString()}>
-            {post.data.pubDate.toLocaleDateString('en-GB', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            })}
-          </time>
-          <div>
-            <h3>{post.data.title}</h3>
-            <p>{post.data.description}</p>
-          </div>
-          <span aria-hidden="true">↗</span>
-        </a>
+          {topic.label}
+        </button>
       ))}
     </div>
-    <p id="post-count" class="muted" aria-live="polite">
-      {posts.length} articles
-    </p>
-    <p id="no-posts" hidden>
-      No matching articles. Try another term or choose all topics.
-    </p>
+    <div class="writing-list" id="post-results">
+      {posts.map((post) => {
+        const group = category(post.data.tags || []);
+        return (
+          <article
+            class="writing-entry"
+            data-post
+            data-topic-group={group}
+            data-search={[
+              post.data.title,
+              post.data.description,
+              ...(post.data.tags || []),
+            ]
+              .join(' ')
+              .toLowerCase()}
+          >
+            <a href={'/blog/' + post.id}>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              </time>
+              <div class="writing-entry-copy">
+                <span class="writing-category">
+                  {topics.find((topic) => topic.id === group)?.label}
+                </span>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description}</p>
+              </div>
+              <span class="writing-readtime">
+                {Math.max(
+                  1,
+                  Math.ceil((post.body || '').split(/\s+/).length / 220),
+                )}{' '}
+                min read
+              </span>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+    <div class="writing-empty" id="no-posts" hidden>
+      <h2>No matching articles</h2>
+      <p>Try a different search or explore all topics.</p>
+      <button class="text-link" type="button" id="reset-posts">
+        Clear filters
+      </button>
+    </div>
+    <noscript>
+      <style>
+        .writing-tools,
+        .topic-filters {
+          display: none;
+        }
+      </style>
+    </noscript>
   </div>
 </Layout>
 <script>
-  const search = document.querySelector<HTMLInputElement>('#post-search');
-  const topic = document.querySelector<HTMLSelectElement>('#post-topic');
+  const search = document.querySelector<HTMLInputElement>('#post-search')!;
+  const buttons = [
+    ...document.querySelectorAll<HTMLButtonElement>('[data-topic]'),
+  ];
+  const posts = [...document.querySelectorAll<HTMLElement>('[data-post]')];
+  let topic = '';
   const filter = () => {
     let count = 0;
-    document.querySelectorAll<HTMLElement>('[data-post]').forEach((post) => {
+    const term = search.value.trim().toLowerCase();
+    for (const post of posts) {
       const match =
-        (post.dataset.search || '').includes(
-          search?.value.trim().toLowerCase() || '',
-        ) &&
-        (!topic?.value ||
-          JSON.parse(post.dataset.tags || '[]').includes(topic.value));
+        (post.dataset.search || '').includes(term) &&
+        (!topic || post.dataset.topicGroup === topic);
       post.hidden = !match;
       if (match) count++;
-    });
-    const result = document.querySelector('#post-count');
-    if (result)
-      result.textContent = count + (count === 1 ? ' article' : ' articles');
-    const empty = document.querySelector<HTMLElement>('#no-posts');
-    if (empty) empty.hidden = count !== 0;
+    }
+    buttons.forEach((button) =>
+      button.setAttribute(
+        'aria-pressed',
+        String(button.dataset.topic === topic),
+      ),
+    );
+    document.querySelector('#post-count')!.textContent =
+      `${count} ${count === 1 ? 'article' : 'articles'}`;
+    document.querySelector<HTMLElement>('#no-posts')!.hidden = count !== 0;
   };
-  search?.addEventListener('input', filter);
-  topic?.addEventListener('change', filter);
+  search.addEventListener('input', filter);
+  buttons.forEach((button) =>
+    button.addEventListener('click', () => {
+      topic = button.dataset.topic || '';
+      filter();
+    }),
+  );
+  document.querySelector('#reset-posts')?.addEventListener('click', () => {
+    search.value = '';
+    topic = '';
+    filter();
+    search.focus();
+  });
+  window.addEventListener('pageshow', filter);
 </script>

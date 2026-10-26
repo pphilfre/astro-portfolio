@@ -27,6 +27,6 @@ In 2024, I observed infrastructure automation and incident management at Tesco a
 
 ## Where it fits now
 
-I’m now in Year 12, studying Mathematics, Further Mathematics, Physics and Economics. Alongside school, I’m building web applications, running a home lab and looking for further cybersecurity work experience.
+I’m now in Year 12, studying Mathematics, Further Mathematics and Physics alongside an EPQ. Alongside school, I’m building web applications, running a home lab and looking for further cybersecurity work experience.
 
 [Glyph](/projects/glyph) is one place I’ve been able to explore a concrete security problem myself: checking note ownership and making public access revocable.

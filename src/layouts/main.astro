@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/field-motion.css';
 import Analytics from '../components/Analytics.astro';
 import Header from '../components/Header.astro';
 import fontUrl from '../assets/fonts/Satoshi-Variable.woff2?url';
@@ -27,7 +28,7 @@ const canonical = new URL(
 );
 const pageTitle =
   title === 'Freddie Philpot'
-    ? 'Freddie Philpot | Development & cybersecurity'
+    ? 'Freddie Philpot'
     : title.includes('Freddie Philpot')
       ? title
       : `${title} | Freddie Philpot`;
@@ -80,7 +81,7 @@ const jsonLd = JSON.stringify(
     <meta name="twitter:image" content={`${siteUrl}/social.png`} />
     <meta
       property="og:image:alt"
-      content="Freddie Philpot — development and cybersecurity portfolio"
+      content="Freddie Philpot — building applications and exploring systems"
     />
     {!noindex && <InlineScript type="application/ld+json" content={jsonLd} />}
     {article && (
@@ -108,7 +109,7 @@ const jsonLd = JSON.stringify(
       {!landing && (
         <footer class="site-footer wrap">
           <a class="footer-name" href="/">
-            Freddie Philpot<span>Development & cybersecurity</span>
+            Freddie Philpot
           </a>
           <div class="footer-links">
             <a href="mailto:contact@freddiephilpot.dev">Email</a>
@@ -117,10 +118,12 @@ const jsonLd = JSON.stringify(
               CV <span class="sr-only">(PDF)</span>
             </a>
           </div>
-          <span class="footer-note">Built with Astro.</span>
         </footer>
       )}
     </div>
     <Analytics />
   </body>
 </html>
+<script>
+  import '../scripts/field-motion';
+</script>

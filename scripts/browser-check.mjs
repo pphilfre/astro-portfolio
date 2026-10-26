@@ -409,8 +409,8 @@ try {
   assert.equal(await page.locator('[data-post]:visible').count(), 0);
   assert.ok(await page.locator('#no-posts').isVisible());
   await page.locator('#post-search').fill('');
-  await page.selectOption('#post-topic', 'dns');
-  assert.equal(await page.locator('[data-post]:visible').count(), 1);
+  await page.getByRole('button', { name: 'Networking', exact: true }).click();
+  assert.equal(await page.locator('[data-post]:visible').count(), 3);
   report.interactions.push(
     'Writing search, topic filtering and empty-state feedback',
   );

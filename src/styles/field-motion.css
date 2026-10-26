@@ -1,0 +1,92 @@
+/* Only the focused field runs the compositor-driven gradient. */
+.focus-surface {
+  position: relative;
+  min-width: 0;
+  border-radius: 8px;
+}
+.focus-surface > input,
+.focus-surface > textarea {
+  display: block;
+  width: 100%;
+  border-radius: inherit;
+}
+.field-aura {
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: 10px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+}
+.field-aura > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.field-aura > span::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--aura-size, 1200px);
+  height: var(--aura-size, 1200px);
+  background: conic-gradient(
+    #3275ef,
+    #8664dc 27%,
+    #cf67a5 52%,
+    #df9574 70%,
+    #6d8be9 88%,
+    #3275ef
+  );
+  transform: translate(-50%, -50%);
+}
+.dark .field-aura > span::before {
+  background: conic-gradient(
+    #7caaff,
+    #b49af3 27%,
+    #ed9ccb 52%,
+    #e9b28e 70%,
+    #a1b1ff 88%,
+    #7caaff
+  );
+}
+.focus-surface:focus-within .field-aura {
+  opacity: 1;
+}
+.focus-surface > :is(input, textarea):focus {
+  outline: none;
+  border-color: var(--muted);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .focus-surface:focus-within .field-aura > span::before {
+    animation: aura-orbit 5s linear infinite;
+  }
+  @keyframes aura-orbit {
+    to {
+      transform: translate(-50%, -50%) rotate(1turn);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-aura {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .field-aura {
+    display: none;
+  }
+  .focus-surface > :is(input, textarea):focus {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+}
